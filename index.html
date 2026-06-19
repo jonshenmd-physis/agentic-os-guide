@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Own Agentic OS — the tabbed build console</title>
+<meta name="description" content="A tabbed build console: what an LLM is, what an agent is, why an agentic OS beats raw chat, what it costs, how your data is handled, and how to turn it all the way on — connectors, a Zotero+Papers integrity pipeline, Cowork, Claude Code, and the graph. From Dr. Jon Schoenecker — a TŌGE teaching build.">
+<style>
+  :root{
+    /* WebOS navy + gold */
+    --navy:#1B4F72; --navy-dark:#0F2D44; --navy-deeper:#0A1E2E; --navy-light:#2471A3;
+    --gold:#F4D03F; --gold-dim:#D4AC0D; --gold-light:#F9E547; --gold-muted:rgba(244,208,63,.15);
+    --teal:#1ABC9C; --coral:#E74C3C; --blue:#3498DB; --purple:#9B59B6; --orange:#E67E22;
+    --ink:#E8EDF1; --dim:#A8B5C2; --muted:#5D6D7E; --white:#FAFAFA;
+    --section:rgba(15,45,68,.6); --card:rgba(27,79,114,.35); --card-hover:rgba(27,79,114,.5);
+    --card-line:rgba(244,208,63,.15); --card-line-hover:rgba(244,208,63,.3);
+    --radius:14px; --t:.3s cubic-bezier(.4,0,.2,1);
+    --mono:'JetBrains Mono','Fira Code',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{scroll-behavior:smooth}
+  body{margin:0;background:var(--navy-deeper);color:var(--ink);
+    font:16px/1.7 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  a{color:var(--gold);text-decoration:none}
+  a:hover{color:var(--gold-light);text-decoration:underline}
+  ::selection{background:rgba(244,208,63,.3);color:#fff}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-track{background:var(--navy-deeper)}
+  ::-webkit-scrollbar-thumb{background:rgba(244,208,63,.2);border-radius:5px}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(244,208,63,.4)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 22px}
+  .gold-text{background:linear-gradient(135deg,#FAFAFA 0%,#F4D03F 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+  /* ===== compact masthead ===== */
+  header.masthead{position:relative;padding:34px 0 20px;overflow:hidden;
+    background:radial-gradient(1200px 500px at 75% -200px,rgba(36,113,163,.30),transparent 62%),
+               radial-gradient(900px 420px at 5% -140px,rgba(244,208,63,.10),transparent 58%)}
+  .eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding:.4rem 1rem;border-radius:50px;
+    background:rgba(244,208,63,.08);border:1px solid rgba(244,208,63,.15);margin:0 0 16px}
+  header.masthead h1{font-size:clamp(1.8rem,5vw,3rem);line-height:1.06;margin:0 0 8px;letter-spacing:-.02em;font-weight:900}
+  header.masthead h1 .sub{display:block;font-size:.42em;color:var(--dim);font-weight:400;letter-spacing:0;margin-top:12px}
+  header.masthead h1 .sub em{color:var(--gold);font-style:italic}
+  header.masthead .lede{margin:14px 0 0;font-size:clamp(1rem,2.2vw,1.18rem);color:var(--dim);font-weight:300;max-width:680px;line-height:1.5}
+  .meta{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+  .chip{background:rgba(10,30,46,.6);border:1px solid rgba(244,208,63,.15);border-radius:999px;
+    padding:6px 15px;font-size:13px;color:var(--dim)}
+  .chip b{color:var(--ink);font-weight:600}
+
+  /* ===== sticky tab bar / console ===== */
+  .tabbar{position:sticky;top:0;z-index:50;background:rgba(10,30,46,.92);
+    backdrop-filter:blur(12px);border-bottom:1px solid rgba(244,208,63,.14)}
+  .tabbar .wrap{display:flex;gap:3px;overflow-x:auto;padding:9px 22px 0;scrollbar-width:none}
+  .tabbar .wrap::-webkit-scrollbar{display:none}
+  .tablist{display:flex;gap:2px;min-width:max-content}
+  .tab{white-space:nowrap;font:600 13px/1 'Inter',sans-serif;color:var(--dim);padding:10px 13px;border-radius:9px 9px 0 0;
+    background:none;border:0;border-bottom:2px solid transparent;cursor:pointer;transition:var(--t);
+    display:flex;gap:7px;align-items:center}
+  .tab .n{font:700 10px/1 var(--mono);color:var(--muted)}
+  .tab:hover{color:var(--white);background:rgba(244,208,63,.06)}
+  .tab:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+  .tab.active .n{color:var(--gold-dim)}
+  .tab.flag .star{color:var(--gold);font-size:.85em}
+  .tab.flag.active{color:var(--gold-light)}
+  .progressrail{height:3px;background:rgba(244,208,63,.07)}
+  .progressrail .fill{height:100%;width:9%;background:linear-gradient(90deg,#D4AC0D,#F4D03F);
+    transition:width .35s ease;border-radius:0 3px 3px 0}
+  .tabselect{display:none;width:calc(100% - 32px);margin:9px 16px;background:rgba(10,30,46,.85);color:var(--ink);
+    border:1px solid rgba(244,208,63,.3);border-radius:9px;padding:11px 13px;font:600 14px 'Inter',sans-serif}
+  @media(max-width:480px){.tabbar .wrap{display:none}.tabselect{display:block}}
+
+  /* ===== tab panels ===== */
+  main{min-height:60vh}
+  .tabpanel{display:none}
+  .tabpanel.active{display:block;animation:fadein .35s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ===== sections ===== */
+  section.pad{padding:44px 0 52px;border-bottom:1px solid rgba(244,208,63,.08)}
+  section.alt{background:var(--section)}
+  .badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);padding:.35rem 1rem;border-radius:50px;
+    background:rgba(244,208,63,.08);border:1px solid rgba(244,208,63,.15);margin:0 0 18px}
+  .badge.flag{background:rgba(244,208,63,.16);border-color:rgba(244,208,63,.4);color:var(--gold-light)}
+  h2{font-size:clamp(1.7rem,3.6vw,2.4rem);margin:0 0 12px;letter-spacing:-.01em;font-weight:800;line-height:1.15}
+  .sectsub{color:var(--dim);margin:0 0 28px;font-size:1.05rem;max-width:680px;line-height:1.6}
+  p{margin:0 0 16px}
+  .body-text{color:var(--ink);max-width:680px}
+  .body-text em{color:var(--gold-light);font-style:italic}
+  .body-text strong{color:var(--white)}
+  .pull{font-size:clamp(1.15rem,2.6vw,1.5rem);font-weight:700;line-height:1.4;color:var(--white);
+    border-left:3px solid var(--gold);padding:.2rem 0 .2rem 1.2rem;margin:26px 0;max-width:720px}
+  .pull .gold{color:var(--gold)}
+
+  /* ===== glass card ===== */
+  .card{background:var(--card);border:1px solid var(--card-line);border-radius:var(--radius);
+    padding:24px;margin:16px 0;backdrop-filter:blur(4px);transition:var(--t)}
+  .card h3{margin:0 0 12px;font-size:1.12rem;color:var(--white)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  ul.clean{list-style:none;padding:0;margin:0}
+  ul.clean li{position:relative;padding:10px 0 10px 32px;border-bottom:1px solid rgba(244,208,63,.10)}
+  ul.clean li:last-child{border-bottom:0}
+  ul.clean li::before{content:"";position:absolute;left:2px;top:17px;width:13px;height:13px;
+    border:2px solid var(--gold);border-radius:4px}
+  ul.clean li b{color:var(--white)}
+  ol.num{counter-reset:step;padding:0;margin:0;list-style:none}
+  ol.num li{position:relative;padding:11px 0 11px 44px;border-bottom:1px solid rgba(244,208,63,.10)}
+  ol.num li:last-child{border-bottom:0}
+  ol.num li::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:9px;
+    width:27px;height:27px;background:linear-gradient(135deg,#F4D03F,#D4AC0D);color:var(--navy-deeper);
+    font-weight:800;font-size:14px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+  .pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:999px;
+    vertical-align:middle;letter-spacing:.02em}
+  .pill.free{background:rgba(26,188,156,.16);color:#5fe6c8;border:1px solid rgba(26,188,156,.35)}
+  .pill.paid{background:rgba(244,208,63,.14);color:var(--gold);border:1px solid rgba(244,208,63,.32)}
+  .pill.yours{background:rgba(155,89,182,.16);color:#cd9bdf;border:1px solid rgba(155,89,182,.35)}
+
+  /* ===== rule / callout ===== */
+  .rule{display:flex;gap:14px;align-items:flex-start;background:rgba(231,76,60,.09);
+    border:1px solid rgba(231,76,60,.35);border-radius:var(--radius);padding:17px 19px;margin:20px 0}
+  .rule .ic{font-size:22px;line-height:1.2}
+  .rule b{color:#ff9a8f}
+  .callout{background:rgba(244,208,63,.06);border-left:3px solid var(--gold);
+    border-radius:0 12px 12px 0;padding:18px 22px;margin:22px 0;color:var(--ink)}
+  .callout b{color:var(--gold-light)}
+
+  /* ===== code blocks ===== */
+  .code{position:relative;background:rgba(7,21,33,.85);border:1px solid rgba(244,208,63,.13);
+    border-radius:12px;margin:16px 0;overflow:hidden}
+  .code .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:9px 13px;border-bottom:1px solid rgba(244,208,63,.10);background:rgba(10,30,46,.5)}
+  .code .fname{font:600 12.5px/1.3 var(--mono);color:#5fe6c8}
+  .code pre{margin:0;padding:15px 17px;overflow-x:auto;font:12.8px/1.6 var(--mono);color:#d6dee8;white-space:pre}
+  .copy{background:rgba(244,208,63,.08);border:1px solid rgba(244,208,63,.2);color:var(--gold);
+    font:600 12px/1 'Inter',sans-serif;padding:6px 12px;border-radius:7px;cursor:pointer;transition:var(--t);flex:none}
+  .copy:hover{background:rgba(244,208,63,.16);color:var(--gold-light)}
+  .copy.done{color:#5fe6c8;border-color:#5fe6c8;background:rgba(26,188,156,.14)}
+  code.inl{font-family:var(--mono);color:#5fe6c8;font-size:.92em}
+
+  /* ===== details / accordion ===== */
+  details{background:var(--card);border:1px solid var(--card-line);border-radius:var(--radius);margin:12px 0;overflow:hidden;transition:var(--t)}
+  details[open]{border-color:var(--card-line-hover)}
+  details>summary{cursor:pointer;padding:17px 20px;font-weight:600;color:var(--white);list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:10px}
+  details>summary::-webkit-details-marker{display:none}
+  details>summary .tag{font:600 12px/1 var(--mono);color:#5fe6c8;background:rgba(26,188,156,.1);
+    padding:3px 9px;border-radius:6px;margin-left:auto}
+  details>summary::after{content:"+";color:var(--gold);font-size:22px;line-height:1;flex:none}
+  details[open]>summary::after{content:"–"}
+  details .body{padding:0 20px 18px}
+  details .desc{color:var(--dim);font-size:.95rem;margin:0 0 6px}
+
+  /* ===== five contrasts: shadow vs lit ===== */
+  .contrasts{margin:8px 0 6px}
+  .contrast-head{display:grid;grid-template-columns:1fr 56px 1fr;gap:0;margin-bottom:10px}
+  .contrast-head div{font-weight:800;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;padding:0 4px}
+  .contrast-head .l{color:var(--muted);text-align:right}
+  .contrast-head .r{color:var(--gold)}
+  .crow{display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;gap:0;
+    border-radius:12px;margin:8px 0;overflow:hidden;border:1px solid rgba(244,208,63,.10)}
+  .crow .shadow{padding:14px 16px;text-align:right;background:rgba(10,30,46,.5);color:var(--muted);font-size:.96rem}
+  .crow .arrow{display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:18px;
+    background:rgba(10,30,46,.3)}
+  .crow .lit{padding:14px 16px;background:rgba(27,79,114,.4);color:var(--ink);font-weight:600;font-size:.98rem}
+  .crow .lit b{color:var(--gold-light)}
+  .crow.peak{border-color:rgba(244,208,63,.4);box-shadow:0 0 24px rgba(244,208,63,.10)}
+  .crow.peak .lit{background:rgba(244,208,63,.10)}
+  @media(max-width:640px){
+    .contrast-head{display:none}
+    .crow{grid-template-columns:1fr;border:1px solid rgba(244,208,63,.14)}
+    .crow .shadow{text-align:left;border-bottom:1px dashed rgba(244,208,63,.15)}
+    .crow .shadow::before{content:"Chat: ";color:var(--coral);font-weight:700}
+    .crow .arrow{display:none}
+    .crow .lit::before{content:"OS: ";color:var(--gold);font-weight:800}
+  }
+
+  /* ===== the rungs / climb ===== */
+  .rungs{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:18px 0;align-items:stretch}
+  .rung{position:relative;background:var(--card);border:1px solid var(--card-line);border-radius:12px;
+    padding:16px 14px;display:flex;flex-direction:column;gap:8px;transition:var(--t)}
+  .rung:hover{background:var(--card-hover);border-color:var(--card-line-hover);transform:translateY(-4px)}
+  .rung .step{font:700 11px/1 var(--mono);color:var(--muted)}
+  .rung .name{font-weight:800;color:var(--white);font-size:1rem;letter-spacing:-.01em}
+  .rung .one{color:var(--dim);font-size:.83rem;line-height:1.45;flex:1}
+  .rung .marker{font-size:10.5px;font-weight:700;letter-spacing:.04em}
+  .rung.free .name{color:#7fecd0}
+  .rung.shen{background:linear-gradient(160deg,rgba(244,208,63,.12),rgba(27,79,114,.4));border-color:rgba(244,208,63,.35)}
+  .rung.shen .name{color:var(--gold)}
+  @media(max-width:920px){.rungs{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:560px){.rungs{grid-template-columns:1fr;gap:10px}
+    .rung{flex-direction:row;align-items:center;flex-wrap:wrap}
+    .rung .one{flex-basis:100%;order:3}}
+
+  /* ===== skill = care pathway flow ===== */
+  .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;margin:16px 0}
+  .flow .node{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:16px;text-align:center}
+  .flow .node .t{font-weight:800;color:var(--white);font-size:.95rem;margin-bottom:6px}
+  .flow .node .d{color:var(--dim);font-size:.82rem;line-height:1.4}
+  .flow .node.skill{border-color:rgba(244,208,63,.4);background:rgba(244,208,63,.08)}
+  .flow .node.skill .t{color:var(--gold)}
+  .flow .ar{color:var(--gold);font-size:24px;text-align:center}
+  @media(max-width:680px){.flow{grid-template-columns:1fr;gap:6px}.flow .ar{transform:rotate(90deg)}}
+
+  /* ===== glossary ===== */
+  .gloss{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+  @media(max-width:680px){.gloss{grid-template-columns:1fr}}
+  .gloss dt{font-weight:700;color:var(--gold-light);font-family:var(--mono);font-size:.9rem;margin-top:14px}
+  .gloss dd{margin:3px 0 0;color:var(--dim);font-size:.92rem;line-height:1.5}
+
+  /* ===== CTA steps ===== */
+  .cta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:8px 0}
+  @media(max-width:760px){.cta-grid{grid-template-columns:1fr}}
+  .cta{background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:22px;position:relative}
+  .cta .when{font:700 .72rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block}
+  .cta h3{margin:0 0 8px;font-size:1.05rem;color:var(--white)}
+  .cta p{margin:0;color:var(--dim);font-size:.92rem;line-height:1.5}
+
+  /* ===== footer ===== */
+  footer{padding:44px 0 64px;color:var(--dim);font-size:.92rem;background:var(--navy-deeper);border-top:1px solid rgba(244,208,63,.1)}
+  footer .sig{color:var(--white);font-weight:700;font-size:1.15rem;margin-bottom:6px}
+  footer .line{color:var(--gold-light);font-style:italic;margin-top:18px;font-size:1rem}
+
+  /* ===== scroll reveal ===== */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ===== svg animation helpers ===== */
+  .seed-node,.seed-link{opacity:0}
+  .anim .seed-node{animation:pop .5s ease forwards}
+  .anim .seed-link{animation:draw .7s ease forwards}
+  @keyframes pop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+  @keyframes draw{from{opacity:0}to{opacity:.6}}
+  .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 3s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.85}50%{opacity:1}}
+
+  @media(prefers-reduced-motion:reduce){
+    html,body{scroll-behavior:auto}
+    *,.seed-node,.seed-link{animation:none!important}
+    .reveal{opacity:1;transform:none;transition:none}
+    .tabpanel.active{animation:none}
+    .seed-node,.seed-link{opacity:1}
+    .pulse{animation:none}
+  }
+
+  /* ===== entry chooser / router ===== */
+  .chooser{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0}
+  @media(max-width:820px){.chooser{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.chooser{grid-template-columns:1fr}}
+  .choose{display:flex;flex-direction:column;gap:6px;background:var(--card);border:1px solid var(--card-line);
+    border-radius:12px;padding:16px;text-decoration:none;transition:var(--t);text-align:left;cursor:pointer;font:inherit}
+  .choose:hover{background:var(--card-hover);border-color:var(--card-line-hover);transform:translateY(-3px);text-decoration:none}
+  .choose .who{font:700 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+  .choose .go{font-weight:800;color:var(--white);font-size:1.02rem}
+  .choose .go span{color:var(--gold)}
+  .choose .d{color:var(--dim);font-size:.85rem;line-height:1.4}
+
+  /* ===== sub-heading inside sections ===== */
+  .sub-h{color:var(--white);font-size:1.18rem;font-weight:800;margin:34px 0 6px;letter-spacing:-.01em}
+  .sub-h .q{color:var(--gold);font-family:var(--mono);font-size:.92em;margin-right:.4rem}
+
+  /* ===== token chips ===== */
+  .tokens{display:flex;flex-wrap:wrap;gap:5px;margin:14px 0;align-items:center}
+  .tok{font:600 13px/1 var(--mono);padding:5px 9px;border-radius:6px;color:var(--navy-deeper)}
+  .tok.b{background:#F4D03F}.tok.t{background:#1ABC9C}.tok.bl{background:#3498DB}.tok.p{background:#cd9bdf}
+  .tok.sp{background:transparent;color:var(--muted);padding:5px 2px}
+
+  /* ===== model tiers ===== */
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+  @media(max-width:680px){.tiers{grid-template-columns:1fr}}
+  .tier{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:18px;position:relative}
+  .tier .tname{font-weight:800;color:var(--gold);font-size:1.05rem}
+  .tier .tfor{color:var(--dim);font-size:.88rem;margin:6px 0 0;line-height:1.45}
+  .tier .bar{height:7px;border-radius:4px;margin:12px 0 4px;background:linear-gradient(90deg,#D4AC0D,#F4D03F)}
+  .tier .meta{font:600 .72rem/1.3 var(--mono);color:var(--muted)}
+
+  /* ===== tables (pricing / alternatives) ===== */
+  .ptable{width:100%;border-collapse:collapse;margin:14px 0;font-size:.92rem;display:table}
+  .ptable th,.ptable td{text-align:left;padding:11px 12px;border-bottom:1px solid rgba(244,208,63,.12);vertical-align:top}
+  .ptable th{color:var(--gold);font-weight:700;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+  .ptable td b{color:var(--white)}
+  .ptable tr:last-child td{border-bottom:0}
+  .ptable .hl{background:rgba(244,208,63,.06)}
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  @media(max-width:620px){.ptable{font-size:.84rem}.ptable th,.ptable td{padding:9px 9px}}
+
+  .asof{font-size:.8rem;color:var(--muted);font-style:italic;margin-top:6px}
+  .src{font-size:.8rem;color:var(--muted);margin-top:10px}
+  .src a{color:var(--dim)}
+
+  /* ===== per-tab template helpers ===== */
+  .whatwhy{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+  @media(max-width:680px){.whatwhy{grid-template-columns:1fr}}
+  .whatwhy .box{background:var(--card);border:1px solid var(--card-line);border-radius:12px;padding:18px}
+  .whatwhy .k{font:700 .68rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block}
+  .whatwhy .box p{margin:0;color:var(--ink);font-size:.95rem}
+  .tierpill{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
+  .tierpill .lab{font:700 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .paths{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+  @media(max-width:760px){.paths{grid-template-columns:1fr}}
+  .path{background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:20px}
+  .path .ph{font-weight:800;font-size:1.02rem;margin:0 0 12px;display:flex;gap:8px;align-items:center;color:var(--white)}
+  .path.cowork .ph{color:#cd9bdf}.path.code .ph{color:#5fe6c8}
+  .path .ph .ic{font-size:1.1em}
+  .donewhen{display:flex;gap:11px;align-items:flex-start;background:rgba(26,188,156,.08);border:1px solid rgba(26,188,156,.3);
+    border-radius:12px;padding:14px 17px;margin:22px 0}
+  .donewhen .ic{font-size:18px;line-height:1.2}.donewhen b{color:#5fe6c8}
+  .next{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0;align-items:center}
+  .next .lab{font:700 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+  .goto{background:rgba(244,208,63,.08);border:1px solid rgba(244,208,63,.22);color:var(--gold);
+    font:600 12.5px/1 'Inter',sans-serif;padding:8px 13px;border-radius:999px;cursor:pointer;transition:var(--t)}
+  .goto:hover{background:rgba(244,208,63,.16);color:var(--gold-light)}
+
+  /* ===== zotero dual-layer + pipeline ===== */
+  .payoff{font-size:1.05rem;font-weight:700;color:var(--white);background:rgba(244,208,63,.08);
+    border:1px solid rgba(244,208,63,.25);border-radius:12px;padding:16px 19px;margin:20px 0}
+  .payoff .g{color:var(--gold-light)}
+</style>
+</head>
+<body>
+
+<a id="top"></a>
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">◆ Build Your Own Agentic OS · a TŌGE teaching build · the build console</p>
+    <h1 class="gold-text">Build Your Own Agentic OS
+      <span class="sub">Seed it with <em>you</em> — then turn it all the way on.</span>
+    </h1>
+    <p class="lede">One tab per build stage. Find where you are, learn what each stage <em>does</em> and why a surgeon-scientist wants it, then actually switch it on — in Cowork or Claude Code. Start at <b>Why</b>, or jump to your rung.</p>
+    <div class="meta">
+      <span class="chip"><b>Bring a laptop</b> · build as you read</span>
+      <span class="chip">with <b>Dr. Jon Schoenecker</b></span>
+      <span class="chip"><b>Free</b> to start · ~5 min prep</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabbar" aria-label="Build stages">
+  <div class="wrap">
+    <div class="tablist" role="tablist" aria-label="Agentic OS build console">
+      <button class="tab" role="tab" id="tabbtn-why"        data-tab="why"        aria-selected="true"  aria-controls="panel-why"><span class="n">01</span>Why</button>
+      <button class="tab" role="tab" id="tabbtn-square"      data-tab="square"     aria-selected="false" aria-controls="panel-square"><span class="n">02</span>Square One</button>
+      <button class="tab" role="tab" id="tabbtn-core"        data-tab="core"       aria-selected="false" aria-controls="panel-core"><span class="n">03</span>OS Core</button>
+      <button class="tab" role="tab" id="tabbtn-connectors"  data-tab="connectors" aria-selected="false" aria-controls="panel-connectors"><span class="n">04</span>Connectors</button>
+      <button class="tab flag" role="tab" id="tabbtn-zotero" data-tab="zotero"     aria-selected="false" aria-controls="panel-zotero"><span class="n">05</span><span class="star">★</span>Zotero + Papers</button>
+      <button class="tab" role="tab" id="tabbtn-cowork"      data-tab="cowork"     aria-selected="false" aria-controls="panel-cowork"><span class="n">06</span>Cowork</button>
+      <button class="tab" role="tab" id="tabbtn-code"        data-tab="code"       aria-selected="false" aria-controls="panel-code"><span class="n">07</span>Claude Code</button>
+      <button class="tab" role="tab" id="tabbtn-graph"       data-tab="graph"      aria-selected="false" aria-controls="panel-graph"><span class="n">08</span>The Graph</button>
+      <button class="tab" role="tab" id="tabbtn-skills"      data-tab="skills"     aria-selected="false" aria-controls="panel-skills"><span class="n">09</span>Skills</button>
+      <button class="tab" role="tab" id="tabbtn-scale"       data-tab="scale"      aria-selected="false" aria-controls="panel-scale"><span class="n">10</span>At Scale</button>
+      <button class="tab" role="tab" id="tabbtn-reference"   data-tab="reference"  aria-selected="false" aria-controls="panel-reference"><span class="n">11</span>Reference</button>
+    </div>
+  </div>
+  <select class="tabselect" aria-label="Jump to build stage">
+    <option value="why">01 · Why</option>
+    <option value="square">02 · Square One</option>
+    <option value="core">03 · OS Core</option>
+    <option value="connectors">04 · Connectors</option>
+    <option value="zotero">05 · ★ Zotero + Papers</option>
+    <option value="cowork">06 · Cowork</option>
+    <option value="code">07 · Claude Code</option>
+    <option value="graph">08 · The Graph</option>
+    <option value="skills">09 · Skills</option>
+    <option value="scale">10 · At Scale</option>
+    <option value="reference">11 · Reference</option>
+  </select>
+  <div class="progressrail"><div class="fill" id="progFill"></div></div>
+</nav>
+
+<main>
+<!-- ===================== TAB 1 · WHY ===================== -->
+<section class="tabpanel active" id="panel-why" role="tabpanel" aria-labelledby="tabbtn-why">
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Why an OS beats chat</span>
+      <h2>Seed it with <em style="color:var(--gold-light);font-style:italic">you</em> — then watch it work.</h2>
+      <p class="sectsub">No hype, no jargon. What an LLM is, what an agent is, and the five things that change the moment you give the model a home. Then pick your on-ramp below.</p>
+
+      <!-- HERO ART: seed → constellation -->
+      <div class="card svg-anim" id="heroArt">
+        <svg viewBox="0 0 920 220" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A single seed point growing into a connected constellation of knowledge nodes.">
+          <defs>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#F4D03F" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#F4D03F" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="lk" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#F4D03F" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#3498DB" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+          <g stroke="url(#lk)" stroke-width="1.4">
+            <line class="seed-link" x1="120" y1="110" x2="300" y2="60"  style="animation-delay:.5s"/>
+            <line class="seed-link" x1="120" y1="110" x2="320" y2="150" style="animation-delay:.7s"/>
+            <line class="seed-link" x1="300" y1="60"  x2="470" y2="40"  style="animation-delay:.9s"/>
+            <line class="seed-link" x1="300" y1="60"  x2="500" y2="115" style="animation-delay:1.0s"/>
+            <line class="seed-link" x1="320" y1="150" x2="500" y2="115" style="animation-delay:1.1s"/>
+            <line class="seed-link" x1="320" y1="150" x2="480" y2="190" style="animation-delay:1.2s"/>
+            <line class="seed-link" x1="470" y1="40"  x2="660" y2="70"  style="animation-delay:1.3s"/>
+            <line class="seed-link" x1="500" y1="115" x2="660" y2="70"  style="animation-delay:1.4s"/>
+            <line class="seed-link" x1="500" y1="115" x2="680" y2="160" style="animation-delay:1.5s"/>
+            <line class="seed-link" x1="480" y1="190" x2="680" y2="160" style="animation-delay:1.55s"/>
+            <line class="seed-link" x1="660" y1="70"  x2="820" y2="110" style="animation-delay:1.6s"/>
+            <line class="seed-link" x1="680" y1="160" x2="820" y2="110" style="animation-delay:1.7s"/>
+          </g>
+          <circle cx="120" cy="110" r="34" fill="url(#glow)"/>
+          <circle class="seed-node pulse" cx="120" cy="110" r="11" fill="#F4D03F" style="animation-delay:.1s"/>
+          <text x="120" y="170" text-anchor="middle" fill="#A8B5C2" font-size="13" font-family="Inter,sans-serif">you</text>
+          <g>
+            <circle class="seed-node" cx="300" cy="60"  r="7" fill="#3498DB" style="animation-delay:.6s"/>
+            <circle class="seed-node" cx="320" cy="150" r="7" fill="#1ABC9C" style="animation-delay:.8s"/>
+            <circle class="seed-node" cx="470" cy="40"  r="6" fill="#9B59B6" style="animation-delay:1.0s"/>
+            <circle class="seed-node" cx="500" cy="115" r="9" fill="#F4D03F" style="animation-delay:1.1s"/>
+            <circle class="seed-node" cx="480" cy="190" r="6" fill="#3498DB" style="animation-delay:1.25s"/>
+            <circle class="seed-node" cx="660" cy="70"  r="7" fill="#1ABC9C" style="animation-delay:1.4s"/>
+            <circle class="seed-node" cx="680" cy="160" r="6" fill="#9B59B6" style="animation-delay:1.55s"/>
+            <circle class="seed-node" cx="820" cy="110" r="8" fill="#F4D03F" style="animation-delay:1.7s"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- WHERE ARE YOU? router -->
+      <p class="sub-h" style="margin-top:30px">Where are you? Pick a door — it opens the right tab.</p>
+      <div class="chooser">
+        <button class="choose" data-goto="square"><span class="who">Never opened Claude</span><span class="go">Start at <span>Square One</span> →</span><span class="d">Download, account, free vs paid, your first Project.</span></button>
+        <button class="choose" data-goto="core"><span class="who">Have an account</span><span class="go">Build the <span>OS Core</span> →</span><span class="d">Seed it with your CV + goals so it finally knows you.</span></button>
+        <button class="choose" data-goto="connectors"><span class="who">Want live data</span><span class="go">Turn on <span>Connectors</span> →</span><span class="d">PubMed, Drive, Calendar — answers with real citations.</span></button>
+        <button class="choose" data-goto="zotero"><span class="who">Drowning in PDFs</span><span class="go">★ <span>Zotero + Papers</span> →</span><span class="d">Turn a pile of papers into a queryable, integrity-checked library.</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BASICS -->
+  <section class="pad alt">
+    <div class="wrap reveal">
+      <span class="badge">The basics</span>
+      <h2>What this stuff actually is.</h2>
+      <p class="sectsub">Four ideas, and the rest of this console falls into place.</p>
+
+      <p class="sub-h"><span class="q">01</span>What is an LLM?</p>
+      <p class="body-text"><strong>LLM</strong> stands for <em>large language model</em>. Picture an autocomplete that read an enormous slice of human writing — books, papers, code, the web — and got very good at one trick: <strong>given some text, predict what comes next.</strong> That's the whole engine. ChatGPT, Gemini, and Claude are all LLMs wrapped in a friendly chat box.</p>
+      <p class="body-text">It isn't a database and it isn't a search engine. It doesn't "look up" an answer — it <em>generates</em> the most plausible continuation, a piece at a time. That's why it's fluent and creative, and also why it can sound completely confident and still be wrong. The fix — grounding it in <em>your real files</em> — is what the rest of this console is about.</p>
+      <div class="card">
+        <svg viewBox="0 0 760 210" width="100%" role="img" aria-label="An input phrase enters a model, which outputs ranked guesses for the next word.">
+          <defs><linearGradient id="mbox" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B4F72"/><stop offset="1" stop-color="#0F2D44"/></linearGradient></defs>
+          <rect x="20" y="80" width="250" height="48" rx="10" fill="rgba(10,30,46,.7)" stroke="rgba(244,208,63,.25)"/>
+          <text x="145" y="103" text-anchor="middle" fill="#A8B5C2" font-size="13" font-family="Inter">the opposite of "difficult" is</text>
+          <text x="145" y="121" text-anchor="middle" fill="#5D6D7E" font-size="11" font-family="Inter">your text (the prompt)</text>
+          <line x1="270" y1="104" x2="320" y2="104" stroke="#F4D03F" stroke-width="2"/><polygon points="320,99 332,104 320,109" fill="#F4D03F"/>
+          <rect x="332" y="74" width="120" height="60" rx="12" fill="url(#mbox)" stroke="rgba(244,208,63,.4)"/>
+          <text x="392" y="100" text-anchor="middle" fill="#F4D03F" font-size="15" font-weight="800" font-family="Inter">LLM</text>
+          <text x="392" y="119" text-anchor="middle" fill="#A8B5C2" font-size="10.5" font-family="Inter">predicts next</text>
+          <line x1="452" y1="104" x2="502" y2="104" stroke="#F4D03F" stroke-width="2"/><polygon points="502,99 514,104 502,109" fill="#F4D03F"/>
+          <g font-family="Inter">
+            <rect x="514" y="44" width="226" height="34" rx="8" fill="rgba(244,208,63,.14)" stroke="rgba(244,208,63,.4)"/>
+            <text x="526" y="66" fill="#FAFAFA" font-size="13" font-weight="700">easy</text><text x="728" y="66" text-anchor="end" fill="#F4D03F" font-size="12" font-weight="700">71%</text>
+            <rect x="514" y="86" width="226" height="34" rx="8" fill="rgba(52,152,219,.12)" stroke="rgba(52,152,219,.3)"/>
+            <text x="526" y="108" fill="#E8EDF1" font-size="13">simple</text><text x="728" y="108" text-anchor="end" fill="#3498DB" font-size="12">18%</text>
+            <rect x="514" y="128" width="226" height="34" rx="8" fill="rgba(26,188,156,.10)" stroke="rgba(26,188,156,.28)"/>
+            <text x="526" y="150" fill="#E8EDF1" font-size="13">effortless</text><text x="728" y="150" text-anchor="end" fill="#1ABC9C" font-size="12">7%</text>
+          </g>
+          <text x="627" y="184" text-anchor="middle" fill="#5D6D7E" font-size="11">it ranks likely next words — predicting language, not deciding or looking up a fact</text>
+        </svg>
+      </div>
+      <div class="callout"><b>For clinicians &amp; scientists:</b> because it's predicting plausible <em>language</em>, it can state a wrong fact — or invent a citation that looks flawless — with total confidence. Treat every fact, figure, dose, and reference as <b>unverified until you check the source</b>. That's exactly why the skills in this kit force every claim back to a real citation.</div>
+
+      <p class="sub-h"><span class="q">02</span>How does it "think"?</p>
+      <p class="body-text">It writes the way you might finish someone's sentence — a piece at a time, each choice shaped by everything before it. Newer models can also <strong>"think out loud" first</strong> (you'll see this as <em>extended thinking</em>): they work through the problem step by step before answering, which makes them far better at hard reasoning. But here's the catch that explains everything else: <strong>by default it remembers nothing between conversations.</strong> Close the tab and it has met you for the first time, again. Giving it a memory is move #1 of building an OS.</p>
+      <div class="card">
+        <svg viewBox="0 0 760 130" width="100%" role="img" aria-label="A question flows through several hidden reasoning steps before producing an answer.">
+          <rect x="14" y="46" width="110" height="40" rx="10" fill="rgba(10,30,46,.7)" stroke="rgba(244,208,63,.25)"/>
+          <text x="69" y="71" text-anchor="middle" fill="#A8B5C2" font-size="13" font-family="Inter">question</text>
+          <g>
+            <rect x="170" y="30" width="420" height="72" rx="12" fill="none" stroke="rgba(244,208,63,.25)" stroke-dasharray="5 5"/>
+            <text x="380" y="24" text-anchor="middle" fill="#5D6D7E" font-size="11" font-family="Inter">extended thinking (step by step)</text>
+            <circle cx="230" cy="66" r="13" fill="rgba(52,152,219,.2)" stroke="#3498DB"/><text x="230" y="70" text-anchor="middle" fill="#3498DB" font-size="11" font-family="Inter">1</text>
+            <circle cx="320" cy="66" r="13" fill="rgba(52,152,219,.2)" stroke="#3498DB"/><text x="320" y="70" text-anchor="middle" fill="#3498DB" font-size="11" font-family="Inter">2</text>
+            <circle cx="410" cy="66" r="13" fill="rgba(52,152,219,.2)" stroke="#3498DB"/><text x="410" y="70" text-anchor="middle" fill="#3498DB" font-size="11" font-family="Inter">3</text>
+            <circle cx="510" cy="66" r="13" fill="rgba(155,89,182,.2)" stroke="#9B59B6"/><text x="510" y="70" text-anchor="middle" fill="#cd9bdf" font-size="11" font-family="Inter">4</text>
+            <line x1="243" y1="66" x2="307" y2="66" stroke="#3498DB" stroke-width="1.4"/>
+            <line x1="333" y1="66" x2="397" y2="66" stroke="#3498DB" stroke-width="1.4"/>
+            <line x1="423" y1="66" x2="497" y2="66" stroke="#3498DB" stroke-width="1.4"/>
+          </g>
+          <line x1="124" y1="66" x2="160" y2="66" stroke="#F4D03F" stroke-width="2"/><polygon points="160,61 172,66 160,71" fill="#F4D03F"/>
+          <line x1="590" y1="66" x2="626" y2="66" stroke="#F4D03F" stroke-width="2"/><polygon points="626,61 638,66 626,71" fill="#F4D03F"/>
+          <rect x="638" y="46" width="108" height="40" rx="10" fill="rgba(244,208,63,.14)" stroke="rgba(244,208,63,.4)"/>
+          <text x="692" y="71" text-anchor="middle" fill="#F4D03F" font-size="13" font-weight="700" font-family="Inter">answer</text>
+        </svg>
+      </div>
+
+      <p class="sub-h"><span class="q">03</span>What's a token?</p>
+      <p class="body-text">Models don't read letters or whole words — they read <strong>tokens</strong>, the little chunks text gets sliced into. A token is roughly <strong>¾ of a word</strong> (about four characters in English), so a phrase breaks into more pieces than you'd guess. Rough rule: <strong>100 tokens ≈ 75 words.</strong></p>
+      <div class="card">
+        <div style="color:var(--muted);font-size:.82rem;margin-bottom:4px">"Ground your answers in my real files."</div>
+        <div class="tokens" aria-label="The sentence split into tokens.">
+          <span class="tok b">Ground</span><span class="tok t">your</span><span class="tok bl">answer</span><span class="tok p">s</span><span class="tok b">in</span><span class="tok t">my</span><span class="tok bl">real</span><span class="tok p">files</span><span class="tok sp">.</span>
+          <span style="color:var(--muted);font-size:.8rem;margin-left:8px">→ 9 tokens</span>
+        </div>
+      </div>
+      <p class="body-text">Two reasons it matters. First, <strong>cost and usage limits are measured in tokens</strong> — you pay, or hit a cap, per token in and out. Second, every model has a <strong>context window</strong>: the most tokens it can hold in mind at once — its working memory, the size of its desk. Go past it and the earliest things slide off the edge. A bigger desk means it can read your whole CV <em>and</em> three papers at the same time, instead of forgetting the top of the page by the time it reaches the bottom.</p>
+
+      <p class="sub-h"><span class="q">04</span>What do the different models do?</p>
+      <p class="body-text">One company offers several models — not "old vs new," but <em>different sizes for different jobs</em>, like reaching for a scalpel vs a bone saw. Bigger models are smarter but slower and pricier; smaller ones are fast and cheap. You match the model to the task. Claude's current line-up is a clean example:</p>
+      <div class="tiers">
+        <div class="tier">
+          <div class="tname">Opus</div>
+          <div class="bar" style="width:100%"></div>
+          <div class="meta">biggest · smartest · priciest</div>
+          <div class="tfor">The heavyweight — complex reasoning, hard analysis, long multi-step agent work.</div>
+        </div>
+        <div class="tier">
+          <div class="tname">Sonnet</div>
+          <div class="bar" style="width:66%"></div>
+          <div class="meta">balanced · fast · everyday</div>
+          <div class="tfor">The workhorse — a strong balance of intelligence, speed, and cost for most daily work.</div>
+        </div>
+        <div class="tier">
+          <div class="tname">Haiku</div>
+          <div class="bar" style="width:38%"></div>
+          <div class="meta">fastest · cheapest</div>
+          <div class="tfor">The sprinter — quick answers, summaries, and high-volume simple tasks.</div>
+        </div>
+      </div>
+      <p class="asof">Model names current as of June 2026 — the line-up refreshes often and new tiers appear regularly. The principle (match the model to the job) doesn't change.</p>
+      <p class="src">Source: <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing</a></p>
+    </div>
+  </section>
+
+  <!-- WHAT IS AN AGENT -->
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">What's an agent</span>
+      <h2>A chatbot talks. An agent does.</h2>
+      <p class="sectsub">It's the word everyone uses and almost no one defines. Here's the whole thing.</p>
+      <p class="body-text">A plain chatbot is a brilliant conversation partner: you ask, it answers, the loop ends. An <strong>agent</strong> is that same model handed three things — a <strong>goal</strong>, a set of <strong>tools</strong>, and permission to <strong>loop</strong> — so it can go <em>get the goal done</em> instead of just describing how.</p>
+      <p class="body-text">Give it a goal like "organize this folder of papers and write me a summary," and an agent will look at what's there, make a plan, take an action (open a file, run a search, write a document), check the result, and repeat — until the job is finished. You stop dictating each step and start delegating the outcome.</p>
+      <div class="card">
+        <div style="text-align:center;color:var(--dim);font-size:.85rem;margin-bottom:4px">The agent loop — it runs this on its own until the goal is met.</div>
+        <svg viewBox="0 0 760 250" width="100%" role="img" aria-label="A loop: Goal feeds into Plan, then Act, then Observe, which loops back to Plan, until Done.">
+          <defs><marker id="ah" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+          <rect x="40" y="100" width="120" height="50" rx="12" fill="rgba(244,208,63,.14)" stroke="rgba(244,208,63,.4)"/>
+          <text x="100" y="123" text-anchor="middle" fill="#F4D03F" font-size="14" font-weight="800" font-family="Inter">Goal</text>
+          <text x="100" y="140" text-anchor="middle" fill="#A8B5C2" font-size="10" font-family="Inter">what you want</text>
+          <line x1="160" y1="125" x2="232" y2="125" stroke="#F4D03F" stroke-width="2" marker-end="url(#ah)"/>
+          <g font-family="Inter">
+            <circle cx="320" cy="125" r="48" fill="rgba(27,79,114,.4)" stroke="rgba(52,152,219,.4)"/>
+            <text x="320" y="121" text-anchor="middle" fill="#FAFAFA" font-size="13" font-weight="700">Plan</text>
+            <text x="320" y="138" text-anchor="middle" fill="#A8B5C2" font-size="10">decide next step</text>
+            <circle cx="470" cy="65" r="48" fill="rgba(27,79,114,.4)" stroke="rgba(26,188,156,.4)"/>
+            <text x="470" y="61" text-anchor="middle" fill="#FAFAFA" font-size="13" font-weight="700">Act</text>
+            <text x="470" y="78" text-anchor="middle" fill="#A8B5C2" font-size="10">use a tool</text>
+            <circle cx="470" cy="185" r="48" fill="rgba(27,79,114,.4)" stroke="rgba(155,89,182,.4)"/>
+            <text x="470" y="181" text-anchor="middle" fill="#FAFAFA" font-size="13" font-weight="700">Observe</text>
+            <text x="470" y="198" text-anchor="middle" fill="#A8B5C2" font-size="10">check result</text>
+          </g>
+          <path d="M357 100 A70 70 0 0 1 432 80" fill="none" stroke="#F4D03F" stroke-width="2" marker-end="url(#ah)"/>
+          <path d="M495 108 A70 70 0 0 1 495 142" fill="none" stroke="#F4D03F" stroke-width="2" marker-end="url(#ah)"/>
+          <path d="M432 170 A70 70 0 0 1 357 150" fill="none" stroke="#F4D03F" stroke-width="2" marker-end="url(#ah)"/>
+          <text x="395" y="125" text-anchor="middle" fill="#5D6D7E" font-size="10" font-family="Inter">repeat</text>
+          <line x1="518" y1="125" x2="600" y2="125" stroke="#1ABC9C" stroke-width="2" marker-end="url(#ah)"/>
+          <rect x="600" y="100" width="120" height="50" rx="12" fill="rgba(26,188,156,.14)" stroke="rgba(26,188,156,.45)"/>
+          <text x="660" y="123" text-anchor="middle" fill="#5fe6c8" font-size="14" font-weight="800" font-family="Inter">Done</text>
+          <text x="660" y="140" text-anchor="middle" fill="#A8B5C2" font-size="10" font-family="Inter">files + result</text>
+        </svg>
+      </div>
+      <p class="sub-h">What gives it "hands"</p>
+      <div class="grid2">
+        <div class="card"><h3>Tools &amp; connectors</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Reach beyond the chat box — read your files, search PubMed, check your calendar, browse the web, run code.</p></div>
+        <div class="card"><h3>Skills</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Encoded workflows it runs the same way every time — your care pathways for cognitive work (more in the Skills tab).</p></div>
+        <div class="card"><h3>Memory &amp; files</h3><p style="color:var(--dim);font-size:.92rem;margin:0">It remembers, and it leaves durable artifacts behind — so work compounds instead of vanishing.</p></div>
+        <div class="card"><h3>The loop</h3><p style="color:var(--dim);font-size:.92rem;margin:0">It chains many steps by itself, checking its own work as it goes, until the goal is actually met.</p></div>
+      </div>
+      <p class="sub-h">How much rope you give it</p>
+      <p class="body-text">Agents run on a spectrum of autonomy, and <strong>you set it</strong>: from <em>suggests what to do</em> → <em>does one step when asked</em> → <em>runs a whole multi-step task on its own</em>. Think graduated responsibility, like a trainee — supervised first, independent only once it's earned your trust on the small things. A well-behaved agent pauses before anything irreversible — sending, deleting, publishing, spending — and asks first.</p>
+      <div class="callout"><b>Where this lands:</b> Cowork and Claude Code are agents with a real workspace. A mature OS is many agents + a library of skills + a knowledge vault, wired together across machines. Same handful of ideas, scaled up.</div>
+      <p class="body-text" style="color:var(--dim);font-size:.92rem">One honesty note: an agent is only as safe as the boundaries around it. Keep patient data out, review anything it sends or publishes, and let it ask before irreversible steps. Good AI hygiene scales with capability.</p>
+    </div>
+  </section>
+
+  <!-- HOOK -->
+  <section class="pad alt">
+    <div class="wrap reveal">
+      <span class="badge">The flop → the fix</span>
+      <h2>It's a world-class chief of staff who has never met you.</h2>
+      <p class="body-text">Open any chat and ask it to <em>"plan my year to reach my career goals."</em> You'll get fluent, confident, generic mush — because it has no idea who you are. It's brilliant, and it forgets you the moment you close the tab.</p>
+      <p class="body-text">That's not a flaw in the model. It's a missing <strong>system</strong>. The fix is four moves: give it a <strong>memory</strong>, give it a <strong>filesystem</strong>, give it <strong>skills</strong> — and seed all of it with <em>you</em>: your CV, your papers, your goals. Do that and the same model that just flopped becomes a teammate that knows your whole world.</p>
+      <p class="body-text">If you've tried these tools and walked away thinking <em>"impressive, but a glorified autocomplete I can't trust"</em> — you're not wrong. That's an honest verdict on raw chat. It's not a verdict on the system you can build around it.</p>
+      <p class="pull">Every tab to the right is those four moves, built up one stage at a time — and almost all of it is <span class="gold">free to start tonight</span>.</p>
+
+      <h3 style="color:var(--white);margin-top:30px">Five things change the moment you build an OS.</h3>
+      <p class="sectsub">Same model, two completely different machines. The left is what you get from a chat window. The right is what you get when you give the model a home.</p>
+      <div class="contrasts">
+        <div class="contrast-head"><div class="l">Raw chat</div><div></div><div class="r">An agentic OS</div></div>
+        <div class="crow"><div class="shadow">Amnesiac — starts at zero every time</div><div class="arrow">→</div><div class="lit"><b>Remembers</b> — context persists</div></div>
+        <div class="crow"><div class="shadow">Generic — built for everyone</div><div class="arrow">→</div><div class="lit"><b>Yours</b> — built on your data</div></div>
+        <div class="crow"><div class="shadow">Improvised — as good as the day you had</div><div class="arrow">→</div><div class="lit"><b>Reproducible</b> — runs your best workflow every time</div></div>
+        <div class="crow"><div class="shadow">Siloed — one conversation</div><div class="arrow">→</div><div class="lit"><b>Orchestrated</b> — across tools, files, machines</div></div>
+        <div class="crow peak"><div class="shadow">Resets to zero</div><div class="arrow">→</div><div class="lit"><b>Compounds</b> — more valuable the more you feed it</div></div>
+      </div>
+      <p class="pull"><span class="gold">"Chat is something you use. An OS is something you build —</span> and it pays you back forever."</p>
+    </div>
+  </section>
+
+  <!-- THE CLIMB / RUNGS -->
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">The arc</span>
+      <h2>It's a climb, not a leap. Six rungs.</h2>
+      <p class="sectsub">You don't need all of it tonight. Each rung adds one capability, and you can stop wherever it's already paying off. Here's the whole ladder — and exactly where free ends and a paid plan begins. <b>Each rung has its own tab.</b></p>
+      <div class="rungs">
+        <div class="rung free"><span class="step">RUNG 1</span><span class="name">chat</span><span class="one">One conversation. Brilliant, ephemeral, single context.</span><span class="marker"><span class="pill free">Free</span></span></div>
+        <div class="rung free"><span class="step">RUNG 2</span><span class="name">Project</span><span class="one">Chat + persistent files & instructions. It finally remembers who you are.</span><span class="marker"><span class="pill free">Free</span></span></div>
+        <div class="rung"><span class="step">RUNG 3</span><span class="name">Cowork</span><span class="one">Claude's no-terminal agent app — a real workspace that reads whole folders, runs skills, and leaves files behind.</span><span class="marker"><span class="pill paid">Paid</span></span></div>
+        <div class="rung"><span class="step">RUNG 4</span><span class="name">Claude Code</span><span class="one">Same power, in a terminal — for the technical crowd.</span><span class="marker"><span class="pill paid">Paid</span></span></div>
+        <div class="rung free"><span class="step">RUNG 5</span><span class="name">Obsidian</span><span class="one">See the graph. Your notes become linked nodes you can walk through.</span><span class="marker"><span class="pill free">Free</span></span></div>
+        <div class="rung shen"><span class="step">RUNG 6</span><span class="name">At scale</span><span class="one">All of it — a skill library + vault + connectors across machines.</span><span class="marker"><span class="pill yours">Mature OS</span></span></div>
+      </div>
+      <div class="callout"><b>You are here → Rung 2.</b> A Project seeded with your CV, goals, and a couple of papers is the whole personal-OS core, and it's free. That's the first build (<button class="goto" data-goto="core" style="padding:3px 10px;font-size:11.5px">OS Core tab →</button>). Rungs 3–4 are the paid agentic workspace (<button class="goto" data-goto="cowork" style="padding:3px 10px;font-size:11.5px">Cowork</button> / <button class="goto" data-goto="code" style="padding:3px 10px;font-size:11.5px">Code</button>); Rung 5 (Obsidian) is free again; Rung 6 is just these same ideas, accumulated over a year (<button class="goto" data-goto="scale" style="padding:3px 10px;font-size:11.5px">At Scale</button>).</div>
+      <h3 style="color:var(--white);margin-top:30px">Why the jump from Project to Cowork is the real one</h3>
+      <p class="body-text">In a <strong>Project</strong>, your files persist — but it's still a <em>conversation</em>. The agent talks <em>about</em> your work. In <strong>Cowork</strong> (or Claude Code), the agent has a real workspace: it can read a whole folder of papers, run multi-step work, execute skills, and <strong>create files</strong>. It <em>operates on</em> your world and leaves durable artifacts behind.</p>
+      <div class="grid2" style="margin-top:12px">
+        <div class="card">
+          <h3 style="color:#ff9a8f">Chat: resets to zero</h3>
+          <svg viewBox="0 0 360 140" width="100%" role="img" aria-label="A chat bubble that resets back to empty each session.">
+            <g fill="none" stroke="rgba(231,76,60,.5)" stroke-width="1.5"><rect x="30" y="30" width="80" height="50" rx="10"/><rect x="140" y="30" width="80" height="50" rx="10"/><rect x="250" y="30" width="80" height="50" rx="10"/></g>
+            <text x="70"  y="60" text-anchor="middle" fill="#5D6D7E" font-size="22" font-family="Inter">∅</text>
+            <text x="180" y="60" text-anchor="middle" fill="#5D6D7E" font-size="22" font-family="Inter">∅</text>
+            <text x="290" y="60" text-anchor="middle" fill="#5D6D7E" font-size="22" font-family="Inter">∅</text>
+            <text x="70"  y="105" text-anchor="middle" fill="#5D6D7E" font-size="11" font-family="Inter">Mon</text>
+            <text x="180" y="105" text-anchor="middle" fill="#5D6D7E" font-size="11" font-family="Inter">Tue</text>
+            <text x="290" y="105" text-anchor="middle" fill="#5D6D7E" font-size="11" font-family="Inter">Wed</text>
+            <text x="180" y="128" text-anchor="middle" fill="#A8B5C2" font-size="12" font-family="Inter">every session starts empty</text>
+          </svg>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--gold-light)">An OS: compounds</h3>
+          <svg viewBox="0 0 360 140" width="100%" role="img" aria-label="A knowledge graph that accumulates more linked nodes each day.">
+            <g stroke="rgba(244,208,63,.45)" stroke-width="1.2">
+              <line x1="60" y1="70" x2="150" y2="45"/><line x1="150" y1="45" x2="200" y2="90"/><line x1="150" y1="45" x2="240" y2="40"/>
+              <line x1="200" y1="90" x2="260" y2="95"/><line x1="240" y1="40" x2="300" y2="70"/><line x1="260" y1="95" x2="300" y2="70"/><line x1="60" y1="70" x2="120" y2="105"/>
+            </g>
+            <circle cx="60"  cy="70"  r="8" fill="#F4D03F"/><circle cx="150" cy="45"  r="6" fill="#3498DB"/><circle cx="200" cy="90"  r="6" fill="#1ABC9C"/>
+            <circle cx="240" cy="40"  r="5" fill="#9B59B6"/><circle cx="260" cy="95"  r="5" fill="#3498DB"/><circle cx="300" cy="70"  r="7" fill="#F4D03F"/><circle cx="120" cy="105" r="5" fill="#1ABC9C"/>
+            <text x="180" y="128" text-anchor="middle" fill="#A8B5C2" font-size="12" font-family="Inter">every day adds linked nodes</text>
+          </svg>
+        </div>
+      </div>
+      <p class="pull" style="font-size:1.1rem"><span class="gold">An agent isn't a smarter chat —</span> it's a worker with hands. You stop <em>asking</em> and start <em>delegating</em>.</p>
+    </div>
+  </section>
+
+  <!-- SKILLS INTRO -->
+  <section class="pad alt">
+    <div class="wrap reveal">
+      <span class="badge">Skills</span>
+      <h2>A skill is a care pathway for cognitive work.</h2>
+      <p class="sectsub">Write your best workflow down once, and the agent runs it perfectly every time — even post-call, even when you don't have the energy to structure it yourself. Encode the best process once, kill the variability, guarantee the floor. Same reason we use checklists in the OR. <b>Full kit + copy blocks are in the Skills tab.</b></p>
+      <div class="flow">
+        <div class="node"><div class="t">Messy inputs</div><div class="d">A PDF, a folder, a half-formed ask</div></div>
+        <div class="ar">→</div>
+        <div class="node skill"><div class="t">⚙ Encoded skill</div><div class="d">Your steps + rules, written once</div></div>
+        <div class="ar">→</div>
+        <div class="node"><div class="t">Consistent output</div><div class="d">The same high-quality artifact, every time</div></div>
+      </div>
+      <div class="grid3">
+        <div class="card"><h3>Chief of Staff</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Reads your OS + a deadlines note and hands you a prioritized briefing: what's urgent, what's due, the next concrete action, and one strategic insight you'd have missed.</p></div>
+        <div class="card"><h3>Paper-ingest</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Drop a paper, get a permanent linked <em>knowledge node</em> — citation, findings, methods, why-it-matters-to-you, verified refs — instead of a throwaway summary.</p></div>
+        <div class="card"><h3>Presentation-ingest</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Drop a talk, get a structured <em>talk node</em>: thesis, the mental model it teaches, key claims, figures, and links back to your work.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE GRAPH -->
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">The compounding</span>
+      <h2>The graph is the part you can <em>see</em>.</h2>
+      <p class="sectsub">Wiki-links, backlinks, and a graph view turn your notes into an external memory that gets smarter as it grows. Every paper, every talk, every meeting becomes a permanent, linked node — instead of a memory that fades by Monday. <b>Turn it on in The Graph tab.</b></p>
+      <div class="card svg-anim" id="graphArt">
+        <div style="text-align:center;color:var(--dim);font-size:.85rem;margin-bottom:6px">Watch it grow — each node links into the ones already there.</div>
+        <svg viewBox="0 0 800 320" width="100%" role="img" aria-label="An animated knowledge graph in which nodes and links appear one after another, growing denser over time.">
+          <g stroke="rgba(244,208,63,.4)" stroke-width="1.3">
+            <line class="seed-link" x1="400" y1="160" x2="270" y2="90"  style="animation-delay:.6s"/>
+            <line class="seed-link" x1="400" y1="160" x2="300" y2="240" style="animation-delay:.8s"/>
+            <line class="seed-link" x1="400" y1="160" x2="540" y2="100" style="animation-delay:1.0s"/>
+            <line class="seed-link" x1="400" y1="160" x2="520" y2="235" style="animation-delay:1.2s"/>
+            <line class="seed-link" x1="270" y1="90"  x2="150" y2="140" style="animation-delay:1.4s"/>
+            <line class="seed-link" x1="270" y1="90"  x2="230" y2="40"  style="animation-delay:1.5s"/>
+            <line class="seed-link" x1="540" y1="100" x2="650" y2="60"  style="animation-delay:1.6s"/>
+            <line class="seed-link" x1="540" y1="100" x2="670" y2="160" style="animation-delay:1.7s"/>
+            <line class="seed-link" x1="520" y1="235" x2="640" y2="270" style="animation-delay:1.8s"/>
+            <line class="seed-link" x1="300" y1="240" x2="200" y2="280" style="animation-delay:1.9s"/>
+            <line class="seed-link" x1="300" y1="240" x2="520" y2="235" style="animation-delay:2.0s"/>
+          </g>
+          <g font-family="Inter,sans-serif" font-size="11" fill="#A8B5C2" text-anchor="middle">
+            <g class="seed-node" style="animation-delay:.1s"><circle cx="400" cy="160" r="14" fill="#F4D03F"/><text x="400" y="190" fill="#FAFAFA">_ABOUT_ME</text></g>
+            <g class="seed-node" style="animation-delay:.7s"><circle cx="270" cy="90"  r="8" fill="#3498DB"/><text x="270" y="74">CV</text></g>
+            <g class="seed-node" style="animation-delay:.9s"><circle cx="300" cy="240" r="8" fill="#1ABC9C"/><text x="300" y="262">goals</text></g>
+            <g class="seed-node" style="animation-delay:1.1s"><circle cx="540" cy="100" r="9" fill="#9B59B6"/><text x="540" y="84">talk node</text></g>
+            <g class="seed-node" style="animation-delay:1.3s"><circle cx="520" cy="235" r="8" fill="#3498DB"/><text x="520" y="257">paper</text></g>
+            <g class="seed-node" style="animation-delay:1.5s"><circle cx="150" cy="140" r="6" fill="#1ABC9C"/></g>
+            <g class="seed-node" style="animation-delay:1.55s"><circle cx="230" cy="40"  r="6" fill="#3498DB"/></g>
+            <g class="seed-node" style="animation-delay:1.65s"><circle cx="650" cy="60"  r="7" fill="#F4D03F"/><text x="650" y="44">PubMed</text></g>
+            <g class="seed-node" style="animation-delay:1.75s"><circle cx="670" cy="160" r="6" fill="#9B59B6"/></g>
+            <g class="seed-node" style="animation-delay:1.85s"><circle cx="640" cy="270" r="6" fill="#1ABC9C"/></g>
+            <g class="seed-node" style="animation-delay:1.95s"><circle cx="200" cy="280" r="6" fill="#3498DB"/></g>
+          </g>
+        </svg>
+      </div>
+      <p class="body-text" style="margin-top:18px">A <code class="inl">[[wiki-link]]</code> is you telling your second brain "these two ideas are related." Backlinks mean every note knows who points at it. The more a note is referenced, the bigger it grows. <strong>That visible web is the compounding</strong> — and you'll grow it live, in Obsidian, with papers pulled straight from PubMed.</p>
+      <div class="next"><span class="lab">Where next →</span>
+        <button class="goto" data-goto="square">① Square One</button>
+        <button class="goto" data-goto="core">② OS Core</button>
+        <button class="goto" data-goto="zotero">★ Zotero + Papers</button>
+      </div>
+    </div>
+  </section>
+</section>
+<!-- ===================== TAB 2 · SQUARE ONE ===================== -->
+<section class="tabpanel" id="panel-square" role="tabpanel" aria-labelledby="tabbtn-square" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 02 · Square One</span>
+      <h2>Never opened Claude? Start exactly here.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>The absolute beginning: make an account, install the few free apps, and understand the one thing you'll pay for and the (large) amount you won't. By the end you have a working account and an empty <em>Project</em> ready to seed.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>Everything else on this page hangs off one free account. Fifteen minutes now and the rest of your career's scholarly context has a home that remembers you — instead of re-explaining yourself to a blank box every time.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill free">Free to start</span> <span class="pill paid">Paid only for Cowork/Code</span> <span class="pill yours">Yours forever</span></div>
+
+      <p class="sub-h">Free vs paid — the honest version</p>
+      <p class="body-text">The whole <strong>personal-OS core is free</strong>: chat, Memory, file creation, and up to five Projects. You only pay when you want the agentic <em>workspace</em> — Cowork (no terminal) or Claude Code (terminal) — which need a paid plan. So: build and feel the entire idea for <strong>$0</strong>; upgrade later only if you want the hands-on agent. <span class="pill free">Free</span> covers tonight.</p>
+      <div class="rule"><div class="ic">⛔</div><div><b>One hard rule, from the very first minute: no patient information, ever.</b> A personal account has no institutional data agreement (no BAA), so this is for <b>your own scholarly materials</b> — CV, your published papers, public data — never patient data or anything pulled from your institution's systems. Clinical/PHI work belongs in an institution-approved, BAA-covered tool.</div></div>
+
+      <p class="sub-h">Set it up — the free apps <span class="pill free">~15 min · no terminal</span></p>
+      <p class="body-text" style="margin-bottom:4px">This stage lives on the web + desktop app — no terminal anywhere. Install these four; the first one is all you strictly need tonight.</p>
+      <div class="grid2">
+        <div class="card"><h3>1 · Claude account <span class="pill free">Free</span></h3>
+          <p style="color:var(--dim);font-size:.93rem;margin:0 0 10px"><b style="color:var(--white)">What it is:</b> the AI itself. <b style="color:var(--white)">What it does:</b> Projects + Memory are free — your whole personal-OS core lives here.</p>
+          <a href="https://claude.ai" target="_blank" rel="noopener">Get it → claude.ai</a></div>
+        <div class="card"><h3>2 · Claude Desktop <span class="pill free">Free app</span></h3>
+          <p style="color:var(--dim);font-size:.93rem;margin:0 0 10px"><b style="color:var(--white)">What it is:</b> Claude as a desktop app. <b style="color:var(--white)">What it does:</b> hosts <b>Cowork</b> and the connectors (MCP) that reach your files, PubMed, and calendar.</p>
+          <a href="https://claude.ai/download" target="_blank" rel="noopener">Get it → claude.ai/download</a></div>
+        <div class="card"><h3>3 · Obsidian <span class="pill free">Free</span></h3>
+          <p style="color:var(--dim);font-size:.93rem;margin:0 0 10px"><b style="color:var(--white)">What it is:</b> a free, local markdown app. <b style="color:var(--white)">What it does:</b> your knowledge vault + the graph view that shows it grow.</p>
+          <a href="https://obsidian.md" target="_blank" rel="noopener">Get it → obsidian.md</a></div>
+        <div class="card"><h3>4 · Zotero <span class="pill free">Free</span></h3>
+          <p style="color:var(--dim);font-size:.93rem;margin:0 0 10px"><b style="color:var(--white)">What it is:</b> a free reference manager. <b style="color:var(--white)">What it does:</b> stores your PDFs + citations so the literature graph has something to link.</p>
+          <a href="https://www.zotero.org/download/" target="_blank" rel="noopener">Get it → zotero.org</a></div>
+      </div>
+
+      <p class="sub-h">Make your first Project (the empty shell)</p>
+      <div class="card">
+        <ol class="num">
+          <li>Sign in at <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> (Free is fine).</li>
+          <li>In the left sidebar, open <b>Projects</b> → <b>Create Project</b>. Name it <b>My OS</b>.</li>
+          <li>Make a folder on your computer called <code class="inl">My-OS/</code> — that's where your source files and your Obsidian vault will both live.</li>
+          <li>Don't burn your daily message limit poking around — you'll want it for the build. That's it for Square One.</li>
+        </ol>
+      </div>
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you can open the empty <b>My OS</b> Project and you have a <code class="inl">My-OS/</code> folder on disk. Now go fill it.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="core">Seed it in OS Core →</button>
+        <button class="goto" data-goto="reference">Pricing &amp; privacy in Reference</button>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ===================== TAB 3 · OS CORE ===================== -->
+<section class="tabpanel" id="panel-core" role="tabpanel" aria-labelledby="tabbtn-core" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 03 · OS Core (Project + Memory)</span>
+      <h2>Seed it with you — the move that turns chat into a chief of staff.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>A <em>Project</em> seeded with who you are — CV, goals, a couple of papers — plus a custom-instructions block that tells it how to help. This is the free personal-OS core (Rung 2), and it's the whole first build.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>A chief of staff that knows your CV, your papers, and this week's deadlines — so "plan my year" stops being generic mush and becomes specific, grounded, cited-to-your-files advice.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill free">Free</span> · Projects + Memory, no terminal</div>
+
+      <h3 style="color:var(--white);margin-top:24px">① Before you begin — bring four things</h3>
+      <div class="card">
+        <ul class="clean">
+          <li><b>Your CV</b></li>
+          <li><b>Your personal statement</b> — or a short bio / career snapshot</li>
+          <li><b>Your career goals</b> — even a few bullets is plenty</li>
+          <li><b>1–3 of your publications</b> — abstracts or posters are fine if you're early</li>
+        </ul>
+        <p style="color:var(--dim);font-size:.92rem;margin:14px 0 0">Have a <a href="https://claude.ai" target="_blank" rel="noopener">Claude.ai</a> account ready. <span class="pill free">Free</span> covers this core build. And don't burn your daily message limit right before we start — we'll send ~10 prompts together. (See the privacy note in <button class="goto" data-goto="reference" style="padding:3px 9px;font-size:11px">Reference</button> for the free-tier nuance on personal statements.)</p>
+      </div>
+
+      <h3 style="color:var(--white);margin-top:30px">② The folder + the seed</h3>
+      <p class="body-text" style="margin-bottom:4px">Keep your OS files in one folder so Obsidian can graph them. Then fill in <code class="inl">_ABOUT_ME.md</code> — it's who your OS thinks you are; everything else hangs off it.</p>
+      <div class="code">
+        <div class="bar"><span class="fname">My-OS/ — suggested layout</span><button class="copy" data-copy="layout">Copy</button></div>
+        <pre id="layout">My-OS/
+├── _ABOUT_ME.md            ← who you are (the seed)
+├── deadlines.md            ← what's due (for the Chief of Staff)
+├── Literature/             ← paper-ingest drops nodes here
+├── Talks/                  ← presentation-ingest drops nodes here
+└── skills/
+    ├── chief-of-staff.md
+    ├── paper-ingest.md
+    └── presentation-ingest.md</pre>
+      </div>
+      <div class="code">
+        <div class="bar"><span class="fname">_ABOUT_ME.md</span><button class="copy" data-copy="about">Copy</button></div>
+        <pre id="about"># About Me
+
+## Identity
+- Name / role: [your role — e.g. PGY-3, Orthopaedic Surgery]
+- One-line: [who you are professionally]
+
+## Career goals
+- Short term (this year): [...]
+- Medium (residency): [...]
+- Long term (the career you want): [...]
+
+## My work / interests
+- Clinical interests: [...]
+- Research themes: [...]
+- Publications: [list — these also live as PDFs in this folder]
+
+## How I want help
+- Voice: [direct / concise / etc.]
+- Defaults: prioritize ruthlessly; give me the next concrete action;
+  ground answers in my real materials; cite which file you used.
+
+## Standing rule
+- Never include patient-protected information in this system.</pre>
+      </div>
+
+      <h3 style="color:var(--white);margin-top:30px">③ The custom instructions for your Project</h3>
+      <p class="body-text" style="margin-bottom:4px">Open your <b>My OS</b> Project, upload your four files, and paste this into its custom instructions. This is the move that turns a chat into a chief of staff who knows you.</p>
+      <div class="code">
+        <div class="bar"><span class="fname">My OS — custom instructions</span><button class="copy" data-copy="ci">Copy</button></div>
+        <pre id="ci">You are my chief of staff. You know me from the files in this project —
+my CV, personal statement, career goals, and publications. Always ground
+your answers in my actual materials and cite which file you used. Be
+specific and direct. When I ask what to do, prioritize ruthlessly and
+give me the next concrete action, not generic advice.</pre>
+      </div>
+      <div class="callout"><b>Try it:</b> ask your seeded Project <em>"given my goals and what's due, what should I focus on this month?"</em> — and feel it answer as someone who actually knows you. The full <b>Chief of Staff</b> skill (a copy-paste file) lives in the <button class="goto" data-goto="skills" style="padding:3px 9px;font-size:11px">Skills tab</button>.</div>
+
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> your <b>My OS</b> Project holds your CV + goals, the custom instructions are pasted, and it gives you a specific answer that cites one of your files.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="connectors">Give it live data: Connectors →</button>
+        <button class="goto" data-goto="skills">Add the starter Skills →</button>
+        <button class="goto" data-goto="graph">See it grow: The Graph →</button>
+      </div>
+    </div>
+  </section>
+</section>
+<!-- ===================== TAB 4 · CONNECTORS ===================== -->
+<section class="tabpanel" id="panel-connectors" role="tabpanel" aria-labelledby="tabbtn-connectors" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 04 · Connectors (MCP)</span>
+      <h2>Give it hands — turn the connectors all the way on.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>A <strong>connector (MCP — Model Context Protocol)</strong> is a standard plug that lets an agent reach an outside tool: your files, PubMed, your calendar, Drive, Gmail, Slack. Add one once and the agent can use it in any conversation. Think <em>USB for AI</em> — one port, many devices.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>Ask a clinical or research question and get an answer <em>with</em> a verifiable citation list — not a confident guess. The PubMed connector is the single highest-leverage switch: it turns "sounds right" into "here are the PMIDs."</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill free">PubMed + Files connectors: free in Projects/Desktop</span></div>
+
+      <p class="sub-h">Connectors worth turning on</p>
+      <div class="grid2">
+        <div class="card"><h3>Reach your world</h3>
+          <ul class="clean">
+            <li><b>Files</b> (your own folders) — read &amp; write a folder of your files. The heart of Cowork.</li>
+            <li><b>PubMed</b> — search the literature and write linked notes straight into your vault.</li>
+            <li><b>Google Drive</b> — pull in docs, slides, and sheets you already have.</li>
+            <li><b>Calendar</b> — let the Chief of Staff see what's actually on your week.</li>
+            <li><b>Gmail</b> — triage and draft from real threads (review before sending).</li>
+            <li><b>Slack</b> — capture and triage messages into action items.</li>
+          </ul>
+        </div>
+        <div class="card"><h3>The PubMed payoff</h3>
+          <p style="color:var(--dim);font-size:.93rem">With PubMed wired in, your Chief of Staff and your paper skills stop guessing. Every claim can be resolved to a real PMID/DOI, checked for retractions, and graded for evidence — the same discipline behind the integrity check in the <button class="goto" data-goto="zotero" style="padding:3px 9px;font-size:11px">★ Zotero + Papers</button> tab.</p>
+          <p style="color:var(--dim);font-size:.92rem;margin:10px 0 0">Two ready-to-paste builds that use the PubMed connector — <code class="inl">research-identity</code> and <code class="inl">literature-graph</code> — live in the <button class="goto" data-goto="skills" style="padding:3px 9px;font-size:11px">Skills tab</button>.</p>
+        </div>
+      </div>
+
+      <p class="sub-h">Set it up — two paths</p>
+      <div class="paths">
+        <div class="path cowork">
+          <p class="ph"><span class="ic">🖥️</span> In Claude Desktop / Cowork <span class="pill paid">no terminal</span></p>
+          <ol class="num">
+            <li>Open <b>Settings → Connectors</b>.</li>
+            <li>Add the one you want (Files, PubMed, Google Drive, Calendar…) and <b>approve</b> the access it asks for.</li>
+            <li>Grant the <b>narrowest access</b> that does the job; disconnect anything you're not actively using.</li>
+          </ol>
+          <p class="desc" style="margin:8px 0 0">🔶 The exact menu names move between versions — the shape ("Settings → Connectors → add &amp; approve") is stable even when the labels shift.</p>
+        </div>
+        <div class="path code">
+          <p class="ph"><span class="ic">⌨️</span> In Claude Code <span class="pill paid">terminal</span></p>
+          <ol class="num">
+            <li>Run the add command and follow the prompts:</li>
+          </ol>
+          <div class="code">
+            <div class="bar"><span class="fname">terminal — add a connector</span><button class="copy" data-copy="mcpadd">Copy</button></div>
+            <pre id="mcpadd"># interactive: pick a server and follow the prompts
+claude mcp add
+
+# list what's connected
+claude mcp list</pre>
+          </div>
+          <p class="desc" style="margin:8px 0 0">Project-scoped servers can also live in a <code class="inl">.mcp.json</code> file — see the <button class="goto" data-goto="code" style="padding:3px 9px;font-size:11px">Claude Code tab</button>.</p>
+        </div>
+      </div>
+
+      <details open>
+        <summary>Use OpenEvidence — clinical literature, safely <span class="tag">evidence</span></summary>
+        <div class="body">
+          <p class="desc">Goal: bring OpenEvidence's cited clinical answers into your OS — as a guarded lead, never the final word.</p>
+          <ol class="num">
+            <li>OpenEvidence isn't a live connector you plug in — it's a web tool. Ask it a focused clinical question at <a href="https://www.openevidence.com" target="_blank" rel="noopener">openevidence.com</a>; it answers <em>with</em> a "Cited Sources" list.</li>
+            <li>Bring it in by hand: copy the answer and its Cited Sources into a note in your OS folder.</li>
+            <li><b>Then verify — always.</b> Treat OpenEvidence (and any AI answer) as a <em>lead</em>, not a citation. Run each source through PubMed before it earns a place in your notes.</li>
+            <li><b>No patient information in the query, ever.</b> Ask about the condition, not the patient.</li>
+          </ol>
+          <div class="callout"><b>Why the extra step:</b> a fluent answer with confident-looking citations can still be wrong, or point to a paper that doesn't actually say what's claimed. Verifying every source is the whole discipline — the same reason the paper-ingest skill checks citations against PubMed.</div>
+        </div>
+      </details>
+
+      <div class="rule"><div class="ic">🔒</div><div><b>Golden rule for every connection:</b> only connect what you trust, never route patient data through a personal account (no BAA), and review anything an agent sends, posts, or publishes before it goes out.</div></div>
+
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you've added the <b>PubMed</b> connector and asked a question that comes back with a real, clickable citation list.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="zotero">★ Zotero + Papers (the deep one) →</button>
+        <button class="goto" data-goto="skills">Wire it into Skills →</button>
+      </div>
+    </div>
+  </section>
+</section>
+<!-- ===================== TAB 5 · ZOTERO + PAPERS (FLAGSHIP) ===================== -->
+<section class="tabpanel" id="panel-zotero" role="tabpanel" aria-labelledby="tabbtn-zotero" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge flag">★ Stage 05 · Flagship — Zotero + Papers</span>
+      <h2>Make your OS <em>completely aware</em> of a paper — with an integrity check.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>The whole path: turn Zotero on (both layers), drop in a PDF you've marked up, and get back a linked Markdown node your OS can answer questions about — every reference resolved, retraction-checked, and graded. Not "get an API key." The full loop.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>Turn a pile of PDFs into a queryable, integrity-checked library wired into your ideas — and never re-read a paper from scratch again. The graph remembers what you read so you don't have to.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill free">Zotero + reading: free</span> <span class="pill paid">folder-scale ingest: Cowork/Code</span></div>
+
+      <!-- 5.3 PIPELINE ANIMATION -->
+      <p class="sub-h">The pipeline, end to end</p>
+      <div class="card svg-anim" id="zoteroFlow">
+        <div style="text-align:center;color:var(--dim);font-size:.85rem;margin-bottom:6px">PDF (your highlights) → verified identity → MD node → integrity check → Zotero mirror.</div>
+        <svg viewBox="0 0 930 220" width="100%" role="img" aria-label="A five-stage pipeline: a marked-up PDF becomes a verified identity, then a Markdown node, then passes an integrity check, then mirrors to Zotero with a key written back.">
+          <defs><marker id="zah" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+          <g font-family="Inter">
+            <g class="seed-node" style="animation-delay:.1s"><rect x="8" y="64" width="160" height="78" rx="12" fill="rgba(52,152,219,.14)" stroke="rgba(52,152,219,.45)"/><text x="88" y="92" text-anchor="middle" fill="#FAFAFA" font-size="13.5" font-weight="800">① PDF</text><text x="88" y="112" text-anchor="middle" fill="#A8B5C2" font-size="10.5">+ your highlights</text><text x="88" y="128" text-anchor="middle" fill="#5D6D7E" font-size="10">drop it in your folder</text></g>
+            <g class="seed-node" style="animation-delay:.5s"><rect x="194" y="64" width="160" height="78" rx="12" fill="rgba(26,188,156,.12)" stroke="rgba(26,188,156,.45)"/><text x="274" y="92" text-anchor="middle" fill="#FAFAFA" font-size="13.5" font-weight="800">② Verified ID</text><text x="274" y="112" text-anchor="middle" fill="#A8B5C2" font-size="10.5">a script reads the file</text><text x="274" y="128" text-anchor="middle" fill="#5D6D7E" font-size="10">authors · DOI — not memory</text></g>
+            <g class="seed-node" style="animation-delay:.9s"><rect x="380" y="64" width="160" height="78" rx="12" fill="rgba(244,208,63,.14)" stroke="rgba(244,208,63,.5)"/><text x="460" y="92" text-anchor="middle" fill="#F4D03F" font-size="13.5" font-weight="800">③ MD node</text><text x="460" y="112" text-anchor="middle" fill="#A8B5C2" font-size="10.5">findings + wiki-links</text><text x="460" y="128" text-anchor="middle" fill="#5D6D7E" font-size="10">now in your graph</text></g>
+            <g class="seed-node" style="animation-delay:1.3s"><rect x="566" y="64" width="160" height="78" rx="12" fill="rgba(155,89,182,.14)" stroke="rgba(155,89,182,.5)"/><text x="646" y="92" text-anchor="middle" fill="#cd9bdf" font-size="13.5" font-weight="800">④ Integrity</text><text x="646" y="112" text-anchor="middle" fill="#A8B5C2" font-size="10.5">resolve · retraction · grade</text><text x="646" y="128" text-anchor="middle" fill="#5D6D7E" font-size="10">PASS / COND / FAIL</text></g>
+            <g class="seed-node" style="animation-delay:1.7s"><rect x="762" y="64" width="160" height="78" rx="12" fill="rgba(52,152,219,.14)" stroke="rgba(52,152,219,.45)"/><text x="842" y="92" text-anchor="middle" fill="#FAFAFA" font-size="13.5" font-weight="800">⑤ Zotero</text><text x="842" y="112" text-anchor="middle" fill="#A8B5C2" font-size="10.5">mirror + zotero_key back</text><text x="842" y="128" text-anchor="middle" fill="#5D6D7E" font-size="10">loop closes</text></g>
+          </g>
+          <g stroke="#F4D03F" stroke-width="2">
+            <line class="seed-link" x1="168" y1="103" x2="192" y2="103" marker-end="url(#zah)" style="animation-delay:.4s"/>
+            <line class="seed-link" x1="354" y1="103" x2="378" y2="103" marker-end="url(#zah)" style="animation-delay:.8s"/>
+            <line class="seed-link" x1="540" y1="103" x2="564" y2="103" marker-end="url(#zah)" style="animation-delay:1.2s"/>
+            <line class="seed-link" x1="726" y1="103" x2="760" y2="103" marker-end="url(#zah)" style="animation-delay:1.6s"/>
+          </g>
+          <text x="465" y="178" text-anchor="middle" fill="#5D6D7E" font-size="11" font-family="Inter">identity is read from the file itself — that's how you beat hallucinated citations</text>
+        </svg>
+      </div>
+
+      <!-- 5.1 TURN ZOTERO ON -->
+      <p class="sub-h">① Turn Zotero on — both layers</p>
+      <div class="grid2">
+        <div class="card"><h3>Read layer — Local API <span class="pill free">no key</span></h3>
+          <p style="color:var(--dim);font-size:.93rem;margin:0">Run the Zotero desktop app, then <b>Settings → Advanced → "Allow other applications on this computer to communicate with Zotero."</b> It exposes <code class="inl">http://localhost:23119/api/</code> — fast, local, and <b>read-only</b>. Great for "find the papers in my library on X."</p></div>
+        <div class="card"><h3>Write layer — Web API <span class="pill paid">key required</span></h3>
+          <p style="color:var(--dim);font-size:.93rem;margin:0">The local service can't <em>add</em> items. To write, create a personal key: <a href="https://www.zotero.org/settings/keys" target="_blank" rel="noopener">zotero.org/settings/keys</a> → <b>"Create new private key,"</b> grant <b>library read/write</b>, copy it (<b>shown once</b>). Your numeric <b>userID</b> is on that same page.</p></div>
+      </div>
+      <div class="rule"><div class="ic">🔑</div><div><b>Treat the key like a password.</b> Store it in your password manager, hand it to the tool when it asks, and <b>never paste it into a chat or commit it to a repo.</b> On this page everything uses placeholders — <code class="inl">&lt;your-userID&gt;</code> and <code class="inl">&lt;your-key&gt;</code> — and so should your notes.</div></div>
+
+      <!-- 5.2 DUAL-LAYER MODEL -->
+      <p class="sub-h">② The dual-layer mental model</p>
+      <p class="body-text">One paper, two homes, linked: <strong>Zotero is the human layer</strong> (the PDF binary, your highlights, annotations, mobile access); <strong>your OS is the AI layer</strong> (a small Markdown node — citation, findings, why-it-matters, evidence level, status, and wiki-links into your theories/projects). The bridge is the node's frontmatter, carrying a <code class="inl">zotero_key</code>.</p>
+      <div class="card">
+        <svg viewBox="0 0 760 220" width="100%" role="img" aria-label="Zotero (human layer) on the left and your OS (AI layer) on the right, bridged by a zotero_key in frontmatter.">
+          <rect x="20" y="40" width="300" height="140" rx="14" fill="rgba(52,152,219,.10)" stroke="rgba(52,152,219,.4)"/>
+          <text x="170" y="66" text-anchor="middle" fill="#3498DB" font-size="14" font-weight="800" font-family="Inter">Zotero — human layer</text>
+          <text x="170" y="92" text-anchor="middle" fill="#A8B5C2" font-size="11.5" font-family="Inter">the PDF binary + your highlights</text>
+          <text x="170" y="112" text-anchor="middle" fill="#A8B5C2" font-size="11.5" font-family="Inter">annotations · tags · mobile access</text>
+          <text x="170" y="150" text-anchor="middle" fill="#5fe6c8" font-size="12" font-family="JetBrains Mono,monospace">📄 highlighted PDF</text>
+          <rect x="440" y="40" width="300" height="140" rx="14" fill="rgba(244,208,63,.10)" stroke="rgba(244,208,63,.4)"/>
+          <text x="590" y="66" text-anchor="middle" fill="#F4D03F" font-size="14" font-weight="800" font-family="Inter">Your OS — AI layer</text>
+          <text x="590" y="92" text-anchor="middle" fill="#A8B5C2" font-size="11.5" font-family="Inter">a Markdown node per paper</text>
+          <text x="590" y="112" text-anchor="middle" fill="#A8B5C2" font-size="11.5" font-family="Inter">findings · evidence · wiki-links</text>
+          <text x="590" y="150" text-anchor="middle" fill="#5fe6c8" font-size="12" font-family="JetBrains Mono,monospace">🔗 Author_Year.md</text>
+          <line x1="320" y1="110" x2="440" y2="110" stroke="#F4D03F" stroke-width="2" stroke-dasharray="5 4"/>
+          <rect x="330" y="92" width="100" height="36" rx="8" fill="rgba(10,30,46,.9)" stroke="rgba(244,208,63,.5)"/>
+          <text x="380" y="115" text-anchor="middle" fill="#F4D03F" font-size="11" font-family="JetBrains Mono,monospace">zotero_key</text>
+          <text x="380" y="150" text-anchor="middle" fill="#5D6D7E" font-size="10.5" font-family="Inter">the bridge</text>
+        </svg>
+      </div>
+      <div class="code">
+        <div class="bar"><span class="fname">Literature/Author_Year.md — frontmatter (generic values)</span><button class="copy" data-copy="zfront">Copy</button></div>
+        <pre id="zfront">---
+title: "Short title of the paper"
+authors: "First Author, et al."
+year: 2026
+doi: 10.xxxx/xxxxx
+pmid: 00000000
+zotero_key: <returned-after-mirror>
+litguard_status: PASS        # PASS | CONDITIONAL | FAIL
+evidence_level: II           # I–V (study design)
+tags: [literature]
+---</pre>
+      </div>
+
+      <!-- 5.3 INGEST STEPS -->
+      <p class="sub-h">③ Ingest a paper end to end</p>
+      <div class="card">
+        <ol class="num">
+          <li><b>Drop the PDF</b> (with your markup) into your <code class="inl">My-OS/Literature/</code> folder.</li>
+          <li><b>Verify identity deterministically</b> — the agent extracts authors / title / DOI from the PDF <em>itself</em> (a script reads the file), not from the model's memory. This is how you beat hallucinated citations.</li>
+          <li><b>Write the MD node</b> — citation, 3–5 key findings, "why it matters to my work," evidence level, and ≥2 wiki-links to your theory/project notes. Now the OS can <em>answer questions about the paper</em> and it shows up in your graph.</li>
+          <li><b>Integrity check (LitGuard pattern)</b> — every reference the paper leans on runs <b>RESOLVE → VERIFY → ENRICH → REPORT</b>: resolved against PubMed (PMID/DOI), checked for <b>retractions</b>, graded for <b>evidence level</b>, and scanned for <b>overclaims</b> (strong language on weak evidence). Output: a verdict — <b>PASS / CONDITIONAL / FAIL</b> — with a hard gate on retractions and hallucinations.</li>
+          <li><b>Mirror to Zotero</b> — verified references import into a Zotero collection (auto-attaching open-access PDFs where available); the returned <code class="inl">zotero_key</code> is written back into the MD frontmatter. The loop closes.</li>
+        </ol>
+      </div>
+      <p class="payoff"><span class="g">Now your OS <em>knows</em> the paper</span> — you can ask it anything, it's wired into your graph, and every claim traces to a real, non-retracted citation.</p>
+
+      <!-- 5.4 COPY BLOCKS -->
+      <p class="sub-h">④ Copy blocks for this stage</p>
+      <p class="body-text" style="margin-bottom:4px">An integrity-check prompt a resident can paste today (needs the <button class="goto" data-goto="connectors" style="padding:3px 9px;font-size:11px">PubMed connector</button>):</p>
+      <div class="code">
+        <div class="bar"><span class="fname">integrity-check — paste into Cowork or a Project</span><button class="copy" data-copy="zcheck">Copy</button></div>
+        <pre id="zcheck">For each reference in this paper, find it on PubMed and give me:
+1. the verified citation + PMID/DOI (say "NOT FOUND" if you can't resolve it),
+2. a retraction / correction flag,
+3. the evidence level (study design: RCT, cohort, case series…),
+4. any claim in the paper that overreaches its cited evidence.
+Return a table, then a one-line verdict: PASS / CONDITIONAL / FAIL.
+Do not invent a PMID — if a reference doesn't resolve, mark it unverified.</pre>
+      </div>
+      <p class="body-text" style="margin-bottom:4px">The full <b>paper-ingest (pro)</b> skill — the base paper-ingest plus the integrity check and Zotero mirror:</p>
+      <div class="code">
+        <div class="bar"><span class="fname">skills/paper-ingest-pro.md</span><button class="copy" data-copy="zskill">Copy</button></div>
+        <pre id="zskill"># Skill: Paper Ingest (Pro — integrity + Zotero mirror)
+
+## Purpose
+Turn a marked-up PDF into a verified, integrity-checked knowledge node
+that is mirrored into Zotero. Extends the base paper-ingest skill.
+
+## When to run
+"Ingest this paper (pro)" + a PDF in Literature/.
+
+## Steps
+1. Read _ABOUT_ME.md so you know why this paper matters to me.
+2. VERIFY IDENTITY from the file itself — extract authors, title, journal,
+   year, DOI/PMID by reading the PDF (a script), NOT from memory. If a
+   field is unsure, mark it "verify" — never guess a name or a PMID.
+3. Write Literature/<FirstAuthor>_<Year>.md with the frontmatter template
+   (doi, pmid, zotero_key, litguard_status, evidence_level) + body:
+   bottom line, methods, why-it-matters-to-me, >=2 [[wiki-links]].
+4. INTEGRITY CHECK every reference the paper relies on:
+   RESOLVE (PubMed PMID/DOI) -> VERIFY (retraction/correction) ->
+   ENRICH (evidence level) -> REPORT (overclaim scan).
+   Verdict: PASS / CONDITIONAL / FAIL. Hard gate: any retraction or any
+   unresolvable ("hallucinated") citation -> FAIL, surface to me.
+5. MIRROR to Zotero via the Web API (placeholders <your-userID>/<your-key>):
+   import verified refs into the collection, attach open-access PDFs,
+   write the returned zotero_key back into the node's frontmatter.
+
+## Rules
+- Real citations only; verify against the PDF or PubMed. Never fabricate.
+- Never print or commit the API key or userID — use placeholders.
+- No patient data in this system, ever.</pre>
+      </div>
+      <p class="body-text" style="color:var(--dim);font-size:.92rem"><b>At scale</b> this is a one-command skill (e.g. a <code class="inl">paper-ingest</code> / LitGuard pipeline with a Zotero write module) — <b>Code path:</b> a single skill on the folder; <b>Cowork path:</b> the same skill run on the folder, no terminal. Both honest about what's free (PubMed connector + Project) vs paid (Cowork/Code). The base <code class="inl">paper-ingest.md</code> lives in the <button class="goto" data-goto="skills" style="padding:3px 9px;font-size:11px">Skills tab</button>.</p>
+
+      <details>
+        <summary>The Zotero snag we hit (so you skip it) <span class="tag">gotcha</span></summary>
+        <div class="body">
+          <div class="callout" style="margin-top:0"><b>The snag:</b> the old one-click Zotero connector is gone, and the local read-only service silently refuses to <em>write</em> — so "add this to Zotero" can look like it did nothing. The <b>Web API key</b> above is the supported write path; that one detail saves an hour of confusion. In Obsidian, the <b>Zotero</b> + <b>"Citations"</b> community plugins pull your library straight into your notes.</div>
+        </div>
+      </details>
+
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> one marked-up PDF has become a linked <code class="inl">Author_Year.md</code> node with a PASS/CONDITIONAL/FAIL verdict, and (if you set the write key) a <code class="inl">zotero_key</code> written back into its frontmatter.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="connectors">← needs the PubMed connector</button>
+        <button class="goto" data-goto="graph">see the node appear: The Graph →</button>
+        <button class="goto" data-goto="cowork">run it at folder scale: Cowork →</button>
+      </div>
+    </div>
+  </section>
+</section>
+<!-- ===================== TAB 6 · COWORK ===================== -->
+<section class="tabpanel" id="panel-cowork" role="tabpanel" aria-labelledby="tabbtn-cowork" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 06 · Cowork (Rung 3)</span>
+      <h2>The agent workspace — no terminal required.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>Claude's no-terminal agent app, inside Claude Desktop. Unlike a Project (which talks <em>about</em> your files), Cowork <em>operates on</em> a real folder: it reads whole directories, runs multi-step work, executes skills, and <strong>creates files</strong> you keep.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>Hand the agent a whole folder of a project's papers and data and get back a scaffolded summary, a reusable methods block, and a talk-ready deck — the kind of structuring you'd do on a good day, on every day.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill paid">Paid (Pro or higher)</span> · no terminal · research-preview</div>
+
+      <p class="sub-h">Set it up — and run a skill on a folder</p>
+      <div class="path cowork">
+        <p class="ph"><span class="ic">🖥️</span> In Cowork (Claude Desktop)</p>
+        <ol class="num">
+          <li>Install <a href="https://claude.ai/download" target="_blank" rel="noopener">Claude Desktop</a> and sign in on a <b>paid plan</b>; open <b>Cowork</b>.</li>
+          <li>Point it at your <code class="inl">My-OS/</code> folder (grant folder access — the narrowest that works).</li>
+          <li>Drop your starter skills into <code class="inl">My-OS/skills/</code> (grab them from the <button class="goto" data-goto="skills" style="padding:3px 9px;font-size:11px">Skills tab</button>).</li>
+          <li>Run one: <em>"Run my chief-of-staff briefing on this folder"</em> or <em>"Ingest this paper"</em> + a PDF. Watch it plan → act → write a file back into your folder.</li>
+          <li>Open that file in Obsidian — it's already a node in your graph.</li>
+        </ol>
+      </div>
+      <div class="callout"><b>No dev stack needed here.</b> Cowork is the whole point of "agentic without a terminal." If you'd rather work in a shell, the same power lives in the <button class="goto" data-goto="code" style="padding:3px 9px;font-size:11px">Claude Code tab</button> (which <em>does</em> need the developer install).</div>
+      <div class="rule"><div class="ic">🔒</div><div><b>Same golden rule:</b> no patient data through a personal account (no BAA), and review anything the agent sends or publishes before it goes out. Let it ask before anything irreversible.</div></div>
+
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you've run one skill in Cowork and it has written a new file into your <code class="inl">My-OS/</code> folder that shows up in Obsidian.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="skills">Get the skills →</button>
+        <button class="goto" data-goto="zotero">★ Run the Zotero ingest at scale →</button>
+        <button class="goto" data-goto="graph">See the output: The Graph →</button>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ===================== TAB 7 · CLAUDE CODE ===================== -->
+<section class="tabpanel" id="panel-code" role="tabpanel" aria-labelledby="tabbtn-code" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 07 · Claude Code (Rung 4)</span>
+      <h2>The same power, in a terminal.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>The terminal agent — same workspace abilities as Cowork (reads folders, runs skills, writes files), driven from your shell. Fully scriptable, and the natural home for project-scoped connectors via a <code class="inl">.mcp.json</code> file.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>Once you're comfortable, it's faster and fully automatable — the same folder-of-papers → methods-block → deck workflow, but repeatable from a command and easy to wire into project repos.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill paid">Paid</span> · terminal · runs on Node.js</div>
+
+      <p class="sub-h">Install the developer stack — in order</p>
+      <p class="body-text">Install these <b>in order</b> — each builds on the last, and <b>Node.js must come before Claude Code</b> (Code runs on Node). On <b>Mac</b>, install Homebrew first; on <b>Windows</b>, use the official installers or <code class="inl">winget</code>.</p>
+      <div class="code">
+        <div class="bar"><span class="fname">macOS — paste into Terminal, in order</span><button class="copy" data-copy="macsetup">Copy</button></div>
+        <pre id="macsetup"># 1) Homebrew (package manager)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# 2) Git, Node (LTS), Python
+brew install git node python
+# 3) Claude Code (needs Node)
+npm install -g @anthropic-ai/claude-code
+# verify everything
+git --version && node --version && python3 --version && claude --version</pre>
+      </div>
+      <div class="code">
+        <div class="bar"><span class="fname">Windows — paste into PowerShell, in order</span><button class="copy" data-copy="winsetup">Copy</button></div>
+        <pre id="winsetup"># Git, Node (LTS), Python via winget (built into Windows 10/11)
+winget install Git.Git OpenJS.NodeJS.LTS Python.Python.3.12
+# restart the terminal, then install Claude Code (needs Node)
+npm install -g @anthropic-ai/claude-code
+# verify everything
+git --version; node --version; python --version; claude --version</pre>
+      </div>
+
+      <p class="sub-h">Run it, add connectors, run a skill</p>
+      <div class="code">
+        <div class="bar"><span class="fname">terminal — start in your OS folder</span><button class="copy" data-copy="codecmds">Copy</button></div>
+        <pre id="codecmds"># from inside My-OS/
+claude                 # start an interactive session here
+claude mcp add         # add a connector (PubMed, Files…), follow prompts
+claude mcp list        # see what's connected
+# then just ask, e.g.:  "Ingest this paper (pro)"  +  a PDF in Literature/</pre>
+      </div>
+      <p class="body-text" style="margin-bottom:4px">For project-scoped connectors, drop a <code class="inl">.mcp.json</code> in the folder. Server names below are illustrative — use the packages your connectors document.</p>
+      <div class="code">
+        <div class="bar"><span class="fname">My-OS/.mcp.json — project-scoped connectors (illustrative)</span><button class="copy" data-copy="mcpjson">Copy</button></div>
+        <pre id="mcpjson">{
+  "mcpServers": {
+    "files": {
+      "command": "npx",
+      "args": ["-y", "<filesystem-mcp-package>", "./"]
+    },
+    "pubmed": {
+      "command": "npx",
+      "args": ["-y", "<pubmed-mcp-package>"]
+    }
+  }
+}</pre>
+      </div>
+      <div class="rule"><div class="ic">🔑</div><div><b>Secrets never live in the repo.</b> Keys go in your password manager or a local environment variable the tool reads — <b>never</b> hard-coded into <code class="inl">.mcp.json</code> or committed. Use placeholders like <code class="inl">&lt;your-key&gt;</code> in anything you share.</div></div>
+
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> <code class="inl">claude --version</code> prints a version, <code class="inl">claude mcp list</code> shows a connector, and you've run one skill from the terminal that wrote a file into <code class="inl">My-OS/</code>.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="connectors">← Connectors</button>
+        <button class="goto" data-goto="skills">Skills →</button>
+        <button class="goto" data-goto="scale">What it becomes: At Scale →</button>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ===================== TAB 8 · THE GRAPH ===================== -->
+<section class="tabpanel" id="panel-graph" role="tabpanel" aria-labelledby="tabbtn-graph" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 08 · The Graph (Obsidian · Rung 5)</span>
+      <h2>See the compounding — your second brain, getting denser.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>Obsidian opens your <code class="inl">My-OS/</code> folder as a <em>vault</em>: every note becomes a node, every <code class="inl">[[wiki-link]]</code> a line between them. Backlinks, graph view, all built in — no account, no key.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>Every paper, talk, and meeting becomes a permanent, linked node instead of a memory that fades by Monday. The more you feed it, the more the web of your own thinking becomes something you can <em>see</em> and walk.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill free">Free</span> · local · no account</div>
+
+      <p class="sub-h">Obsidian quickstart (5 minutes)</p>
+      <div class="card">
+        <ol class="num">
+          <li>Install <a href="https://obsidian.md" target="_blank" rel="noopener">Obsidian</a> (free).</li>
+          <li><b>Open folder as vault</b> → choose your <code class="inl">My-OS/</code> folder. Your markdown files become notes.</li>
+          <li>Make a link: in any note, type <code class="inl">[[</code> and start typing another note's name — that's a <b>wiki-link</b>. The other note now shows a <b>backlink</b>.</li>
+          <li>Open <b>Graph View</b> (ribbon icon, or command palette → "Open graph view"). Each note is a node; each link is a line. The more a note is linked, the bigger it gets.</li>
+          <li>Grow it: every paper or talk you ingest adds a node that links into the graph. That visible web <em>is</em> the compounding.</li>
+        </ol>
+        <p style="color:var(--dim);font-size:.9rem;margin:14px 0 0">Graph view, backlinks, and wiki-links are all built in — no plugins needed to start. Later: the <b>Zotero</b> + <b>"Citations"</b> community plugins for reference management, <b>Dataview</b> for live tables, and Claude's PubMed connector to write literature notes straight into <code class="inl">Literature/</code>.</p>
+      </div>
+
+      <details open>
+        <summary>The one thing that trips people up <span class="tag">same folder</span></summary>
+        <div class="body">
+          <div class="callout" style="margin-top:0"><b>The vault folder and the agent's working folder must be the <em>same</em> folder.</b> If your graph isn't growing, the agent is almost always writing somewhere Obsidian isn't watching — point Cowork/Code and Obsidian at the same <code class="inl">My-OS/</code> and it springs to life. Have your agent write new notes into <code class="inl">My-OS/Literature/</code>, hit refresh, and the new nodes appear, already linked.</div>
+        </div>
+      </details>
+      <p class="body-text">A <code class="inl">[[wiki-link]]</code> is you telling your second brain "these two ideas are related." Backlinks mean every note knows who points at it. The more a note is referenced, the bigger it grows — and the animated graph back on the <button class="goto" data-goto="why" style="padding:3px 9px;font-size:11px">Why tab</button> is exactly what yours starts to look like.</p>
+
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you've opened <code class="inl">My-OS/</code> as a vault, made one wiki-link, and watched the first line appear in Graph View.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="zotero">★ Feed it: Zotero + Papers →</button>
+        <button class="goto" data-goto="scale">At Scale →</button>
+      </div>
+    </div>
+  </section>
+</section>
+<!-- ===================== TAB 9 · SKILLS ===================== -->
+<section class="tabpanel" id="panel-skills" role="tabpanel" aria-labelledby="tabbtn-skills" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 09 · Skills</span>
+      <h2>Encode your best workflow once. Run it perfectly forever.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>A skill is a short Markdown file — your steps + rules, written down once — that the agent follows the same way every time. Messy input in, the same high-quality artifact out. A care pathway for cognitive work.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>Encode your best workflow once — paper-ingest, presentation-ingest, a literature sweep — the same way an OR checklist guarantees the floor. It runs perfectly even post-call, when you don't have the energy to structure it yourself.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill free">Lite: paste into a Project</span> <span class="pill paid">Full: a file in skills/ for Cowork/Code</span></div>
+
+      <div class="flow">
+        <div class="node"><div class="t">Messy inputs</div><div class="d">A PDF, a folder, a half-formed ask</div></div>
+        <div class="ar">→</div>
+        <div class="node skill"><div class="t">⚙ Encoded skill</div><div class="d">Your steps + rules, written once</div></div>
+        <div class="ar">→</div>
+        <div class="node"><div class="t">Consistent output</div><div class="d">The same high-quality artifact, every time</div></div>
+      </div>
+
+      <p class="sub-h">The three starters</p>
+      <p class="sectsub" style="margin-bottom:14px">Tap to expand. Each has a Copy button — grab the file, drop it in your <code class="inl">My-OS/skills/</code> folder (or paste into a Project's custom instructions for a lite version).</p>
+
+      <details open>
+        <summary>Chief of Staff <span class="tag">chief-of-staff.md</span></summary>
+        <div class="body">
+          <p class="desc">Total situational awareness, and what to do next — not a status dump.</p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/chief-of-staff.md</span><button class="copy" data-copy="cos">Copy</button></div>
+            <pre id="cos"># Skill: Chief of Staff
+
+## Purpose
+Give me total situational awareness and tell me what to do next —
+not a status dump.
+
+## When to run
+When I say "run my chief-of-staff briefing," "catch me up," or
+"what should I work on."
+
+## Inputs to read first
+1. _ABOUT_ME.md — who I am and my goals
+2. deadlines.md — what's due
+3. Anything new in Literature/ and Talks/ since last time
+
+## Output (in this order)
+1. **Urgent (next 72h):** specific items + the single next action for each.
+   Be concrete: not "work on manuscript" but "Draft figure-2 legend —
+   it's the last blocker before submission Friday."
+2. **This week:** the 3 things that move my goals most, ranked.
+3. **One strategic insight:** a connection, opportunity, or risk I might
+   be missing — the reason this briefing was worth reading.
+
+## Rules
+- Use my real files; never invent deadlines or facts. If a source is
+  missing, say so.
+- Tie recommendations back to my career goals in _ABOUT_ME.md.
+- Keep it short enough to read before rounds.</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Paper Ingest <span class="tag">paper-ingest.md</span></summary>
+        <div class="body">
+          <p class="desc">Turn a paper into a permanent, linked knowledge node — not a throwaway summary. (The integrity-check + Zotero-mirror <em>pro</em> version is in the <button class="goto" data-goto="zotero" style="padding:2px 8px;font-size:11px">★ Zotero + Papers tab</button>.)</p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/paper-ingest.md</span><button class="copy" data-copy="paper">Copy</button></div>
+            <pre id="paper"># Skill: Paper Ingest
+
+## Purpose
+Turn a paper into a permanent, linked knowledge node — not a
+throwaway summary.
+
+## When to run
+"Ingest this paper" + a PDF.
+
+## Steps
+1. Read _ABOUT_ME.md so you know why this paper matters to me.
+2. Pull the verified citation from the PDF (authors, title, journal,
+   year, DOI/PMID). Do NOT guess names — if unsure, flag "verify."
+3. Write a node and save it to Literature/<FirstAuthor>_<Year>.md.
+
+## Node template
+---
+tags: [literature]
+---
+# <Short title>
+**Citation:** <verified citation + PMID/DOI>
+**Bottom line:** <key finding in 2 sentences>
+**Methods:** <design, n, model — 1-2 lines>
+**Why it matters to me:** <ties to my interests in _ABOUT_ME.md>
+**Connections:** [[link to related concepts or my own work]]
+**Next:** <1 question or study this opens up>
+
+## Rules
+- Real citations only; verify against the PDF or PubMed.
+- Add at least 2 [[wiki-links]] so the node joins the graph.</pre>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Presentation Ingest <span class="tag">presentation-ingest.md</span></summary>
+        <div class="body">
+          <p class="desc">Turn a talk into a structured node — capture the mental model, not just bullets.</p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/presentation-ingest.md</span><button class="copy" data-copy="pres">Copy</button></div>
+            <pre id="pres"># Skill: Presentation Ingest
+
+## Purpose
+Turn a talk (PDF or slides) into a structured talk node I can keep.
+
+## When to run
+"Ingest this talk" + a PDF/PPTX.
+
+## Steps
+1. Read _ABOUT_ME.md for relevance.
+2. Extract the structure of the talk.
+3. Save to Talks/<ShortName>.md.
+
+## Node template
+---
+tags: [talk]
+---
+# <Talk title> — <Speaker>
+**Thesis:** <one sentence>
+**Framework / mental model:** <the model it teaches>
+**Key takeaways:** <3-5 bullets>
+**Figures:** <each figure + what it shows>
+**References worth chasing:** <list>
+**How it connects to my work:** [[wiki-links]] to my interests
+**Action for me:** <what I'll do with this>
+
+## Rules
+- Capture the *mental model*, not just bullet points.
+- Add [[wiki-links]] so the talk joins the graph.</pre>
+          </div>
+        </div>
+      </details>
+
+      <p class="sub-h">Two more projects to build</p>
+      <p class="body-text" style="margin-bottom:4px">Beyond the three starters, two high-leverage builds — paste either as a single message in Cowork, pointed at your <code class="inl">My-OS/</code> folder. The second needs the <button class="goto" data-goto="connectors" style="padding:3px 9px;font-size:11px">PubMed connector</button>.</p>
+      <div class="code">
+        <div class="bar"><span class="fname">research-identity — find your throughline</span><button class="copy" data-copy="rid">Copy</button></div>
+        <pre id="rid">Read my CV and every paper in this folder. Then write research-identity.md:
+- my core themes and the methodological signature across my work
+- the throughline I might be underselling
+- 3 concrete directions that extend it
+Cite which file each point comes from. Save it to my folder.</pre>
+      </div>
+      <div class="code">
+        <div class="bar"><span class="fname">literature-graph — grow the vault from PubMed</span><button class="copy" data-copy="litg">Copy</button></div>
+        <pre id="litg">Using the PubMed connector, find the 5 most important recent papers on
+[my topic]. For each, write a markdown note with citation + PMID, the key
+finding in 2 sentences, why it matters to me, and [[wiki-links]] to related
+concepts. Save each as its own file in my vault's Literature/ folder.</pre>
+      </div>
+
+      <p class="sub-h">Write your own</p>
+      <p class="body-text">A skill is just a Markdown file with four parts: <strong>Purpose</strong>, <strong>When to run</strong>, <strong>Steps</strong>, and <strong>Rules</strong>. Take a workflow you repeat — a discharge-summary structure, a journal-club teardown, a grant-aim critique — write down exactly how you do it on your best day, and add a "never invent facts; cite the source" rule. That's a skill. The rest is reuse.</p>
+
+      <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> at least one skill file sits in <code class="inl">My-OS/skills/</code> and the agent runs it on command, producing the same structured artifact each time.</div></div>
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="cowork">Run them in Cowork →</button>
+        <button class="goto" data-goto="zotero">★ The pro paper pipeline →</button>
+        <button class="goto" data-goto="scale">At Scale →</button>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ===================== TAB 10 · AT SCALE ===================== -->
+<section class="tabpanel" id="panel-scale" role="tabpanel" aria-labelledby="tabbtn-scale" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 10 · At Scale (Rung 6)</span>
+      <h2>What a mature OS does for a surgeon-scientist.</h2>
+      <div class="whatwhy">
+        <div class="box"><span class="k">What this is</span><p>Rung 6 is just every earlier rung, accumulated and wired together over a year: <strong>many agents + a skill library + a linked vault + connectors, across machines.</strong> Nothing new to learn — only more of the same, compounding.</p></div>
+        <div class="box"><span class="k">Why a surgeon-scientist wants it</span><p>The mature version coordinates the whole scholarly enterprise so the routine parts run themselves and your attention goes to the science.</p></div>
+      </div>
+      <div class="tierpill"><span class="lab">Tier</span> <span class="pill yours">Earned over time</span> · the same ideas, accumulated</div>
+
+      <p class="sub-h">The capabilities it coordinates</p>
+      <p class="body-text">Described as <em>capabilities</em>, not contents — your OS holds your world; this is the shape of what it can do:</p>
+      <div class="grid2">
+        <div class="card"><h3>📝 Manuscripts</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Drafts, figure legends, and revisions coordinated across a paper's whole folder — with every reference traceable.</p></div>
+        <div class="card"><h3>🔬 Grant-citation integrity</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Every citation in an application resolved, retraction-checked, and overclaim-scanned before it goes out — the LitGuard pattern at portfolio scale.</p></div>
+        <div class="card"><h3>📋 IRB &amp; renewals</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Renewal windows, continuing reviews, and personnel updates tracked so deadlines surface before they bite.</p></div>
+        <div class="card"><h3>🎤 Presentation prep</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Talks built from your own ingested nodes — thesis, figures, and the mental model, reused instead of rebuilt.</p></div>
+        <div class="card"><h3>📚 Literature surveillance</h3><p style="color:var(--dim);font-size:.92rem;margin:0">A standing sweep of new papers in your areas, each landing as a verified node in the graph — never re-read from scratch.</p></div>
+        <div class="card"><h3>🤝 Team context across machines</h3><p style="color:var(--dim);font-size:.92rem;margin:0">Shared, linked context so the same project state travels with you between machines and collaborators.</p></div>
+      </div>
+      <div class="callout"><b>How it's built:</b> many agents (each with a job), a library of skills (your workflows, encoded), and a single linked vault (the memory) — exactly the pieces on the other tabs, just more of them, wired together. You don't leap here; you climb here, one rung at a time.</div>
+      <p class="pull" style="font-size:1.15rem"><span class="gold">Mine took months of iteration.</span> Yours starts with one Project — and every rung after it pays for the next.</p>
+      <div class="rule"><div class="ic">🔒</div><div><b>The boundaries scale too:</b> still no patient data through a personal account, still a human review before anything ships, still "ask before irreversible." Capability raises the stakes on good hygiene, it doesn't relax them.</div></div>
+
+      <div class="next"><span class="lab">Where this connects →</span>
+        <button class="goto" data-goto="why">← Back to Why</button>
+        <button class="goto" data-goto="core">Start the climb: OS Core →</button>
+        <button class="goto" data-goto="reference">Pricing &amp; FAQ: Reference →</button>
+      </div>
+    </div>
+  </section>
+</section>
+<!-- ===================== TAB 11 · REFERENCE ===================== -->
+<section class="tabpanel" id="panel-reference" role="tabpanel" aria-labelledby="tabbtn-reference" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Stage 11 · Reference</span>
+      <h2>FAQ, glossary, pricing, privacy — always here.</h2>
+      <p class="sectsub">The reference desk for the whole console: what it costs, how your data is handled, the alternatives, the words, and what the agent means when it says "terminal."</p>
+
+      <p class="sub-h">Your first step — small enough that you'll actually do it</p>
+      <div class="cta-grid">
+        <div class="cta"><span class="when">Tonight · 5 min · free</span><h3>Seed a Project</h3><p>Make a <b>My OS</b> Project with your CV + goals, paste in the custom instructions, and ask it what to focus on this year. Feel it answer as someone who knows you.</p></div>
+        <div class="cta"><span class="when">This weekend · free</span><h3>See your first graph</h3><p>Install Obsidian, point it at your <code class="inl">My-OS/</code> folder, ingest one paper, and open Graph View. Watch the first link appear.</p></div>
+        <div class="cta"><span class="when">The keen ones · paid</span><h3>Run a real skill</h3><p>Set up Cowork, drop in the three starter skills, and run your first Chief-of-Staff briefing on your own folder.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q&A -->
+  <section class="pad alt">
+    <div class="wrap reveal">
+      <span class="badge">Q&amp;A</span>
+      <h2>The questions everyone actually asks.</h2>
+      <p class="sectsub">Privacy, protecting your work, cost, and the alternatives — answered straight.</p>
+
+      <details open>
+        <summary>If I upload my CV, does it automatically go to Anthropic to train its models?</summary>
+        <div class="body">
+          <p class="desc" style="font-size:.98rem"><b>No — not automatically.</b> For consumer plans (Free, Pro, Max), Anthropic uses your conversations — including files you upload — to improve its models <b>only if you turn on the model-improvement setting</b> in your Privacy Settings (plus a separate carve-out for conversations flagged for safety review). Leave that setting off and your chats and uploads aren't used for training.</p>
+          <p class="desc" style="font-size:.98rem">A few specifics worth knowing: files reached through a <b>connector</b> (like Google Drive) aren't included unless you copy them into the chat; <b>Incognito chats</b> — ones Claude never saves — <b>are never used</b> for training; and when data is used it's <b>de-identified</b> (de-linked from your account) and may be kept in that form for up to 5 years. Anthropic says it doesn't sell your data and Claude is ad-free. If a document feels sensitive, keep the setting off or use an Incognito chat.</p>
+          <p class="src">Source: <a href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training" target="_blank" rel="noopener">Anthropic Privacy Center — "Is my data used for model training?"</a> · settings: <a href="https://claude.ai/settings/data-privacy-controls" target="_blank" rel="noopener">Privacy Settings</a></p>
+        </div>
+      </details>
+
+      <details>
+        <summary>How do I protect my work?</summary>
+        <div class="body">
+          <ul class="clean" style="margin-top:4px">
+            <li><b>No patient information, ever.</b> A personal account isn't HIPAA-covered (no BAA) — use only your own scholarly materials, never patient data or institutional systems. Clinical/PHI work needs an institution-approved tool.</li>
+            <li><b>Set your training preference.</b> Turn the model-improvement setting off if you'd rather your chats never be used, and use <b>Incognito</b> chats for sensitive drafts.</li>
+            <li><b>Know your plan.</b> On <b>Team and Enterprise</b> plans, conversations aren't used for training by default; consumer plans put that choice in your hands.</li>
+            <li><b>Keep your originals.</b> Your OS works from copies — your source files stay yours, in your own folder.</li>
+            <li><b>Treat the personal statement as sensitive.</b> If unsure, use a short "career snapshot" instead, or do that part on a paid plan with training off.</li>
+            <li><b>Never paste secrets.</b> No passwords, tokens, or anything you wouldn't want stored in a conversation.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>How much will this cost?</summary>
+        <div class="body">
+          <p class="desc" style="font-size:.98rem">The personal-OS core is <b>free</b>. A Project seeded with your CV and goals, Memory, and Obsidian all cost nothing — Free includes up to five Projects, which is plenty. You only pay when you want the agentic workspace:</p>
+          <div class="tscroll">
+          <table class="ptable">
+            <thead><tr><th>Plan</th><th>Price</th><th>What you get</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><b>Free</b></td><td><b>$0</b></td><td>Chat, web search, file creation, Memory, and up to 5 Projects. The whole personal-OS core + Obsidian.</td></tr>
+              <tr><td><b>Pro</b></td><td><b>~$17/mo</b> annual<br>($20 monthly)</td><td>Adds <b>Cowork</b>, <b>Claude Code</b>, Claude Design, unlimited Projects, and more usage.</td></tr>
+              <tr><td><b>Max</b></td><td><b>from $100/mo</b></td><td>5× or 20× the usage of Pro, higher limits, priority access — for heavy daily users.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="desc" style="font-size:.95rem"><b>Obsidian is free.</b> Cowork is currently a paid research-preview feature, so it needs Pro or higher. Bottom line: you can build and feel the whole idea for $0; a paid plan is only for the hands-on agentic parts.</p>
+          <p class="asof">Prices as of June 2026 (US) and change often — check the live page.</p>
+          <p class="src">Source: <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing</a></p>
+        </div>
+      </details>
+
+      <details>
+        <summary>What are the alternatives?</summary>
+        <div class="body">
+          <p class="desc" style="font-size:.98rem">Everything on this page — memory, files, skills, a graph — is a <em>concept</em>, not a Claude feature. It transfers to any capable assistant. The main options today:</p>
+          <div class="tscroll">
+          <table class="ptable">
+            <thead><tr><th>Tool</th><th>Free?</th><th>Paid (headline)</th><th>Notes &amp; agentic equivalent</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><b>Claude</b> (Anthropic)</td><td>Yes</td><td>Pro ~$17–20 · Max $100+</td><td>This page. Agentic: <b>Cowork</b> (desktop) &amp; <b>Claude Code</b> (terminal).</td></tr>
+              <tr><td><b>ChatGPT</b> (OpenAI)</td><td>Yes</td><td>Go $8 · Plus $20 · Pro $200</td><td>Most widely used. Agentic: <b>Atlas</b> (browser) &amp; <b>Codex</b> (coding). Trains on consumer chats by default unless you opt out.</td></tr>
+              <tr><td><b>Gemini</b> (Google)</td><td>Yes</td><td>AI Pro $19.99 · Ultra $99.99–199.99</td><td>Deep Google Workspace integration. Agentic: <b>Antigravity</b>. "Keep Activity" is on by default; can be turned off.</td></tr>
+              <tr><td><b>Copilot</b> (Microsoft)</td><td>Yes</td><td>~$20/mo or in Microsoft 365</td><td>Embedded in Windows + Office (Word, Excel, Outlook).</td></tr>
+              <tr><td><b>Local / open-source</b></td><td>Yes</td><td>$0 (your hardware)</td><td>Run open models (e.g. Llama via <b>Ollama</b>) <b>fully on your machine</b> — offline, nothing leaves your computer. You self-host; no managed agent workspace.</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="desc" style="font-size:.95rem">If maximum privacy matters most, a <b>local</b> model is the strongest answer — no cloud, no subscription. If integration with your existing tools matters most, the big three each lean into their own ecosystem.</p>
+          <p class="asof">Prices and product names as of June 2026 and change frequently.</p>
+          <p class="src">Sources: <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com</a> · <a href="https://openai.com/chatgpt/pricing/" target="_blank" rel="noopener">openai.com</a> · <a href="https://one.google.com/intl/en/about/google-ai-plans/" target="_blank" rel="noopener">google.com</a> · <a href="https://www.microsoft.com/en-us/microsoft-365-copilot/pricing/individuals" target="_blank" rel="noopener">microsoft.com</a></p>
+        </div>
+      </details>
+
+      <details>
+        <summary>I'm not technical. Is this going to be over my head?</summary>
+        <div class="body"><p class="desc" style="font-size:.98rem">No code required for the core. A Project is point-and-click; Obsidian is "open a folder." <b>Cowork</b> exists precisely so non-developers get the agentic workspace without a terminal — Claude Code is the terminal version for the technical crowd. If you can keep files in a folder, you can do this.</p></div>
+      </details>
+
+      <details>
+        <summary>Will this take over my life?</summary>
+        <div class="body"><p class="desc" style="font-size:.98rem">It shouldn't, and it shouldn't try to. The point is the opposite — encode your best workflow once so you <em>don't</em> rebuild it every time. Tonight's step is five minutes. Add a rung only when the last one is already paying you back. Mine took months of iteration; yours starts with one Project.</p></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- UNDER THE HOOD -->
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Under the hood</span>
+      <h2>The moving parts, in plain English.</h2>
+      <p class="sectsub">You don't need any of this to start. But when the agent says it "wrote a Python script" or asks you to "open a terminal," here's what it means — and why it bothers.</p>
+      <div class="grid2">
+        <div class="card"><h3>A terminal (command line)</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> a plain text window where you type commands straight to your computer. <b style="color:var(--white)">Why:</b> it's how developer tools like Git and Claude Code are run — no buttons, just commands. (On a Mac it's "Terminal"; on Windows, "PowerShell.")</p></div>
+        <div class="card"><h3>Bash / a shell</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> the language the terminal speaks — <code class="inl">cd</code> to move into a folder, <code class="inl">ls</code> to list it, run a program by name. <b style="color:var(--white)">Why:</b> it chains small commands into one action. (Windows' version is PowerShell.)</p></div>
+        <div class="card"><h3>A script</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> a saved list of steps the computer runs top to bottom. <b style="color:var(--white)">Why:</b> write it once, re-run it forever — automation you can trust to do the same thing every time.</p></div>
+        <div class="card"><h3>A Python script</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> a script written in Python, a readable, beginner-friendly language. <b style="color:var(--white)">Why:</b> computers are <em>perfect</em> at exact, repetitive jobs — counting, renaming, checking PMIDs, crunching stats. The agent writes Python for anything that must be exact, where guessing isn't allowed.</p></div>
+        <div class="card"><h3>Git &amp; a "repo"</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> a time machine for a folder — every change saved and reversible. A "repo" is one project it's tracking. <b style="color:var(--white)">Why:</b> nothing is ever lost, and you can always roll back a mistake.</p></div>
+        <div class="card"><h3>Node.js &amp; npm</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> Node runs JavaScript outside a browser; npm is its app store. <b style="color:var(--white)">Why:</b> Claude Code and most connectors are built on Node — it's the plumbing they need to run.</p></div>
+        <div class="card"><h3>An API</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> a doorway one program uses to talk to another. <b style="color:var(--white)">Why:</b> it's how a connector fetches your data — PubMed's API returns papers, Zotero's Web API adds references.</p></div>
+        <div class="card"><h3>Markdown</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> plain text with light formatting — <code class="inl"># heading</code>, <code class="inl">**bold**</code>, <code class="inl">[[links]]</code>. <b style="color:var(--white)">Why:</b> it's what your notes and skills are written in — simple, future-proof, readable by both you and the agent.</p></div>
+        <div class="card"><h3>A CLI</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> a "command-line interface" — a tool you run by typing instead of clicking. <b style="color:var(--white)">Why:</b> Claude Code is a CLI; once you're comfortable it's faster and fully scriptable.</p></div>
+        <div class="card"><h3>An MCP / connector</h3><p style="color:var(--dim);font-size:.93rem;margin:0"><b style="color:var(--white)">What:</b> the standard "plug" that lets an agent use an outside tool. <b style="color:var(--white)">Why:</b> it's how the agent gets hands — files, PubMed, your calendar. (More in <button class="goto" data-goto="connectors" style="padding:2px 8px;font-size:11px">Connectors</button>.)</p></div>
+      </div>
+      <div class="callout"><b>The throughline:</b> the agent reaches for a <em>script</em> whenever a job must be exact and repeatable, and for <em>plain language</em> whenever a job needs judgment. Knowing which is which is most of the craft.</div>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section class="pad alt">
+    <div class="wrap reveal">
+      <span class="badge">Glossary</span>
+      <h2>Fifteen words, plain English.</h2>
+      <dl class="gloss">
+        <dt>LLM</dt><dd>Large language model — an AI trained on huge amounts of text to predict what comes next. The engine inside Claude, ChatGPT, and Gemini.</dd>
+        <dt>Token</dt><dd>The small chunk text is split into before a model reads it — roughly ¾ of a word. Cost and limits are counted in tokens.</dd>
+        <dt>Context window</dt><dd>How many tokens a model can hold in mind at once — its working memory, or the size of its desk.</dd>
+        <dt>Model</dt><dd>One specific AI you can pick — e.g. a bigger, smarter one for hard tasks or a smaller, faster one for quick jobs.</dd>
+        <dt>Prompt</dt><dd>What you type in — the instruction or question the model responds to.</dd>
+        <dt>Agent</dt><dd>An LLM given a goal, tools, and permission to loop — so it takes actions and finishes a task instead of just answering.</dd>
+        <dt>Project</dt><dd>A chat plus persistent files and custom instructions. The agent reads them every time — its first real memory.</dd>
+        <dt>Memory</dt><dd>Facts the assistant carries forward across chats, so you stop re-explaining yourself.</dd>
+        <dt>Cowork</dt><dd>An agentic desktop app for non-developers: a real workspace where the agent reads folders, runs skills, and creates files.</dd>
+        <dt>Claude Code</dt><dd>The same agentic power in a terminal — the version for people who live in a command line.</dd>
+        <dt>Skill</dt><dd>Your best workflow written down once, so the agent runs it the same high-quality way every time. A care pathway for cognitive work.</dd>
+        <dt>Vault</dt><dd>A folder of markdown notes that Obsidian treats as one connected knowledge base.</dd>
+        <dt>Wiki-link</dt><dd>The <code class="inl">[[double-bracket]]</code> link between two notes — you telling your second brain that two ideas relate.</dd>
+        <dt>Node</dt><dd>One note in the graph — a paper, a talk, a person. The more it's linked, the more central it becomes.</dd>
+        <dt>Connector</dt><dd>A bridge that lets the agent reach an outside source — PubMed, your Drive, your calendar — and pull it into your system.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- PRIVACY / PHI -->
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Privacy &amp; PHI</span>
+      <h2>The one rule that never moves.</h2>
+      <div class="rule"><div class="ic">⛔</div><div><b>No patient information of any kind.</b> A personal account has no institutional data agreement (no BAA), so this is for <b>your own scholarly materials</b> — CV, your published papers, public data — never patient data or anything pulled from your institution's systems. Clinical or PHI work belongs in an institution-approved, BAA-covered tool. Good AI hygiene is part of the lesson.</div></div>
+      <p class="body-text">And never paste a password, an API key, or any secret into a chat — anywhere on this page where a key or ID appears, it's a <em>placeholder</em> (<code class="inl">&lt;your-key&gt;</code>, <code class="inl">&lt;your-userID&gt;</code>). Your real values live in your password manager and are handed to the tool when it asks — never typed into a conversation or committed to a repo.</p>
+      <div class="next"><span class="lab">Jump back →</span>
+        <button class="goto" data-goto="why">Why</button>
+        <button class="goto" data-goto="core">OS Core</button>
+        <button class="goto" data-goto="zotero">★ Zotero + Papers</button>
+      </div>
+    </div>
+  </section>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="sig">Start tonight. Come curious.</p>
+    <p>Dr. Jon Schoenecker · part of the TŌGE family · 2026</p>
+    <p class="line">Chat is something you use. An OS is something you build — and it pays you back forever.</p>
+  </div>
+</footer>
+
+<script>
+  // ---- the tabs ----
+  var TABS=['why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
+  var tabBtns=Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var panels=function(id){return document.getElementById('panel-'+id);};
+  var sel=document.querySelector('.tabselect');
+  var progFill=document.getElementById('progFill');
+
+  // reveal observer (re-fires per tab when a panel becomes visible)
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:0.08,rootMargin:'-30px'});
+  // svg growth observer
+  var ao=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('anim');ao.unobserve(e.target);}});
+  },{threshold:0.2});
+
+  function animatePanel(id){
+    var p=panels(id); if(!p) return;
+    p.querySelectorAll('.reveal:not(.in)').forEach(function(el){io.observe(el);});
+    p.querySelectorAll('.svg-anim:not(.anim)').forEach(function(el){ao.observe(el);});
+  }
+
+  function setTab(id,opts){
+    if(TABS.indexOf(id)<0) id='why';
+    opts=opts||{};
+    tabBtns.forEach(function(b){
+      var on=b.dataset.tab===id;
+      b.classList.toggle('active',on);
+      b.setAttribute('aria-selected',on?'true':'false');
+      b.tabIndex=on?0:-1;
+    });
+    TABS.forEach(function(t){var p=panels(t); if(p){var on=t===id; p.classList.toggle('active',on); p.hidden=!on;}});
+    if(sel) sel.value=id;
+    var idx=TABS.indexOf(id);
+    if(progFill) progFill.style.width=((idx+1)/TABS.length*100).toFixed(1)+'%';
+    if(opts.hash!==false){ if(('#tab='+id)!==location.hash){ history.pushState(null,'','#tab='+id); } }
+    if(opts.scroll!==false){ window.scrollTo({top:0,behavior:'auto'}); }
+    // reveal + svg animations for the now-visible panel
+    requestAnimationFrame(function(){animatePanel(id);});
+    if(opts.focus){ var btn=document.getElementById('tabbtn-'+id); if(btn) btn.focus(); }
+  }
+
+  // tab clicks
+  tabBtns.forEach(function(b){
+    b.addEventListener('click',function(){setTab(b.dataset.tab);});
+  });
+  // keyboard arrow nav on the tablist
+  document.querySelector('.tablist').addEventListener('keydown',function(e){
+    var cur=TABS.indexOf(document.querySelector('.tab.active').dataset.tab);
+    var nxt=null;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') nxt=(cur+1)%TABS.length;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp') nxt=(cur-1+TABS.length)%TABS.length;
+    else if(e.key==='Home') nxt=0;
+    else if(e.key==='End') nxt=TABS.length-1;
+    if(nxt!==null){e.preventDefault();setTab(TABS[nxt],{focus:true});}
+  });
+  // select fallback
+  if(sel) sel.addEventListener('change',function(){setTab(sel.value);});
+  // in-page "go to tab" buttons / router
+  document.addEventListener('click',function(e){
+    var g=e.target.closest('[data-goto]');
+    if(g){e.preventDefault();setTab(g.getAttribute('data-goto'));}
+  });
+  // deep-link + back/forward
+  function fromHash(){
+    var m=(location.hash||'').match(/tab=([a-z]+)/);
+    return m?m[1]:'why';
+  }
+  window.addEventListener('hashchange',function(){setTab(fromHash(),{hash:false});});
+
+  // ---- copy buttons ----
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var el=document.getElementById(btn.dataset.copy);
+      if(!el) return;
+      var text=el.innerText;
+      var done=function(){var old=btn.textContent;btn.textContent='Copied ✓';btn.classList.add('done');
+        setTimeout(function(){btn.textContent=old;btn.classList.remove('done');},1600);};
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(function(){fallback(text);done();});
+      }else{fallback(text);done();}
+    });
+  });
+  function fallback(text){
+    var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
+  }
+
+  // ---- boot ----
+  setTab(fromHash(),{hash:false,scroll:false});
+</script>
+</body>
+</html>

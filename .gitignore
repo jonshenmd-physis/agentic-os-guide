@@ -1,0 +1,6 @@
+# Nothing to build — this is a static single-file site.
+.DS_Store
+Thumbs.db
+.vercel
+node_modules/
+*.log
