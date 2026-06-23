@@ -8,10 +8,39 @@ Part of the **TŌGE** family. By Dr. Jon Schoenecker.
 
 ## What this repo is
 
-A single, dependency-free `index.html` (~144 KB). No build step, no framework, no external
-requests — it opens offline and renders identically anywhere. The page is an 11-tab build
-console: Why · Square One · OS Core · Connectors · ★ Zotero + Papers · Cowork · Claude Code ·
-The Graph · Skills · At Scale · Reference.
+A single, dependency-free `index.html` (~150 KB). No build step, no framework, no external
+requests — it opens offline and renders identically anywhere. The page is a build console with
+a pinned **★ Today** tab plus 11 build tabs: Why · Square One · OS Core · Connectors ·
+★ Zotero + Papers · Cowork · Claude Code · The Graph · Skills · At Scale · Reference.
+
+## Stickiness features
+
+- **Daily Signal (★ Today).** A banner + archive of fresh, sourced agentic-OS ideas, updated
+  automatically most days (see *Daily auto-update* below). The reason to come back.
+- **Build-progress tracker.** Each build tab has a "mark complete" toggle persisted in
+  `localStorage` (`agos.progress.v1`); the top progress rail and tab ✓ badges reflect how many
+  of the 11 stages the reader has finished. Pulls people back to finish their build.
+- **Per-tab share / deep links.** Every tab has a "copy link to this tab" button on top of the
+  existing `#tab=<id>` deep-linking, so a specific stage (or the day's idea) is shareable.
+
+## Daily auto-update (the Daily Signal pipeline)
+
+The day's ideas live in ONE inline JSON block in `index.html`, between the markers
+`<!-- DAILY_SIGNAL_START -->` … `<!-- DAILY_SIGNAL_END -->`. A scheduled **cloud agent** runs
+daily and:
+
+1. finds one publicly-sourced new idea (`tools/DAILY_BUILD_PROMPT.md` is its instructions),
+2. splices it in with `tools/update_daily_signal.py` (deterministic — the LLM never hand-edits
+   the HTML; the script de-dups by title, caps the archive at 40, and refuses any item without
+   a source URL),
+3. commits + pushes to `main` → Vercel auto-deploys.
+
+Run it by hand any time:
+
+    python tools/update_daily_signal.py --title "..." --blurb "..." \
+      --source "https://..." --source-name "..." --tag skills --stamp
+
+Exit codes: `0` added · `2` duplicate (nothing to do) · `3` validation/structure error.
 
 ## Autodeploy (the point of this repo)
 

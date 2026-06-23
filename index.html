@@ -322,6 +322,61 @@
   .payoff{font-size:1.05rem;font-weight:700;color:var(--white);background:rgba(244,208,63,.08);
     border:1px solid rgba(244,208,63,.25);border-radius:12px;padding:16px 19px;margin:20px 0}
   .payoff .g{color:var(--gold-light)}
+
+  /* ===== daily signal banner ===== */
+  .daily{border-top:1px solid rgba(244,208,63,.10)}
+  .daily .wrap{display:flex;align-items:center;gap:14px;padding:11px 22px}
+  .daily .dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--gold);
+    box-shadow:0 0 0 0 rgba(244,208,63,.6);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,208,63,.45)}70%{box-shadow:0 0 0 7px rgba(244,208,63,0)}100%{box-shadow:0 0 0 0 rgba(244,208,63,0)}}
+  @media(prefers-reduced-motion:reduce){.daily .dot{animation:none}}
+  .daily .lab{font:700 .64rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);flex:none}
+  .daily .txt{flex:1;min-width:0;color:var(--ink);font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .daily .txt b{color:var(--white);font-weight:700}
+  .daily .more{flex:none;background:rgba(244,208,63,.10);border:1px solid rgba(244,208,63,.25);color:var(--gold);
+    font:600 12px/1 'Inter',sans-serif;padding:7px 13px;border-radius:999px;cursor:pointer;transition:var(--t)}
+  .daily .more:hover{background:rgba(244,208,63,.18);color:var(--gold-light)}
+  @media(max-width:620px){.daily .txt{white-space:normal}.daily .lab{display:none}}
+
+  /* ===== today panel: archive of ideas ===== */
+  .signal-hd{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin:0 0 6px}
+  .signal-when{font:700 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .idea{background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:18px 20px;margin:14px 0;transition:var(--t)}
+  .idea:hover{border-color:var(--card-line-hover);background:var(--card-hover)}
+  .idea.fresh{border-color:rgba(244,208,63,.4);box-shadow:0 0 0 1px rgba(244,208,63,.12)}
+  .idea .top{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:0 0 8px}
+  .idea .date{font:700 .66rem/1 var(--mono);color:var(--gold-dim);letter-spacing:.08em}
+  .idea .tag{font:700 .6rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--navy-deeper);
+    background:var(--gold-dim);padding:4px 8px;border-radius:6px}
+  .idea .newchip{font:700 .58rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--navy-deeper);
+    background:var(--gold);padding:4px 8px;border-radius:6px}
+  .idea h3{margin:0 0 6px;font-size:1.06rem;font-weight:800;color:var(--white)}
+  .idea p{margin:0 0 10px;font-size:.95rem;color:var(--ink)}
+  .idea .src{font-size:.82rem;color:var(--dim)}
+  .idea .src a{font-weight:600}
+  .autonote{display:flex;gap:10px;align-items:flex-start;background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.28);
+    border-radius:12px;padding:12px 15px;margin:16px 0;font-size:.86rem;color:var(--dim)}
+  .autonote b{color:#8fd0f5}
+
+  /* ===== progress tracker ===== */
+  .stagebar{display:flex;gap:11px;align-items:center;background:rgba(26,188,156,.06);border:1px solid rgba(26,188,156,.22);
+    border-radius:12px;padding:13px 16px;margin:0 0 6px}
+  .stagebar .ck{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--muted);background:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:transparent;font-weight:900;font-size:13px;transition:var(--t)}
+  .stagebar .ck:hover{border-color:#5fe6c8}
+  .stagebar.is-done .ck{background:#1ABC9C;border-color:#1ABC9C;color:var(--navy-deeper)}
+  .stagebar .lab{font-size:.9rem;color:var(--dim)}
+  .stagebar.is-done .lab b{color:#5fe6c8}
+  .tab .ck-mini{font:900 10px/1 sans-serif;color:#1ABC9C;margin-left:1px}
+  .progresscount{font:700 .68rem/1 var(--mono);color:var(--gold-dim);letter-spacing:.06em;white-space:nowrap}
+
+  /* ===== share row ===== */
+  .sharerow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 0}
+  .sharerow .lab{font:700 .64rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .sharebtn{background:rgba(244,208,63,.06);border:1px solid rgba(244,208,63,.2);color:var(--gold);
+    font:600 12px/1 'Inter',sans-serif;padding:7px 12px;border-radius:999px;cursor:pointer;transition:var(--t);display:inline-flex;gap:6px;align-items:center}
+  .sharebtn:hover{background:rgba(244,208,63,.15);color:var(--gold-light)}
+  .sharebtn.done{background:rgba(26,188,156,.18);border-color:rgba(26,188,156,.5);color:#5fe6c8}
 </style>
 </head>
 <body>
@@ -338,13 +393,24 @@
       <span class="chip"><b>Bring a laptop</b> · build as you read</span>
       <span class="chip">with <b>Dr. Jon Schoenecker</b></span>
       <span class="chip"><b>Free</b> to start · ~5 min prep</span>
+      <span class="chip">🔄 <b>New idea every day</b></span>
     </div>
   </div>
 </header>
 
+<aside class="daily" id="dailyBanner" hidden aria-label="Today's agentic-OS idea">
+  <div class="wrap">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="lab">Daily&nbsp;Signal</span>
+    <span class="txt" id="dailyTxt"></span>
+    <button class="more" id="dailyMore">See all updates →</button>
+  </div>
+</aside>
+
 <nav class="tabbar" aria-label="Build stages">
   <div class="wrap">
     <div class="tablist" role="tablist" aria-label="Agentic OS build console">
+      <button class="tab flag" role="tab" id="tabbtn-today" data-tab="today"      aria-selected="false" aria-controls="panel-today"><span class="star">★</span>Today</button>
       <button class="tab" role="tab" id="tabbtn-why"        data-tab="why"        aria-selected="true"  aria-controls="panel-why"><span class="n">01</span>Why</button>
       <button class="tab" role="tab" id="tabbtn-square"      data-tab="square"     aria-selected="false" aria-controls="panel-square"><span class="n">02</span>Square One</button>
       <button class="tab" role="tab" id="tabbtn-core"        data-tab="core"       aria-selected="false" aria-controls="panel-core"><span class="n">03</span>OS Core</button>
@@ -359,6 +425,7 @@
     </div>
   </div>
   <select class="tabselect" aria-label="Jump to build stage">
+    <option value="today">★ Today</option>
     <option value="why">01 · Why</option>
     <option value="square">02 · Square One</option>
     <option value="core">03 · OS Core</option>
@@ -375,6 +442,59 @@
 </nav>
 
 <main>
+<!-- ===================== TAB · TODAY (daily signal) ===================== -->
+<section class="tabpanel" id="panel-today" role="tabpanel" aria-labelledby="tabbtn-today" hidden>
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">What's new today</span>
+      <div class="signal-hd">
+        <h2>The build doesn't stand still.</h2>
+        <span class="signal-when" id="signalWhen"></span>
+      </div>
+      <p class="sectsub">A fresh, sourced idea or feature for your agentic OS — most days. Skim today's, then go switch something on. Older entries stay below so you can catch up.</p>
+      <div class="autonote">
+        <span aria-hidden="true">🤖</span>
+        <div><b>Auto-curated.</b> These daily entries are gathered automatically from public sources (each links to its source) and are pointers to explore — not medical, legal, or vendor advice. The permanent build tabs are the hand-built core.</div>
+      </div>
+      <div id="archiveList"></div>
+    </div>
+  </section>
+</section>
+
+<!-- DAILY_SIGNAL_START — the daily cloud agent rewrites only this block; do not hand-edit between the markers -->
+<script type="application/json" id="daily-signal-data">
+{
+  "updated": "2026-06-23",
+  "items": [
+    {
+      "date": "2026-06-23",
+      "tag": "skills",
+      "title": "Agent Skills: teach your OS a repeatable job once",
+      "blurb": "A Skill is a small folder of instructions (and optional scripts) the model loads only when a task needs it. Instead of re-explaining 'how I do a literature pass' every time, you write it down once and your OS reaches for it on demand — the cleanest way to turn a workflow you repeat into something the agent just does.",
+      "source": "https://www.anthropic.com/news/agent-skills",
+      "sourceName": "Anthropic — Agent Skills"
+    },
+    {
+      "date": "2026-06-21",
+      "tag": "connectors",
+      "title": "MCP is the universal port for your tools and data",
+      "blurb": "The Model Context Protocol is an open standard that lets an agent talk to outside tools, files, and services through one consistent interface. It's why 'connect my calendar / my papers / my drive' is becoming plug-in rather than custom plumbing — and why the Connectors tab matters for an OS that actually reaches your real work.",
+      "source": "https://modelcontextprotocol.io",
+      "sourceName": "Model Context Protocol"
+    },
+    {
+      "date": "2026-06-19",
+      "tag": "technique",
+      "title": "Context engineering beats prompt-wrangling",
+      "blurb": "As agents run longer, the high-leverage skill shifts from clever one-off prompts to curating what sits in the model's limited context window — the right files, memory, and tools at the right moment. Think of your OS's job as handing the model a tight, relevant working set, not a firehose.",
+      "source": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "sourceName": "Anthropic Engineering"
+    }
+  ]
+}
+</script>
+<!-- DAILY_SIGNAL_END -->
+
 <!-- ===================== TAB 1 · WHY ===================== -->
 <section class="tabpanel active" id="panel-why" role="tabpanel" aria-labelledby="tabbtn-why">
   <section class="pad">
@@ -1628,7 +1748,8 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
 <script>
   // ---- the tabs ----
-  var TABS=['why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
+  var TABS=['today','why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
+  var BUILD_STAGES=['why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
   var tabBtns=Array.prototype.slice.call(document.querySelectorAll('.tab'));
   var panels=function(id){return document.getElementById('panel-'+id);};
   var sel=document.querySelector('.tabselect');
@@ -1660,8 +1781,6 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
     });
     TABS.forEach(function(t){var p=panels(t); if(p){var on=t===id; p.classList.toggle('active',on); p.hidden=!on;}});
     if(sel) sel.value=id;
-    var idx=TABS.indexOf(id);
-    if(progFill) progFill.style.width=((idx+1)/TABS.length*100).toFixed(1)+'%';
     if(opts.hash!==false){ if(('#tab='+id)!==location.hash){ history.pushState(null,'','#tab='+id); } }
     if(opts.scroll!==false){ window.scrollTo({top:0,behavior:'auto'}); }
     // reveal + svg animations for the now-visible panel
@@ -1715,7 +1834,99 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
     document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
   }
 
+  // ---- small helpers ----
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function fmtDate(s){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||'');if(!m)return s||'';
+    var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1];
+    return mo+' '+(+m[3])+', '+m[1];}
+  function stageName(id){var b=document.getElementById('tabbtn-'+id);if(!b)return id;
+    return b.textContent.replace(/^\d+/,'').replace(/★/,'').trim();}
+
+  // ---- daily signal (banner + archive, from the inline JSON block) ----
+  function renderDailySignal(){
+    var raw=document.getElementById('daily-signal-data');if(!raw)return;
+    var data;try{data=JSON.parse(raw.textContent);}catch(e){return;}
+    var items=(data.items||[]).slice();
+    var when=document.getElementById('signalWhen');
+    if(when&&data.updated) when.textContent='Updated '+fmtDate(data.updated);
+    var banner=document.getElementById('dailyBanner'),txt=document.getElementById('dailyTxt');
+    if(items.length&&banner&&txt){txt.innerHTML='<b>'+esc(items[0].title)+'</b> — '+esc(items[0].blurb);banner.hidden=false;}
+    var list=document.getElementById('archiveList');
+    if(list){
+      list.innerHTML=items.map(function(t,idx){
+        return '<article class="idea'+(idx===0?' fresh':'')+'">'
+          +'<div class="top">'+(idx===0?'<span class="newchip">New</span>':'')
+          +'<span class="date">'+esc(fmtDate(t.date))+'</span>'
+          +(t.tag?'<span class="tag">'+esc(t.tag)+'</span>':'')+'</div>'
+          +'<h3>'+esc(t.title)+'</h3><p>'+esc(t.blurb)+'</p>'
+          +(t.source?'<div class="src">Source: <a href="'+esc(t.source)+'" target="_blank" rel="noopener">'+esc(t.sourceName||t.source)+'</a></div>':'')
+          +'</article>';
+      }).join('');
+    }
+  }
+
+  // ---- progress tracker (localStorage) ----
+  var DONE_KEY='agos.progress.v1';
+  function getDone(){try{return JSON.parse(localStorage.getItem(DONE_KEY)||'[]');}catch(e){return [];}}
+  function setDone(a){try{localStorage.setItem(DONE_KEY,JSON.stringify(a));}catch(e){}}
+  function toggleStage(id){var d=getDone(),i=d.indexOf(id);if(i>=0)d.splice(i,1);else d.push(id);setDone(d);updateProgress();}
+  function updateProgress(){
+    var d=getDone().filter(function(s){return BUILD_STAGES.indexOf(s)>=0;});
+    if(progFill) progFill.style.width=(d.length/BUILD_STAGES.length*100).toFixed(1)+'%';
+    var rail=document.querySelector('.progressrail');
+    if(rail) rail.title=d.length+' of '+BUILD_STAGES.length+' build stages complete';
+    BUILD_STAGES.forEach(function(s){
+      var btn=document.getElementById('tabbtn-'+s);if(!btn)return;
+      var on=d.indexOf(s)>=0,mini=btn.querySelector('.ck-mini');
+      btn.classList.toggle('is-done',on);
+      if(on&&!mini){mini=document.createElement('span');mini.className='ck-mini';mini.textContent='✓';btn.appendChild(mini);}
+      else if(!on&&mini){mini.parentNode.removeChild(mini);}
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.stagebar'),function(sb){
+      var on=getDone().indexOf(sb.dataset.stage)>=0,nm=sb.dataset.label;
+      sb.classList.toggle('is-done',on);
+      var ck=sb.querySelector('.ck');if(ck)ck.setAttribute('aria-pressed',on?'true':'false');
+      var lab=sb.querySelector('.lab');
+      if(lab)lab.innerHTML=on?('<b>'+esc(nm)+' complete</b> — nicely done'):('Mark <b>'+esc(nm)+'</b> complete');
+    });
+  }
+
+  // ---- share (per-tab deep link) ----
+  function buildUrl(id){return location.origin+location.pathname+'#tab='+id;}
+  function doShare(btn){
+    var active=document.querySelector('.tab.active');var id=active?active.dataset.tab:'why';var url=buildUrl(id);
+    if(navigator.share){navigator.share({title:document.title,url:url}).catch(function(){});return;}
+    var done=function(){var old=btn.textContent;btn.textContent='Link copied ✓';btn.classList.add('done');
+      setTimeout(function(){btn.textContent=old;btn.classList.remove('done');},1600);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done).catch(function(){fallback(url);done();});}
+    else{fallback(url);done();}
+  }
+
+  // ---- inject per-stage controls + delegated handlers ----
+  function initControls(){
+    BUILD_STAGES.forEach(function(id){
+      var panel=panels(id);if(!panel)return;var nm=stageName(id);
+      var foot=document.createElement('section');foot.className='pad';
+      foot.innerHTML='<div class="wrap">'
+        +'<div class="stagebar" data-stage="'+id+'" data-label="'+esc(nm)+'">'
+          +'<button class="ck" aria-pressed="false" aria-label="Mark '+esc(nm)+' complete">✓</button>'
+          +'<span class="lab">Mark <b>'+esc(nm)+'</b> complete</span></div>'
+        +'<div class="sharerow"><span class="lab">Share</span>'
+          +'<button class="sharebtn" data-share="tab">🔗 Copy link to this tab</button></div></div>';
+      panel.appendChild(foot);
+    });
+    document.addEventListener('click',function(e){
+      var ck=e.target.closest('.stagebar .ck');if(ck){var sb=ck.closest('.stagebar');toggleStage(sb.dataset.stage);return;}
+      var sh=e.target.closest('.sharebtn');if(sh){doShare(sh);return;}
+    });
+    var dm=document.getElementById('dailyMore');if(dm)dm.addEventListener('click',function(){setTab('today');});
+    var dt=document.getElementById('dailyTxt');if(dt){dt.style.cursor='pointer';dt.addEventListener('click',function(){setTab('today');});}
+  }
+
   // ---- boot ----
+  renderDailySignal();
+  initControls();
+  updateProgress();
   setTab(fromHash(),{hash:false,scroll:false});
 </script>
 </body>
