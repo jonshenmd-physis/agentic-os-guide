@@ -26,16 +26,30 @@ a pinned **★ Today** tab plus 11 build tabs: Why · Square One · OS Core · C
 ## Daily auto-update (the Daily Signal pipeline)
 
 The day's ideas live in ONE inline JSON block in `index.html`, between the markers
-`<!-- DAILY_SIGNAL_START -->` … `<!-- DAILY_SIGNAL_END -->`. A scheduled **cloud agent** runs
-daily and:
+`<!-- DAILY_SIGNAL_START -->` … `<!-- DAILY_SIGNAL_END -->`.
 
-1. finds one publicly-sourced new idea (`tools/DAILY_BUILD_PROMPT.md` is its instructions),
-2. splices it in with `tools/update_daily_signal.py` (deterministic — the LLM never hand-edits
-   the HTML; the script de-dups by title, caps the archive at 40, and refuses any item without
-   a source URL),
-3. commits + pushes to `main` → Vercel auto-deploys.
+The updater runs **in GitHub's cloud** via the `.github/workflows/daily-signal.yml` Action —
+so it fires every day **whether or not any of Jon's machines are on**. Each run:
 
-Run it by hand any time:
+1. `tools/generate_daily_idea.py` asks Claude (with web search) for ONE publicly-sourced new
+   idea and writes it to `new_idea.json`. If nothing solid is found it **skips the day** (exit 4).
+2. `tools/update_daily_signal.py --from-file new_idea.json --stamp` splices it in
+   (deterministic — the LLM never hand-edits the HTML; de-dups by title, caps the archive at 40,
+   refuses any item without an http(s) source URL).
+3. the Action commits + pushes to `main` → Vercel auto-deploys.
+
+`tools/DAILY_BUILD_PROMPT.md` is the equivalent instruction set if you'd rather run the job from
+a claude.ai routine or a Claude Code session instead of the Action.
+
+### One-time setup (required for the Action to run)
+
+Add an **`ANTHROPIC_API_KEY`** repository secret:
+GitHub repo → Settings → Secrets and variables → Actions → New repository secret.
+(That's the only manual step; the Action already has `contents: write` to push.)
+Schedule: `12 11 * * *` UTC ≈ 6:12 AM America/Chicago — edit the cron in the workflow to taste.
+You can also trigger a run any time from the repo's **Actions** tab → *Daily Signal* → *Run workflow*.
+
+### Run it by hand (local)
 
     python tools/update_daily_signal.py --title "..." --blurb "..." \
       --source "https://..." --source-name "..." --tag skills --stamp
