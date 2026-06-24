@@ -1,11 +1,14 @@
-name: Daily Signal
+name: Daily Signal (RETIRED — see meridian-app)
 
-# Runs in GitHub's cloud every day — independent of any of Jon's machines.
-# 11:12 UTC ≈ 6:12 AM America/Chicago (CDT). Adjust if you want a different slot.
+# RETIRED 2026-06-24: the live page moved to Tōge (toge.health/build, served from
+# meridian-app/public/build.html). The daily pipeline now lives in meridian-app
+# (.github/workflows/agentic-os-daily-signal.yml). This standalone page is legacy
+# (kept for the existing emory-agentic-os.vercel.app link, to be 301'd later).
+# Schedule disabled to avoid divergence + double API spend; manual-only if ever needed.
 on:
-  schedule:
-    - cron: "12 11 * * *"
-  workflow_dispatch: {}   # lets you run it on demand from the Actions tab
+  # schedule:               # disabled — meridian-app is now the source of truth
+  #   - cron: "12 11 * * *"
+  workflow_dispatch: {}   # manual-only
 
 permissions:
   contents: write          # needed to push the updated index.html back
