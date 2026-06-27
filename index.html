@@ -375,6 +375,36 @@
   .morefeat .card h3{font-size:1rem;margin-bottom:8px;color:var(--white)}
   .morefeat .card p{color:var(--dim);font-size:.9rem;margin:0;line-height:1.5}
   .morefeat .card .goto{margin-top:10px}
+
+  /* ===== Track 1 · chat modules ===== */
+  .outbanner{display:flex;gap:15px;align-items:center;margin:18px 0;padding:18px 22px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(244,208,63,.13),rgba(27,79,114,.42));border:1px solid rgba(244,208,63,.32)}
+  .outbanner .ic{font-size:26px;line-height:1;flex:none}
+  .outbanner p{margin:0;color:var(--ink);font-size:1.02rem}
+  .outbanner b{color:var(--gold-light)}
+  .chatmod{background:var(--card);border:1px solid var(--card-line);border-radius:16px;padding:22px 22px 18px;margin:0}
+  .modhead{display:flex;align-items:center;gap:12px;margin:0 0 10px;flex-wrap:wrap}
+  .modhead .mnum{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;
+    border-radius:50%;background:linear-gradient(135deg,#F4D03F,#D4AC0D);color:var(--navy-deeper);font:800 15px/1 var(--mono)}
+  .modhead h3{margin:0;font-size:1.16rem;color:var(--white);font-weight:800;letter-spacing:-.01em}
+  .subsp{font:700 .6rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--navy-deeper);
+    background:var(--gold);padding:4px 9px;border-radius:999px;margin-left:auto}
+  .worked{display:flex;gap:10px;align-items:flex-start;margin:6px 0 2px;color:var(--ink);font-size:.96rem}
+  .worked .ar{color:var(--gold);font-weight:800;flex:none}
+  .worked b{color:var(--white)}
+  .verify{display:flex;gap:11px;align-items:flex-start;background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.32);
+    border-radius:12px;padding:13px 16px;margin:16px 0}
+  .verify .ic{flex:none;font-size:17px;line-height:1.3}
+  .verify b{color:#8fd0f5}
+  .verify p{margin:0;color:var(--ink);font-size:.92rem;line-height:1.55}
+  .medichips{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 0}
+  .medichip{display:inline-flex;align-items:center;gap:8px;font:600 12px/1.3 'Inter',sans-serif;
+    color:var(--dim);background:rgba(10,30,46,.5);border:1px dashed rgba(244,208,63,.3);border-radius:999px;padding:8px 13px}
+  .medichip b{color:var(--gold)}
+  .modsvg{display:flex;justify-content:center;margin:14px 0 6px}
+  .modsvg svg{max-width:300px;width:100%;height:auto}
+  .heromenu svg{width:100%;height:auto}
+  .chatmods{display:grid;gap:18px;margin:18px 0 0}
 </style>
 </head>
 <body>
@@ -399,30 +429,32 @@
   <div class="wrap">
     <div class="tablist" role="tablist" aria-label="Agentic OS build console">
       <button class="tab" role="tab" id="tabbtn-why"        data-tab="why"        aria-selected="true"  aria-controls="panel-why"><span class="n">01</span>Why</button>
-      <button class="tab" role="tab" id="tabbtn-square"      data-tab="square"     aria-selected="false" aria-controls="panel-square"><span class="n">02</span>Square One</button>
-      <button class="tab" role="tab" id="tabbtn-core"        data-tab="core"       aria-selected="false" aria-controls="panel-core"><span class="n">03</span>OS Core</button>
-      <button class="tab" role="tab" id="tabbtn-connectors"  data-tab="connectors" aria-selected="false" aria-controls="panel-connectors"><span class="n">04</span>Connectors</button>
-      <button class="tab flag" role="tab" id="tabbtn-zotero" data-tab="zotero"     aria-selected="false" aria-controls="panel-zotero"><span class="n">05</span><span class="star">★</span>Zotero + Papers</button>
-      <button class="tab" role="tab" id="tabbtn-cowork"      data-tab="cowork"     aria-selected="false" aria-controls="panel-cowork"><span class="n">06</span>Cowork</button>
-      <button class="tab" role="tab" id="tabbtn-code"        data-tab="code"       aria-selected="false" aria-controls="panel-code"><span class="n">07</span>Claude Code</button>
-      <button class="tab" role="tab" id="tabbtn-graph"       data-tab="graph"      aria-selected="false" aria-controls="panel-graph"><span class="n">08</span>The Graph</button>
-      <button class="tab" role="tab" id="tabbtn-skills"      data-tab="skills"     aria-selected="false" aria-controls="panel-skills"><span class="n">09</span>Skills</button>
-      <button class="tab" role="tab" id="tabbtn-scale"       data-tab="scale"      aria-selected="false" aria-controls="panel-scale"><span class="n">10</span>At Scale</button>
-      <button class="tab" role="tab" id="tabbtn-reference"   data-tab="reference"  aria-selected="false" aria-controls="panel-reference"><span class="n">11</span>Reference</button>
+      <button class="tab flag" role="tab" id="tabbtn-chat"  data-tab="chat"       aria-selected="false" aria-controls="panel-chat"><span class="n">02</span><span class="star">★</span>Chat Wins</button>
+      <button class="tab" role="tab" id="tabbtn-square"      data-tab="square"     aria-selected="false" aria-controls="panel-square"><span class="n">03</span>Square One</button>
+      <button class="tab" role="tab" id="tabbtn-core"        data-tab="core"       aria-selected="false" aria-controls="panel-core"><span class="n">04</span>OS Core</button>
+      <button class="tab" role="tab" id="tabbtn-connectors"  data-tab="connectors" aria-selected="false" aria-controls="panel-connectors"><span class="n">05</span>Connectors</button>
+      <button class="tab flag" role="tab" id="tabbtn-zotero" data-tab="zotero"     aria-selected="false" aria-controls="panel-zotero"><span class="n">06</span><span class="star">★</span>Zotero + Papers</button>
+      <button class="tab" role="tab" id="tabbtn-cowork"      data-tab="cowork"     aria-selected="false" aria-controls="panel-cowork"><span class="n">07</span>Cowork</button>
+      <button class="tab" role="tab" id="tabbtn-code"        data-tab="code"       aria-selected="false" aria-controls="panel-code"><span class="n">08</span>Claude Code</button>
+      <button class="tab" role="tab" id="tabbtn-graph"       data-tab="graph"      aria-selected="false" aria-controls="panel-graph"><span class="n">09</span>The Graph</button>
+      <button class="tab" role="tab" id="tabbtn-skills"      data-tab="skills"     aria-selected="false" aria-controls="panel-skills"><span class="n">10</span>Skills</button>
+      <button class="tab" role="tab" id="tabbtn-scale"       data-tab="scale"      aria-selected="false" aria-controls="panel-scale"><span class="n">11</span>At Scale</button>
+      <button class="tab" role="tab" id="tabbtn-reference"   data-tab="reference"  aria-selected="false" aria-controls="panel-reference"><span class="n">12</span>Reference</button>
     </div>
   </div>
   <select class="tabselect" aria-label="Jump to build stage">
     <option value="why">01 · Why</option>
-    <option value="square">02 · Square One</option>
-    <option value="core">03 · OS Core</option>
-    <option value="connectors">04 · Connectors</option>
-    <option value="zotero">05 · ★ Zotero + Papers</option>
-    <option value="cowork">06 · Cowork</option>
-    <option value="code">07 · Claude Code</option>
-    <option value="graph">08 · The Graph</option>
-    <option value="skills">09 · Skills</option>
-    <option value="scale">10 · At Scale</option>
-    <option value="reference">11 · Reference</option>
+    <option value="chat">02 · ★ Chat Wins</option>
+    <option value="square">03 · Square One</option>
+    <option value="core">04 · OS Core</option>
+    <option value="connectors">05 · Connectors</option>
+    <option value="zotero">06 · ★ Zotero + Papers</option>
+    <option value="cowork">07 · Cowork</option>
+    <option value="code">08 · Claude Code</option>
+    <option value="graph">09 · The Graph</option>
+    <option value="skills">10 · Skills</option>
+    <option value="scale">11 · At Scale</option>
+    <option value="reference">12 · Reference</option>
   </select>
   <div class="progressrail"><div class="fill" id="progFill"></div></div>
 </nav>
@@ -494,8 +526,8 @@
         <button class="track t-beg" data-track="beginner" type="button">
           <span class="who">New to AI</span>
           <span class="go">Complete <span>beginner</span></span>
-          <span class="d">You've barely touched AI. Understand what it is, make a free account, and seed your first Project — no terminal, no cost.</span>
-          <span class="pathmini">Why → Square One → OS Core → Reference</span>
+          <span class="d">You've barely touched AI. Understand what it is, do a real task in the chat box tonight, make a free account, and seed your first Project — no terminal, no cost.</span>
+          <span class="pathmini">Why → ★ Chat Wins → Square One → OS Core → Reference</span>
           <span class="tgo">Start the beginner path →</span>
         </button>
         <button class="track t-first" data-track="first" type="button">
@@ -514,6 +546,7 @@
         </button>
       </div>
       <p class="next" style="margin-top:14px"><span class="lab">Or jump straight to →</span>
+        <button class="goto" data-goto="chat">★ Chat Wins — tonight</button>
         <button class="goto" data-goto="square">Square One</button>
         <button class="goto" data-goto="core">OS Core</button>
         <button class="goto" data-goto="connectors">Connectors</button>
@@ -801,9 +834,505 @@
       </div>
       <p class="body-text" style="margin-top:18px">A <code class="inl">[[wiki-link]]</code> is you telling your second brain "these two ideas are related." Backlinks mean every note knows who points at it. The more a note is referenced, the bigger it grows. <strong>That visible web is the compounding</strong> — and you'll grow it live, in Obsidian, with papers pulled straight from PubMed.</p>
       <div class="next"><span class="lab">Where next →</span>
-        <button class="goto" data-goto="square">① Square One</button>
-        <button class="goto" data-goto="core">② OS Core</button>
+        <button class="goto" data-goto="chat">★ Chat Wins — do one tonight</button>
+        <button class="goto" data-goto="square">Square One</button>
+        <button class="goto" data-goto="core">OS Core</button>
         <button class="goto" data-goto="zotero">★ Zotero + Papers</button>
+      </div>
+    </div>
+  </section>
+</section>
+<!-- ===================== TAB · CHAT WINS ===================== -->
+<section class="tabpanel" id="panel-chat" role="tabpanel" aria-labelledby="tabbtn-chat" hidden>
+  <!-- INTRO + outcome banner + 12-things grid + verify rule -->
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Track 1 · Chat — no install, no cost</span>
+      <h2>Do one real thing with AI <em>tonight</em> — right in the chat box.</h2>
+      <p class="sectsub">Before you build anything, prove the value. Here are twelve things a surgeon can do in a plain chat window — tonight, on a free account, no terminal. Each one is a concrete task on real orthopaedic work, with a copy-paste prompt and a one-line check.</p>
+
+      <div class="outbanner"><span class="ic">🌙</span><p><b>When you finish tonight,</b> you'll have done one real thing with AI on your own work — a cited evidence brief, a tight abstract, a teaching deck, a quiz, or a patient handout — and you'll see exactly where an OS goes next.</p></div>
+
+      <!-- HERO a · 12 things tonight grid -->
+      <div class="card heromenu">
+        <svg viewBox="0 0 920 286" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A grid of the twelve chat tasks for tonight: 1 deep research, 2 slide deck, 3 abstract fit, 4 quiz sheet, 5 codes draft, 6 patient handout, 7 appeal letter, 8 guideline summary, 9 peer review, 10 boards prep, 11 consult note, 12 plain language.">
+          <text x="16" y="0" dy="0" fill="#F4D03F" font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" dominant-baseline="hanging">12 THINGS YOU CAN DO TONIGHT</text>
+          <g font-family="Inter,sans-serif">
+            <!-- row 1 -->
+            <g><rect x="16"  y="28" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="44"  cy="65" r="13" fill="#F4D03F"/><text x="44"  y="65" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">1</text><text x="66"  y="65" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Deep research</text></g>
+            <g><rect x="244" y="28" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="272" cy="65" r="13" fill="#F4D03F"/><text x="272" y="65" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">2</text><text x="294" y="65" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Slide deck</text></g>
+            <g><rect x="472" y="28" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="500" cy="65" r="13" fill="#F4D03F"/><text x="500" y="65" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">3</text><text x="522" y="65" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Abstract fit</text></g>
+            <g><rect x="700" y="28" width="204" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="728" cy="65" r="13" fill="#F4D03F"/><text x="728" y="65" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">4</text><text x="750" y="65" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Quiz sheet</text></g>
+            <!-- row 2 -->
+            <g><rect x="16"  y="112" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="44"  cy="149" r="13" fill="#F4D03F"/><text x="44"  y="149" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">5</text><text x="66"  y="149" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Codes draft</text></g>
+            <g><rect x="244" y="112" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="272" cy="149" r="13" fill="#F4D03F"/><text x="272" y="149" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">6</text><text x="294" y="149" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Patient handout</text></g>
+            <g><rect x="472" y="112" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="500" cy="149" r="13" fill="#F4D03F"/><text x="500" y="149" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">7</text><text x="522" y="149" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Appeal letter</text></g>
+            <g><rect x="700" y="112" width="204" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="728" cy="149" r="13" fill="#F4D03F"/><text x="728" y="149" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="12" font-weight="800">8</text><text x="750" y="149" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Guideline</text></g>
+            <!-- row 3 -->
+            <g><rect x="16"  y="196" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="44"  cy="233" r="13" fill="#F4D03F"/><text x="44"  y="233" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="11" font-weight="800">9</text><text x="66"  y="233" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Peer review</text></g>
+            <g><rect x="244" y="196" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="272" cy="233" r="13" fill="#F4D03F"/><text x="272" y="233" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="11" font-weight="800">10</text><text x="294" y="233" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Boards prep</text></g>
+            <g><rect x="472" y="196" width="212" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="500" cy="233" r="13" fill="#F4D03F"/><text x="500" y="233" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="11" font-weight="800">11</text><text x="522" y="233" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Consult note</text></g>
+            <g><rect x="700" y="196" width="204" height="74" rx="12" fill="#1B4F72" fill-opacity="0.30" stroke="#F4D03F" stroke-opacity="0.22"/><circle cx="728" cy="233" r="13" fill="#F4D03F"/><text x="728" y="233" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-size="11" font-weight="800">12</text><text x="750" y="233" dominant-baseline="central" fill="#E8EDF1" font-size="13" font-weight="600">Plain language</text></g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- the one rule -->
+      <div class="callout" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+        <svg viewBox="0 0 140 140" width="118" height="118" role="img" aria-label="A stamp that reads: AI drafts, you verify — with a check mark." style="flex:none">
+          <circle cx="70" cy="70" r="64" fill="none" stroke="#F4D03F" stroke-width="2" stroke-dasharray="5 6" stroke-opacity="0.65"/>
+          <circle cx="70" cy="70" r="52" fill="none" stroke="#F4D03F" stroke-width="2" stroke-opacity="0.85"/>
+          <text x="70" y="46" text-anchor="middle" fill="#F9E547" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">AI DRAFTS</text>
+          <path d="M52 74 l11 12 l24 -28" fill="none" stroke="#1ABC9C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="70" y="106" text-anchor="middle" fill="#F9E547" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">YOU VERIFY</text>
+        </svg>
+        <div style="flex:1;min-width:240px"><b>One rule across all twelve.</b> AI writes a <em>draft</em>; you are the verifier. Open every citation, re-read every number, and confirm anything clinical or coding-related against the source before you use it. The model can sound certain and be wrong — your judgment is the safety check.</div>
+      </div>
+
+      <div class="rule"><span class="ic">🔒</span><div><b>No patient data.</b> A personal AI account has no BAA — never paste PHI (names, MRNs, dates of service, identifiable images). Every example here is de-identified; add identifiers only inside your EHR.</div></div>
+
+      <p class="body-text" style="color:var(--dim);font-size:.92rem">You'll need a free account — two minutes in <button class="goto" data-goto="square" style="padding:3px 9px;font-size:11px">Square One</button>. The free tier covers everything on this page <span class="asof" style="display:inline">(as of June 2026; see <button class="goto" data-goto="reference" style="padding:3px 9px;font-size:11px">Reference</button> for the free-vs-paid nuance)</span>. Then work down the list — or jump to whichever win you need first.</p>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section class="pad alt">
+    <div class="wrap reveal">
+      <span class="badge">Tonight's twelve · copy, paste, verify</span>
+      <h2>Each one is a real task — with the prompt and the check.</h2>
+      <div class="chatmods">
+
+        <!-- M1 · Deep research -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">1</span><h3>Deep research — an evidence brief with citations</h3><span class="subsp">Arthroplasty</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Ask the model to research a question in <em>extended-thinking / research mode</em> and return an organized brief where every claim carries a source.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>A fast, structured starting point for a talk, a protocol, or a clinical question — sorted into well-supported vs. uncertain, with PMIDs you can check.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> tranexamic acid in primary total knee arthroplasty — indications, IV vs. topical dosing, contraindications, strength of evidence. (Swap in cefazolin redosing in long cases, or return-to-sport after ACL reconstruction.)</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · deep research</span><button class="copy" data-copy="c1">Copy</button></div>
+            <pre id="c1">Act as an evidence librarian. Give me a current, well-organized evidence
+brief on tranexamic acid (TXA) in primary total knee arthroplasty:
+indications, IV vs topical vs combined dosing, contraindications, and the
+overall strength of evidence.
+
+Rules:
+- Use your research / extended-thinking mode and work step by step.
+- Every claim must carry a citation; list the PMIDs at the end.
+- Separate "well-supported" from "uncertain or mixed."
+- Flag anything I must verify before I quote it.</pre>
+          </div>
+          <!-- HERO c · claim -> source flow -->
+          <div class="modsvg" style="max-width:100%">
+            <svg viewBox="0 0 920 150" width="100%" style="max-width:760px" role="img" aria-label="Flow: your question leads to an AI-drafted claim, which is traced to PubMed, which yields a PMID and source, which you verify with a check.">
+              <defs><marker id="cflow" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <g font-family="Inter,sans-serif" font-size="13">
+                <rect x="8"   y="48" width="150" height="56" rx="11" fill="#1B4F72" fill-opacity="0.35" stroke="#A8B5C2" stroke-opacity="0.4"/><text x="83"  y="76" text-anchor="middle" dominant-baseline="central" fill="#E8EDF1">Your question</text>
+                <rect x="196" y="48" width="160" height="56" rx="11" fill="#1B4F72" fill-opacity="0.35" stroke="#3498DB" stroke-opacity="0.6"/><text x="276" y="76" text-anchor="middle" dominant-baseline="central" fill="#8fd0f5">AI drafts a claim</text>
+                <path d="M396 76 q22 -18 44 0" fill="none" stroke="#3498DB" stroke-opacity="0.45"/>
+                <path d="M404 50 h40 a8 8 0 0 1 8 8 v36 a8 8 0 0 1 -8 8 h-40 a8 8 0 0 1 -8 -8 v-36 a8 8 0 0 1 8 -8 z" fill="#1B4F72" fill-opacity="0.5" stroke="#1ABC9C" stroke-opacity="0.7"/><text x="424" y="76" text-anchor="middle" dominant-baseline="central" fill="#5fe6c8" font-size="12" font-weight="700">PubMed</text>
+                <rect x="490" y="48" width="150" height="56" rx="11" fill="#1B4F72" fill-opacity="0.35" stroke="#A8B5C2" stroke-opacity="0.4"/><text x="565" y="76" text-anchor="middle" dominant-baseline="central" fill="#E8EDF1">PMID + source</text>
+                <rect x="678" y="48" width="160" height="56" rx="11" fill="#244F2E" fill-opacity="0.4" stroke="#1ABC9C" stroke-opacity="0.7"/><path d="M706 76 l8 9 l16 -20" fill="none" stroke="#1ABC9C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="760" y="76" text-anchor="middle" dominant-baseline="central" fill="#5fe6c8">You verify</text>
+                <line x1="160" y1="76" x2="190" y2="76" stroke="#F4D03F" marker-end="url(#cflow)"/>
+                <line x1="356" y1="76" x2="398" y2="76" stroke="#F4D03F" marker-end="url(#cflow)"/>
+                <line x1="452" y1="76" x2="486" y2="76" stroke="#F4D03F" marker-end="url(#cflow)"/>
+                <line x1="640" y1="76" x2="674" y2="76" stroke="#F4D03F" marker-end="url(#cflow)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> models can invent citations. Open every PMID in PubMed yourself; if a reference won't resolve, treat the claim as unverified. (Doing this at manuscript scale is exactly the <button class="goto" data-goto="skills" style="padding:2px 8px;font-size:11px">LitGuard</button> pattern.)</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you have a brief whose claims you've each traced to a PMID that actually resolves.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Deep-research walkthrough — add URL</span><span class="medichip"><b>🎧 Listen</b> · "How I use AI in research" — add URL</span></div>
+        </div>
+
+        <!-- M2 · Slide deck -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">2</span><h3>Build a PowerPoint — a deck from a paper or an outline</h3><span class="subsp">Trauma</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Hand the model a paper or a few bullets and get a slide-by-slide deck outline — titles, bullets, and speaker notes — ready to drop into your slides.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>Journal club, M&amp;M, and grand rounds stop eating your evening. The structure is done; you bring the judgment and the figures.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a journal-club deck on a trial of intramedullary nailing for tibial shaft fractures — one idea per slide, ending in discussion questions.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · slide deck</span><button class="copy" data-copy="c2">Copy</button></div>
+            <pre id="c2">Turn the paper I'm pasting into a 10-slide journal-club deck for a
+trauma conference. One idea per slide, in this order: clinical question,
+background, study design, population, key results (with the numbers),
+limitations, how it changes practice, and 3 discussion questions.
+
+Give me a title and concise bullets for each slide plus a one-line
+speaker note. Keep every claim tied to what the paper actually reports.
+
+[paste the paper or its abstract + results]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A stack of slides with a play marker.">
+              <rect x="20" y="10" width="86" height="56" rx="6" fill="#1B4F72" fill-opacity="0.25" stroke="#A8B5C2" stroke-opacity="0.35"/>
+              <rect x="14" y="18" width="86" height="56" rx="6" fill="#1B4F72" fill-opacity="0.35" stroke="#A8B5C2" stroke-opacity="0.45"/>
+              <rect x="8"  y="26" width="86" height="56" rx="6" fill="#1B4F72" fill-opacity="0.5"  stroke="#F4D03F" stroke-opacity="0.6"/>
+              <line x1="16" y1="38" x2="70" y2="38" stroke="#F4D03F" stroke-width="3" stroke-linecap="round"/>
+              <line x1="16" y1="50" x2="86" y2="50" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"/>
+              <line x1="16" y1="60" x2="78" y2="60" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="104" cy="70" r="13" fill="#F4D03F"/><path d="M100 64 l9 6 l-9 6 z" fill="#0A1E2E"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> the deck is only as right as the source — check that every number on a slide matches the paper; models can round or drift. No patient data in the file.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you have a slide outline whose numbers you've confirmed against the paper.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Paper → deck screencast — add URL</span></div>
+        </div>
+
+        <!-- M3 · Abstract to word count -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">3</span><h3>Format a paper or abstract — fit the word limit, keep the science</h3><span class="subsp">Sports</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Trim an abstract to a journal's exact word limit, enforce structured headings, and clean up grammar — without changing a single result.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>The deadline-night word-count fight, solved in one pass — so you spend your time on the science, not on shaving sentences.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a 412-word abstract from an ACL-reconstruction outcomes cohort, tightened to a 250-word IMRAD limit with every number preserved.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · abstract to word count</span><button class="copy" data-copy="c3">Copy</button></div>
+            <pre id="c3">Tighten this abstract to 250 words or fewer with IMRAD headings
+(Background, Methods, Results, Conclusion). Keep every result and every
+number exactly as written. Fix grammar and flow without changing meaning.
+Do not add findings. Show the final word count at the end.
+
+[paste abstract]</pre>
+          </div>
+          <!-- HERO b · before/after abstract card -->
+          <div class="modsvg" style="max-width:100%">
+            <svg viewBox="0 0 920 220" width="100%" style="max-width:760px" role="img" aria-label="Before and after: a bloated 412-word abstract on the left becomes a tight 250-word IMRAD abstract on the right.">
+              <defs><marker id="cba" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <!-- before -->
+              <rect x="8" y="14" width="372" height="192" rx="12" fill="#2A1416" fill-opacity="0.5" stroke="#E74C3C" stroke-opacity="0.45"/>
+              <text x="28" y="40" fill="#E74C3C" font-family="Inter,sans-serif" font-size="13" font-weight="700">Bloated · unstructured</text>
+              <g stroke="#A8B5C2" stroke-opacity="0.5" stroke-width="6" stroke-linecap="round">
+                <line x1="28" y1="62" x2="356" y2="62"/><line x1="28" y1="80" x2="360" y2="80"/><line x1="28" y1="98" x2="344" y2="98"/><line x1="28" y1="116" x2="358" y2="116"/><line x1="28" y1="134" x2="350" y2="134"/><line x1="28" y1="152" x2="356" y2="152"/><line x1="28" y1="170" x2="338" y2="170"/>
+              </g>
+              <rect x="270" y="180" width="92" height="20" rx="10" fill="#E74C3C" fill-opacity="0.85"/><text x="316" y="190" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">412 words</text>
+              <!-- arrow -->
+              <line x1="392" y1="110" x2="436" y2="110" stroke="#F4D03F" stroke-width="2" marker-end="url(#cba)"/>
+              <!-- after -->
+              <rect x="448" y="14" width="464" height="192" rx="12" fill="#0F2D1C" fill-opacity="0.5" stroke="#1ABC9C" stroke-opacity="0.55"/>
+              <text x="470" y="40" fill="#5fe6c8" font-family="Inter,sans-serif" font-size="13" font-weight="700">Tight · IMRAD</text>
+              <g font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#F4D03F">
+                <text x="470" y="62">BACKGROUND</text><text x="470" y="104">METHODS</text><text x="470" y="146">RESULTS</text><text x="470" y="182">CONCLUSION</text>
+              </g>
+              <g stroke="#A8B5C2" stroke-opacity="0.55" stroke-width="5" stroke-linecap="round">
+                <line x1="470" y1="74" x2="880" y2="74"/><line x1="470" y1="116" x2="884" y2="116"/><line x1="470" y1="158" x2="876" y2="158"/>
+              </g>
+              <rect x="800" y="184" width="92" height="20" rx="10" fill="#1ABC9C" fill-opacity="0.85"/><text x="846" y="194" text-anchor="middle" dominant-baseline="central" fill="#04241c" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">250 words</text>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> re-read it line by line — confirm no number changed and no result was dropped or invented. Then confirm the journal's actual word limit and heading rules.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> the abstract is under the limit, structured, and every number matches your original.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Writing tighter with AI — add URL</span></div>
+        </div>
+
+        <!-- M4 · Conference quiz -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">4</span><h3>Conference quiz sheet — board-style MCQs with a key</h3><span class="subsp">Peds</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Generate OITE/board-style multiple-choice questions on a topic, with a labeled answer key and one-line rationales.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>A fellows' or residents' teaching conference goes from a blank page to a ready quiz in minutes — you just curate.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> 10 questions on pediatric supracondylar humerus fractures — classification, neurovascular exam, operative indications, complications.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · quiz sheet</span><button class="copy" data-copy="c4">Copy</button></div>
+            <pre id="c4">Write 10 board-style multiple-choice questions on pediatric supracondylar
+humerus fractures for a fellows' teaching conference. Cover classification,
+the neurovascular exam, indications for operative vs nonoperative care, and
+complications. Five options each, one best answer, a labeled answer key,
+and a one-line rationale per question. Keep it consistent with standard
+teaching.</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A quiz card with multiple-choice options, one marked correct.">
+              <rect x="14" y="8" width="102" height="76" rx="8" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <line x1="26" y1="22" x2="92" y2="22" stroke="#F4D03F" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="30" cy="38" r="5" fill="none" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2"/><line x1="42" y1="38" x2="96" y2="38" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="30" cy="52" r="5" fill="#1ABC9C"/><path d="M27 52 l2.5 2.5 l4 -5" fill="none" stroke="#04241c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="42" y1="52" x2="96" y2="52" stroke="#5fe6c8" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="30" cy="66" r="5" fill="none" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2"/><line x1="42" y1="66" x2="88" y2="66" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> you're the content expert — read every stem and rationale and fix anything outdated or wrong before you teach from it.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you've reviewed all 10 questions and stand behind every answer key entry.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Teaching with AI-built quizzes — add URL</span></div>
+        </div>
+
+        <!-- M5 · Billing codes + documentation -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">5</span><h3>Billing codes + documentation — a draft to verify</h3><span class="subsp">Hand</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Ask the model to list <em>candidate</em> CPT and ICD-10-CM code types for a scenario <strong>and the documentation elements that support each</strong> — a starting draft, never a final bill.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>It turns "what should I be thinking about for this visit" into a checklist of code candidates and the note elements that justify them — so your documentation supports your work.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a new outpatient with a trigger finger plus an in-clinic tendon-sheath corticosteroid injection — what E/M level, procedure, and diagnosis codes to consider, and what the note must contain.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · coding + documentation draft</span><button class="copy" data-copy="c5">Copy</button></div>
+            <pre id="c5">I saw a new outpatient with a trigger finger and did an in-clinic
+tendon-sheath corticosteroid injection. Acting as a coding assistant,
+list the CANDIDATE code types I should consider and what supports each:
+- the office/outpatient E/M level, and which history, exam, and
+  decision-making elements would justify it
+- the injection procedure code
+- the ICD-10-CM diagnosis code(s)
+For each, tell me the documentation elements my note must contain.
+Treat everything as a DRAFT to be verified — do not assume any code
+I have not confirmed.</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A coded note document with a draft stamp.">
+              <rect x="22" y="8" width="80" height="76" rx="7" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <g stroke="#A8B5C2" stroke-opacity="0.55" stroke-width="2.5" stroke-linecap="round"><line x1="32" y1="22" x2="92" y2="22"/><line x1="32" y1="32" x2="86" y2="32"/><line x1="32" y1="42" x2="92" y2="42"/></g>
+              <rect x="32" y="52" width="34" height="13" rx="3" fill="#F4D03F" fill-opacity="0.85"/><text x="49" y="59" text-anchor="middle" dominant-baseline="central" fill="#0A1E2E" font-family="JetBrains Mono,monospace" font-size="8" font-weight="700">CPT</text>
+              <rect x="70" y="52" width="22" height="13" rx="3" fill="#3498DB" fill-opacity="0.85"/><text x="81" y="59" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700">ICD</text>
+              <g transform="rotate(-14 70 76)"><rect x="40" y="69" width="60" height="16" rx="3" fill="none" stroke="#E74C3C" stroke-width="2"/><text x="70" y="77" text-anchor="middle" dominant-baseline="central" fill="#ff9a8f" font-family="JetBrains Mono,monospace" font-size="8.5" font-weight="700">DRAFT</text></g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">⚠️</span><p><b>Verify (hard rule):</b> AI coding output is a starting draft, <b>not billable</b>. Confirm every code against the current CPT and ICD-10-CM sets, NCCI edits, and your payer's policy — codes change yearly. (ICD-9 was retired in the US in 2015; always use ICD-10-CM.) No patient identifiers in the chat.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you have a checklist of candidate codes and supporting documentation that you (or your coder) verify against current rules before submitting.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Documentation that supports the code — add URL</span></div>
+        </div>
+
+        <!-- M6 · Patient handout -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">6</span><h3>Patient-education handout — plain-language, 6th-grade level</h3><span class="subsp">Foot &amp; Ankle</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Draft a clear, warm, one-page handout at a plain reading level, with brackets where you fill in the specifics.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>Better-understood instructions mean fewer confused calls and safer recoveries — and you keep full control of the medical content.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> post-op weight-bearing and care instructions after open reduction and internal fixation of an ankle fracture.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · patient handout</span><button class="copy" data-copy="c6">Copy</button></div>
+            <pre id="c6">Write a one-page, plain-language handout for a patient after surgery to
+fix a broken ankle. Target a 6th-grade reading level. Cover: weight-bearing
+instructions (use the level I specify), keeping the splint or cast dry,
+swelling and elevation, pain expectations, warning signs that need a call,
+and the follow-up plan. Warm, clear, no jargon. Leave [brackets] anywhere I
+need to fill in specifics, and end with: "Always follow your surgeon's
+specific instructions."
+
+[specify: weight-bearing status, follow-up timing]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A patient handout page with a heart, written in plain language.">
+              <rect x="30" y="8" width="70" height="76" rx="7" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <rect x="40" y="18" width="50" height="10" rx="3" fill="#F4D03F" fill-opacity="0.8"/>
+              <g stroke="#A8B5C2" stroke-opacity="0.55" stroke-width="2.5" stroke-linecap="round"><line x1="40" y1="38" x2="90" y2="38"/><line x1="40" y1="48" x2="86" y2="48"/><line x1="40" y1="58" x2="90" y2="58"/></g>
+              <path d="M65 78 c-6 -7 -16 -2 -10 6 c2 3 7 6 10 8 c3 -2 8 -5 10 -8 c6 -8 -4 -13 -10 -6 z" fill="#E74C3C" fill-opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> you set the medical instructions — read it and correct anything that doesn't match your plan. Hand the patient <em>your</em> final version. No identifiers in the draft.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> the handout reads simply, matches your post-op plan, and you'd give it to a patient.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Plain-language patient materials — add URL</span></div>
+        </div>
+
+        <!-- M7 · Letter of medical necessity -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">7</span><h3>Letter of medical necessity / prior-auth appeal</h3><span class="subsp">Onc</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Draft a professional appeal or necessity letter from your clinical rationale — indication, urgency, risk of delay — with brackets for the specifics.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>The administrative drafting that delays care gets a strong first version in minutes; you add the record-specific facts.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a letter supporting advanced imaging (MRI with and without contrast) to work up an indeterminate bone lesion before a planned biopsy.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · medical-necessity letter</span><button class="copy" data-copy="c7">Copy</button></div>
+            <pre id="c7">Draft a letter of medical necessity for advanced imaging (MRI with and
+without contrast) to work up an indeterminate bone lesion before a planned
+biopsy. Write from the clinical rationale I give you, in a professional
+appeal tone: state the indication, why the imaging is necessary now, the
+risk of not doing it, and the relevant findings. Use [brackets] for anything
+I must fill in. No patient identifiers — I will add those to the final
+letter myself.
+
+[paste de-identified clinical rationale]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A formal letter with a signature line.">
+              <rect x="24" y="10" width="82" height="72" rx="6" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <g stroke="#A8B5C2" stroke-opacity="0.55" stroke-width="2.3" stroke-linecap="round"><line x1="34" y1="24" x2="96" y2="24"/><line x1="34" y1="34" x2="90" y2="34"/><line x1="34" y1="44" x2="96" y2="44"/><line x1="34" y1="54" x2="86" y2="54"/></g>
+              <path d="M34 70 q8 -8 14 0 t14 0" fill="none" stroke="#F4D03F" stroke-width="2.4" stroke-linecap="round"/>
+              <line x1="34" y1="76" x2="80" y2="76" stroke="#A8B5C2" stroke-opacity="0.5" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> read the rationale for accuracy, add the identifiers and any payer-required language yourself in your EHR, and confirm it matches the actual record before it goes out.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> the letter is accurate, record-matched, and ready for your signature in the EHR.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Cutting prior-auth drafting time — add URL</span></div>
+        </div>
+
+        <!-- M8 · Summarize a guideline -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">8</span><h3>Summarize a guideline — talking points from a long document</h3><span class="subsp">Trauma</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Turn a long clinical practice guideline or RCT into a one-page set of talking points, each tagged with its stated strength of evidence.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>You walk into rounds or a committee with the key recommendations and their evidence grades, sourced to the document itself.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a clinical practice guideline on managing hip fractures in older adults, distilled to bedside talking points plus a visual-abstract outline.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · guideline summary</span><button class="copy" data-copy="c8">Copy</button></div>
+            <pre id="c8">I'm pasting a long clinical practice guideline. Summarize it into a one-page
+set of talking points I can use on rounds: the key recommendations, each with
+its strength of evidence as stated in the document, and a short "what this
+means at the bedside" line. Then sketch a simple visual-abstract outline
+(boxes and arrows, in text) I could hand to a designer. Use only what's in
+the document; mark anything ambiguous.
+
+[paste the guideline text]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A guideline checklist with evidence-grade tags.">
+              <rect x="20" y="8" width="90" height="76" rx="7" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <g><path d="M30 24 l3 3 l6 -7" fill="none" stroke="#1ABC9C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><line x1="46" y1="24" x2="84" y2="24" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2.4" stroke-linecap="round"/><rect x="90" y="19" width="12" height="11" rx="3" fill="#F4D03F" fill-opacity="0.85"/></g>
+              <g><path d="M30 44 l3 3 l6 -7" fill="none" stroke="#1ABC9C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><line x1="46" y1="44" x2="80" y2="44" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2.4" stroke-linecap="round"/><rect x="90" y="39" width="12" height="11" rx="3" fill="#3498DB" fill-opacity="0.85"/></g>
+              <g><path d="M30 64 l3 3 l6 -7" fill="none" stroke="#1ABC9C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><line x1="46" y1="64" x2="84" y2="64" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2.4" stroke-linecap="round"/><rect x="90" y="59" width="12" height="11" rx="3" fill="#9B59B6" fill-opacity="0.85"/></g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> summaries drift — check each recommendation and its evidence grade against the source document before you cite it.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> every talking point and grade matches the guideline you pasted.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Visual abstracts from guidelines — add URL</span></div>
+        </div>
+
+        <!-- M9 · Peer review -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">9</span><h3>Peer review / reviewer response — structure the critique</h3><span class="subsp">Spine</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Shape a constructive peer review — summary, major points, minor points, recommendation — or draft point-by-point responses to reviewers of your own paper.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>A blank review form or a daunting revision becomes an organized, collegial draft you refine with your own judgment.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a constructive review of a spine-deformity manuscript, organized into major and minor points with an editor-facing recommendation.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · peer review</span><button class="copy" data-copy="c9">Copy</button></div>
+            <pre id="c9">Help me draft a constructive peer review of the spine-deformity manuscript
+I'm pasting. Structure it as: a 3-sentence summary of what the paper claims,
+then Major points and Minor points (each specific and actionable), then an
+overall recommendation framed as a question for the editor — not a final
+decision. Professional and collegial in tone. Base every comment on the text
+I give you.
+
+[paste the manuscript section under review]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A manuscript with major and minor review marks.">
+              <rect x="22" y="8" width="86" height="76" rx="7" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <g stroke="#A8B5C2" stroke-opacity="0.55" stroke-width="2.3" stroke-linecap="round"><line x1="44" y1="24" x2="98" y2="24"/><line x1="44" y1="40" x2="98" y2="40"/><line x1="44" y1="56" x2="98" y2="56"/><line x1="44" y1="72" x2="92" y2="72"/></g>
+              <circle cx="33" cy="24" r="5.5" fill="none" stroke="#F4D03F" stroke-width="2"/><text x="33" y="24" text-anchor="middle" dominant-baseline="central" fill="#F4D03F" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700">M</text>
+              <path d="M29 38 l3 3 l6 -7" fill="none" stroke="#1ABC9C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M30 53 l6 6 m0 -6 l-6 6" stroke="#E74C3C" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M29 70 l3 3 l6 -7" fill="none" stroke="#1ABC9C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> the scientific judgment is yours — every critique must reflect <em>your</em> read of the paper. Honor the journal's confidentiality rules; don't paste a confidential manuscript into a tool whose data terms you haven't checked.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> every point reflects your own assessment and respects confidentiality.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Reviewing and responding well — add URL</span></div>
+        </div>
+
+        <!-- M10 · Boards prep -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">10</span><h3>Study + boards prep — a plan, flashcards, a teaching sheet</h3><span class="subsp">Resident</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Build a structured OITE/boards study schedule, turn a topic into Anki-style flashcards, and spin up a one-page teaching sheet.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>Trainees (and faculty refreshing for recertification) get an organized, high-yield plan instead of an overwhelming pile.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> an 8-week OITE plan weighted to high-yield domains, plus 15 flashcards and a teaching sheet for this week's topic.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · study plan + flashcards</span><button class="copy" data-copy="c10">Copy</button></div>
+            <pre id="c10">Build me an 8-week OITE study plan. I can study [X] hours on weekdays and
+[Y] on weekends. Spread the major orthopaedic domains across the weeks,
+weight the higher-yield areas, and build in weekly review and a practice-test
+day. Then turn this week's topic into 15 Anki-style flashcards (question on
+front, concise answer on back) and a one-page teaching sheet I could present.
+
+[fill in X, Y, and this week's topic]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A study calendar with marked review and test days.">
+              <rect x="20" y="12" width="90" height="70" rx="7" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <line x1="20" y1="28" x2="110" y2="28" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <rect x="34" y="6" width="6" height="12" rx="3" fill="#F4D03F"/><rect x="90" y="6" width="6" height="12" rx="3" fill="#F4D03F"/>
+              <g fill="#A8B5C2" fill-opacity="0.45"><rect x="28" y="36" width="12" height="9" rx="2"/><rect x="46" y="36" width="12" height="9" rx="2"/><rect x="64" y="36" width="12" height="9" rx="2"/><rect x="82" y="36" width="12" height="9" rx="2"/><rect x="28" y="52" width="12" height="9" rx="2"/><rect x="64" y="52" width="12" height="9" rx="2"/><rect x="82" y="52" width="12" height="9" rx="2"/><rect x="28" y="68" width="12" height="9" rx="2"/><rect x="46" y="68" width="12" height="9" rx="2"/></g>
+              <rect x="46" y="52" width="12" height="9" rx="2" fill="#1ABC9C"/><rect x="82" y="68" width="12" height="9" rx="2" fill="#F4D03F"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> spot-check the flashcard answers against a trusted source — AI flashcards can encode a wrong fact you'll then memorize.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you have a plan you'll follow and flashcards you've fact-checked.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Building a study system with AI — add URL</span></div>
+        </div>
+
+        <!-- M11 · Referral / consult communication -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">11</span><h3>Referral / consult communication — a clear note back</h3><span class="subsp">Sports</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Draft a concise, professional letter back to a referring physician — reason, assessment, plan, and follow-up — with brackets for specifics.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>Cleaner communication closes the loop with referrers and builds the relationships that feed your practice.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a sports-medicine note back to a primary care physician who referred a young athlete with a knee injury, including return-to-play guidance.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · consult letter</span><button class="copy" data-copy="c11">Copy</button></div>
+            <pre id="c11">Draft a brief, clear letter from me (orthopaedic sports medicine) back to a
+primary care physician who referred a young athlete with a knee injury.
+Include: reason for referral, my assessment in plain clinical language, the
+plan (imaging, therapy, or procedure), activity and return-to-play guidance,
+and clear follow-up. Professional, concise, one page. Use [brackets] for
+specifics; no patient identifiers — I'll add those in the EHR.
+
+[paste de-identified summary]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A handoff: a note passed from one clinician box to another.">
+              <rect x="8" y="30" width="40" height="32" rx="6" fill="#1B4F72" fill-opacity="0.45" stroke="#F4D03F" stroke-opacity="0.5"/><text x="28" y="46" text-anchor="middle" dominant-baseline="central" fill="#E8EDF1" font-family="Inter,sans-serif" font-size="9" font-weight="700">Ortho</text>
+              <rect x="82" y="30" width="40" height="32" rx="6" fill="#1B4F72" fill-opacity="0.45" stroke="#3498DB" stroke-opacity="0.6"/><text x="102" y="46" text-anchor="middle" dominant-baseline="central" fill="#8fd0f5" font-family="Inter,sans-serif" font-size="9" font-weight="700">PCP</text>
+              <defs><marker id="chand" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <rect x="56" y="40" width="14" height="11" rx="2" fill="#FAFAFA" fill-opacity="0.85"/>
+              <line x1="48" y1="46" x2="80" y2="46" stroke="#F4D03F" stroke-width="2" marker-end="url(#chand)"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> confirm the plan and details match the actual encounter; add identifiers only inside your EHR. Don't send anything the chart doesn't support.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> the letter matches the encounter and is ready to send from your EHR.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Closing the loop with referrers — add URL</span></div>
+        </div>
+
+        <!-- M12 · Translate jargon -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">12</span><h3>Translate jargon — a report into plain language</h3><span class="subsp">Sports</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Rewrite a de-identified radiology or pathology report into plain language a patient can understand — accurate to the report, no new diagnosis.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>A ready-made plain-language version makes the clinic conversation faster and clearer — you edit, you don't start from scratch.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a de-identified knee MRI report rewritten so a patient can follow what the findings mean — without overstating or alarming.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · plain-language translation</span><button class="copy" data-copy="c12">Copy</button></div>
+            <pre id="c12">I'm pasting a de-identified MRI report. Rewrite it in plain language a
+patient could understand in clinic: what the structures are, what the
+findings mean, and what's normal vs. what may need attention — without
+overstating or alarming. Keep it accurate to the report; do not add a
+diagnosis or a treatment recommendation the report doesn't contain. Flag
+anything I should explain in person.
+
+[paste de-identified report]</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A jargon speech bubble translated into a plain-language speech bubble.">
+              <path d="M16 16 h44 a8 8 0 0 1 8 8 v20 a8 8 0 0 1 -8 8 h-30 l-10 9 v-9 h-4 a8 8 0 0 1 -8 -8 v-20 a8 8 0 0 1 8 -8 z" fill="#1B4F72" fill-opacity="0.5" stroke="#A8B5C2" stroke-opacity="0.45"/>
+              <g stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2.2" stroke-linecap="round"><line x1="24" y1="28" x2="58" y2="28"/><line x1="24" y1="38" x2="52" y2="38"/></g>
+              <defs><marker id="ctrans" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <line x1="62" y1="58" x2="74" y2="58" stroke="#F4D03F" stroke-width="2" marker-end="url(#ctrans)"/>
+              <path d="M70 42 h44 a8 8 0 0 1 8 8 v20 a8 8 0 0 1 -8 8 h-4 v9 l-10 -9 h-30 a8 8 0 0 1 -8 -8 v-20 a8 8 0 0 1 8 -8 z" fill="#0F2D1C" fill-opacity="0.55" stroke="#1ABC9C" stroke-opacity="0.6"/>
+              <g stroke="#5fe6c8" stroke-opacity="0.8" stroke-width="2.2" stroke-linecap="round"><line x1="80" y1="54" x2="112" y2="54"/><line x1="80" y1="64" x2="106" y2="64"/></g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> you own the interpretation — read the plain-language version against the actual report and correct any drift before using it with a patient. Strip all identifiers first.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> the plain-language version is accurate to the report and safe to use in clinic.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Explaining scans to patients — add URL</span></div>
+        </div>
+
+      </div>
+
+      <div class="donewhen" style="margin-top:26px"><span class="ic">🌙</span><div><b>Tonight's win.</b> Do <em>one</em> of these on your own work and you've crossed the line from reading about AI to using it. When you want it to remember you — your CV, your papers, your deadlines — that's the OS. Keep going.</div></div>
+      <div class="next"><span class="lab">Where next →</span>
+        <button class="goto" data-goto="square">Make a free account: Square One →</button>
+        <button class="goto" data-goto="core">Give it a memory: OS Core →</button>
+        <button class="goto" data-goto="reference">Privacy &amp; free-vs-paid: Reference →</button>
       </div>
     </div>
   </section>
@@ -812,7 +1341,7 @@
 <section class="tabpanel" id="panel-square" role="tabpanel" aria-labelledby="tabbtn-square" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 02 · Square One</span>
+      <span class="badge">Stage 03 · Square One</span>
       <h2>Never opened Claude? Start exactly here.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>The absolute beginning: make an account, install the few free apps, and understand the one thing you'll pay for and the (large) amount you won't. By the end you have a working account and an empty <em>Project</em> ready to seed.</p></div>
@@ -863,7 +1392,7 @@
 <section class="tabpanel" id="panel-core" role="tabpanel" aria-labelledby="tabbtn-core" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 03 · OS Core (Project + Memory)</span>
+      <span class="badge">Stage 04 · OS Core (Project + Memory)</span>
       <h2>Seed it with you — the move that turns chat into a chief of staff.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>A <em>Project</em> seeded with who you are — CV, goals, a couple of papers — plus a custom-instructions block that tells it how to help. This is the free personal-OS core (Rung 2), and it's the whole first build.</p></div>
@@ -948,7 +1477,7 @@ give me the next concrete action, not generic advice.</pre>
 <section class="tabpanel" id="panel-connectors" role="tabpanel" aria-labelledby="tabbtn-connectors" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 04 · Connectors (MCP)</span>
+      <span class="badge">Stage 05 · Connectors (MCP)</span>
       <h2>Give it hands — turn the connectors all the way on.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>A <strong>connector (MCP — Model Context Protocol)</strong> is a standard plug that lets an agent reach an outside tool: your files, PubMed, your calendar, Drive, Gmail, Slack. Add one once and the agent can use it in any conversation. Think <em>USB for AI</em> — one port, many devices.</p></div>
@@ -1030,7 +1559,7 @@ claude mcp list</pre>
 <section class="tabpanel" id="panel-zotero" role="tabpanel" aria-labelledby="tabbtn-zotero" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge flag">★ Stage 05 · Flagship — Zotero + Papers</span>
+      <span class="badge flag">★ Stage 06 · Flagship — Zotero + Papers</span>
       <h2>Make your OS <em>completely aware</em> of a paper — with an integrity check.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>The whole path: turn Zotero on (both layers), drop in a PDF you've marked up, and get back a linked Markdown node your OS can answer questions about — every reference resolved, retraction-checked, and graded. Not "get an API key." The full loop.</p></div>
@@ -1189,7 +1718,7 @@ that is mirrored into Zotero. Extends the base paper-ingest skill.
 <section class="tabpanel" id="panel-cowork" role="tabpanel" aria-labelledby="tabbtn-cowork" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 06 · Cowork (Rung 3)</span>
+      <span class="badge">Stage 07 · Cowork (Rung 3)</span>
       <h2>The agent workspace — no terminal required.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>Claude's no-terminal agent app, inside Claude Desktop. Unlike a Project (which talks <em>about</em> your files), Cowork <em>operates on</em> a real folder: it reads whole directories, runs multi-step work, executes skills, and <strong>creates files</strong> you keep.</p></div>
@@ -1225,7 +1754,7 @@ that is mirrored into Zotero. Extends the base paper-ingest skill.
 <section class="tabpanel" id="panel-code" role="tabpanel" aria-labelledby="tabbtn-code" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 07 · Claude Code (Rung 4)</span>
+      <span class="badge">Stage 08 · Claude Code (Rung 4)</span>
       <h2>The same power, in a terminal.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>The terminal agent — same workspace abilities as Cowork (reads folders, runs skills, writes files), driven from your shell. Fully scriptable, and the natural home for project-scoped connectors via a <code class="inl">.mcp.json</code> file.</p></div>
@@ -1297,7 +1826,7 @@ claude mcp list        # see what's connected
 <section class="tabpanel" id="panel-graph" role="tabpanel" aria-labelledby="tabbtn-graph" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 08 · The Graph (Obsidian · Rung 5)</span>
+      <span class="badge">Stage 09 · The Graph (Obsidian · Rung 5)</span>
       <h2>See the compounding — your second brain, getting denser.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>Obsidian opens your <code class="inl">My-OS/</code> folder as a <em>vault</em>: every note becomes a node, every <code class="inl">[[wiki-link]]</code> a line between them. Backlinks, graph view, all built in — no account, no key.</p></div>
@@ -1337,7 +1866,7 @@ claude mcp list        # see what's connected
 <section class="tabpanel" id="panel-skills" role="tabpanel" aria-labelledby="tabbtn-skills" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 09 · Skills</span>
+      <span class="badge">Stage 10 · Skills</span>
       <h2>Encode your best workflow once. Run it perfectly forever.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>A skill is a short Markdown file — your steps + rules, written down once — that the agent follows the same way every time. Messy input in, the same high-quality artifact out. A care pathway for cognitive work.</p></div>
@@ -1508,7 +2037,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 <section class="tabpanel" id="panel-scale" role="tabpanel" aria-labelledby="tabbtn-scale" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 10 · At Scale (Rung 6)</span>
+      <span class="badge">Stage 11 · At Scale (Rung 6)</span>
       <h2>What a mature OS does for a surgeon-scientist.</h2>
       <div class="whatwhy">
         <div class="box"><span class="k">What this is</span><p>Rung 6 is just every earlier rung, accumulated and wired together over a year: <strong>many agents + a skill library + a linked vault + connectors, across machines.</strong> Nothing new to learn — only more of the same, compounding.</p></div>
@@ -1553,7 +2082,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 <section class="tabpanel" id="panel-reference" role="tabpanel" aria-labelledby="tabbtn-reference" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 11 · Reference</span>
+      <span class="badge">Stage 12 · Reference</span>
       <h2>FAQ, glossary, pricing, privacy — always here.</h2>
       <p class="sectsub">The reference desk for the whole console: what it costs, how your data is handled, the alternatives, the words, and what the agent means when it says "terminal."</p>
 
@@ -1724,7 +2253,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
 <script>
   // ---- the tabs ----
-  var TABS=['why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
+  var TABS=['why','chat','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
   var tabBtns=Array.prototype.slice.call(document.querySelectorAll('.tab'));
   var panels=function(id){return document.getElementById('panel-'+id);};
   var sel=document.querySelector('.tabselect');
@@ -1796,11 +2325,11 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
   // ---- tracks (skill-level guided paths) ----
   var TRACKS={
-    beginner:{name:'Complete beginner',steps:['why','square','core','reference']},
+    beginner:{name:'Complete beginner',steps:['why','chat','square','core','reference']},
     first:{name:'First agentic OS',steps:['core','connectors','zotero','cowork','graph','skills']},
     advanced:{name:'Already built one',steps:['skills','graph','scale','code']}
   };
-  var TABLABEL={why:'Why',square:'Square One',core:'OS Core',connectors:'Connectors',zotero:'★ Zotero',
+  var TABLABEL={why:'Why',chat:'Chat Wins',square:'Square One',core:'OS Core',connectors:'Connectors',zotero:'★ Zotero',
     cowork:'Cowork',code:'Claude Code',graph:'The Graph',skills:'Skills',scale:'At Scale',reference:'Reference'};
   var currentTrack=null;
   var trackbar=document.getElementById('trackbar');
