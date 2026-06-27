@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<!-- build 20260619151032 -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -323,60 +322,59 @@
     border:1px solid rgba(244,208,63,.25);border-radius:12px;padding:16px 19px;margin:20px 0}
   .payoff .g{color:var(--gold-light)}
 
-  /* ===== daily signal banner ===== */
-  .daily{border-top:1px solid rgba(244,208,63,.10)}
-  .daily .wrap{display:flex;align-items:center;gap:14px;padding:11px 22px}
-  .daily .dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--gold);
-    box-shadow:0 0 0 0 rgba(244,208,63,.6);animation:pulse 2.4s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,208,63,.45)}70%{box-shadow:0 0 0 7px rgba(244,208,63,0)}100%{box-shadow:0 0 0 0 rgba(244,208,63,0)}}
-  @media(prefers-reduced-motion:reduce){.daily .dot{animation:none}}
-  .daily .lab{font:700 .64rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);flex:none}
-  .daily .txt{flex:1;min-width:0;color:var(--ink);font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .daily .txt b{color:var(--white);font-weight:700}
-  .daily .more{flex:none;background:rgba(244,208,63,.10);border:1px solid rgba(244,208,63,.25);color:var(--gold);
-    font:600 12px/1 'Inter',sans-serif;padding:7px 13px;border-radius:999px;cursor:pointer;transition:var(--t)}
-  .daily .more:hover{background:rgba(244,208,63,.18);color:var(--gold-light)}
-  @media(max-width:620px){.daily .txt{white-space:normal}.daily .lab{display:none}}
+  /* ===== skill-level tracks (chooser) ===== */
+  .tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 4px}
+  @media(max-width:820px){.tracks{grid-template-columns:1fr}}
+  .track{display:flex;flex-direction:column;gap:7px;text-align:left;cursor:pointer;font:inherit;
+    background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:18px 18px 16px;
+    transition:var(--t);position:relative;overflow:hidden}
+  .track::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+  .track.t-beg::before{background:#5fe6c8}.track.t-first::before{background:#3498DB}.track.t-adv::before{background:#cd9bdf}
+  .track:hover{background:var(--card-hover);border-color:var(--card-line-hover);transform:translateY(-3px)}
+  .track:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .track .who{font:700 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+  .track .go{font-weight:800;color:var(--white);font-size:1.18rem;letter-spacing:-.01em}
+  .track.t-beg .go span{color:#5fe6c8}.track.t-first .go span{color:#7bbef0}.track.t-adv .go span{color:#cd9bdf}
+  .track .d{color:var(--dim);font-size:.9rem;line-height:1.5}
+  .track .pathmini{font:600 .76rem/1.45 var(--mono);color:var(--muted);background:rgba(10,30,46,.5);
+    border:1px solid rgba(244,208,63,.1);border-radius:8px;padding:7px 10px;margin-top:2px}
+  .track .tgo{margin-top:4px;font-weight:700;font-size:.9rem;color:var(--gold)}
+  .track.on{border-color:var(--card-line-hover);box-shadow:0 0 0 1px rgba(244,208,63,.25),0 10px 30px rgba(0,0,0,.28)}
+  .track.on .tgo::after{content:" ✓";color:#5fe6c8}
 
-  /* ===== today panel: archive of ideas ===== */
-  .signal-hd{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin:0 0 6px}
-  .signal-when{font:700 .68rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .idea{background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:18px 20px;margin:14px 0;transition:var(--t)}
-  .idea:hover{border-color:var(--card-line-hover);background:var(--card-hover)}
-  .idea.fresh{border-color:rgba(244,208,63,.4);box-shadow:0 0 0 1px rgba(244,208,63,.12)}
-  .idea .top{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:0 0 8px}
-  .idea .date{font:700 .66rem/1 var(--mono);color:var(--gold-dim);letter-spacing:.08em}
-  .idea .tag{font:700 .6rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--navy-deeper);
-    background:var(--gold-dim);padding:4px 8px;border-radius:6px}
-  .idea .newchip{font:700 .58rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--navy-deeper);
-    background:var(--gold);padding:4px 8px;border-radius:6px}
-  .idea h3{margin:0 0 6px;font-size:1.06rem;font-weight:800;color:var(--white)}
-  .idea p{margin:0 0 10px;font-size:.95rem;color:var(--ink)}
-  .idea .src{font-size:.82rem;color:var(--dim)}
-  .idea .src a{font-weight:600}
-  .autonote{display:flex;gap:10px;align-items:flex-start;background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.28);
-    border-radius:12px;padding:12px 15px;margin:16px 0;font-size:.86rem;color:var(--dim)}
-  .autonote b{color:#8fd0f5}
+  /* ===== track path bar (under tabs) ===== */
+  #trackbar{background:rgba(10,30,46,.85);border-bottom:1px solid rgba(244,208,63,.12)}
+  #trackbar .wrap{display:flex;align-items:center;gap:12px;padding:9px 22px;overflow-x:auto;scrollbar-width:none}
+  #trackbar .wrap::-webkit-scrollbar{display:none}
+  #trackbar .tlabel{font:700 .7rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);white-space:nowrap;flex:none}
+  #trackbar .tlabel b{color:var(--gold)}
+  .tsteps{display:flex;align-items:center;gap:5px;min-width:max-content}
+  .tstep{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer;
+    font:600 12.5px/1 'Inter',sans-serif;color:var(--dim);background:none;border:0;padding:5px 8px;border-radius:7px;transition:var(--t)}
+  .tstep .sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;
+    font:700 10px/1 var(--mono);background:rgba(244,208,63,.14);color:var(--gold)}
+  .tstep:hover{color:var(--white);background:rgba(244,208,63,.06)}
+  .tstep.on{color:var(--gold)}
+  .tstep.on .sn{background:var(--gold);color:var(--navy-deeper)}
+  .tsa{color:var(--muted);font-size:13px;flex:none}
+  .tclear{margin-left:auto;flex:none;font:600 11.5px/1 'Inter',sans-serif;color:var(--dim);
+    background:rgba(244,208,63,.06);border:1px solid rgba(244,208,63,.18);border-radius:999px;padding:6px 11px;cursor:pointer;transition:var(--t)}
+  .tclear:hover{color:var(--white);border-color:var(--card-line-hover)}
 
-  /* ===== progress tracker ===== */
-  .stagebar{display:flex;gap:11px;align-items:center;background:rgba(26,188,156,.06);border:1px solid rgba(26,188,156,.22);
-    border-radius:12px;padding:13px 16px;margin:0 0 6px}
-  .stagebar .ck{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--muted);background:none;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;color:transparent;font-weight:900;font-size:13px;transition:var(--t)}
-  .stagebar .ck:hover{border-color:#5fe6c8}
-  .stagebar.is-done .ck{background:#1ABC9C;border-color:#1ABC9C;color:var(--navy-deeper)}
-  .stagebar .lab{font-size:.9rem;color:var(--dim)}
-  .stagebar.is-done .lab b{color:#5fe6c8}
-  .tab .ck-mini{font:900 10px/1 sans-serif;color:#1ABC9C;margin-left:1px}
-  .progresscount{font:700 .68rem/1 var(--mono);color:var(--gold-dim);letter-spacing:.06em;white-space:nowrap}
+  /* ===== tab order badge + off-track dim ===== */
+  .tab .tb{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;
+    font:700 9.5px/1 var(--mono);background:var(--gold);color:var(--navy-deeper);margin-right:1px}
+  .tab.hasbadge .n{display:none}
+  .tab.offtrack{opacity:.38}
+  .tab.offtrack:hover{opacity:.72}
 
-  /* ===== share row ===== */
-  .sharerow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 0}
-  .sharerow .lab{font:700 .64rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  .sharebtn{background:rgba(244,208,63,.06);border:1px solid rgba(244,208,63,.2);color:var(--gold);
-    font:600 12px/1 'Inter',sans-serif;padding:7px 12px;border-radius:999px;cursor:pointer;transition:var(--t);display:inline-flex;gap:6px;align-items:center}
-  .sharebtn:hover{background:rgba(244,208,63,.15);color:var(--gold-light)}
-  .sharebtn.done{background:rgba(26,188,156,.18);border-color:rgba(26,188,156,.5);color:#5fe6c8}
+  /* ===== more features (advanced) ===== */
+  .morefeat{margin-top:6px}
+  .morefeat .card{padding:18px}
+  .morefeat .card h3{font-size:1rem;margin-bottom:8px;color:var(--white)}
+  .morefeat .card p{color:var(--dim);font-size:.9rem;margin:0;line-height:1.5}
+  .morefeat .card .goto{margin-top:10px}
 </style>
 </head>
 <body>
@@ -388,29 +386,18 @@
     <h1 class="gold-text">Build Your Own Agentic OS
       <span class="sub">Seed it with <em>you</em> — then turn it all the way on.</span>
     </h1>
-    <p class="lede">One tab per build stage. Find where you are, learn what each stage <em>does</em> and why a surgeon-scientist wants it, then actually switch it on — in Cowork or Claude Code. Start at <b>Why</b>, or jump to your rung.</p>
+    <p class="lede">One tab per build stage. Find where you are, learn what each stage <em>does</em> and why a surgeon-scientist wants it, then actually switch it on — in Cowork or Claude Code. Start at <b>Why</b>, or pick your track below.</p>
     <div class="meta">
-      <span class="chip"><b>Bring a laptop</b> · build as you read</span>
-      <span class="chip">with <b>Dr. Jon Schoenecker</b></span>
-      <span class="chip"><b>Free</b> to start · ~5 min prep</span>
-      <span class="chip">🔄 <b>New idea every day</b></span>
+      <span class="chip"><b>Build as you read</b> · no code to start</span>
+      <span class="chip">by <b>Dr. Jon Schoenecker</b></span>
+      <span class="chip"><b>Free</b> to start · ~5 min to your first win</span>
     </div>
   </div>
 </header>
 
-<aside class="daily" id="dailyBanner" hidden aria-label="Today's agentic-OS idea">
-  <div class="wrap">
-    <span class="dot" aria-hidden="true"></span>
-    <span class="lab">Daily&nbsp;Signal</span>
-    <span class="txt" id="dailyTxt"></span>
-    <button class="more" id="dailyMore">See all updates →</button>
-  </div>
-</aside>
-
 <nav class="tabbar" aria-label="Build stages">
   <div class="wrap">
     <div class="tablist" role="tablist" aria-label="Agentic OS build console">
-      <button class="tab flag" role="tab" id="tabbtn-today" data-tab="today"      aria-selected="false" aria-controls="panel-today"><span class="star">★</span>Today</button>
       <button class="tab" role="tab" id="tabbtn-why"        data-tab="why"        aria-selected="true"  aria-controls="panel-why"><span class="n">01</span>Why</button>
       <button class="tab" role="tab" id="tabbtn-square"      data-tab="square"     aria-selected="false" aria-controls="panel-square"><span class="n">02</span>Square One</button>
       <button class="tab" role="tab" id="tabbtn-core"        data-tab="core"       aria-selected="false" aria-controls="panel-core"><span class="n">03</span>OS Core</button>
@@ -425,7 +412,6 @@
     </div>
   </div>
   <select class="tabselect" aria-label="Jump to build stage">
-    <option value="today">★ Today</option>
     <option value="why">01 · Why</option>
     <option value="square">02 · Square One</option>
     <option value="core">03 · OS Core</option>
@@ -441,60 +427,15 @@
   <div class="progressrail"><div class="fill" id="progFill"></div></div>
 </nav>
 
+<div id="trackbar" hidden aria-label="Your selected track path">
+  <div class="wrap">
+    <span class="tlabel">Your path · <b id="tkname"></b></span>
+    <div class="tsteps" id="tsteps"></div>
+    <button class="tclear" id="tclear" type="button">All stages ✕</button>
+  </div>
+</div>
+
 <main>
-<!-- ===================== TAB · TODAY (daily signal) ===================== -->
-<section class="tabpanel" id="panel-today" role="tabpanel" aria-labelledby="tabbtn-today" hidden>
-  <section class="pad">
-    <div class="wrap reveal">
-      <span class="badge">What's new today</span>
-      <div class="signal-hd">
-        <h2>The build doesn't stand still.</h2>
-        <span class="signal-when" id="signalWhen"></span>
-      </div>
-      <p class="sectsub">A fresh, sourced idea or feature for your agentic OS — most days. Skim today's, then go switch something on. Older entries stay below so you can catch up.</p>
-      <div class="autonote">
-        <span aria-hidden="true">🤖</span>
-        <div><b>Auto-curated.</b> These daily entries are gathered automatically from public sources (each links to its source) and are pointers to explore — not medical, legal, or vendor advice. The permanent build tabs are the hand-built core.</div>
-      </div>
-      <div id="archiveList"></div>
-    </div>
-  </section>
-</section>
-
-<!-- DAILY_SIGNAL_START — the daily cloud agent rewrites only this block; do not hand-edit between the markers -->
-<script type="application/json" id="daily-signal-data">
-{
-  "updated": "2026-06-23",
-  "items": [
-    {
-      "date": "2026-06-23",
-      "tag": "skills",
-      "title": "Agent Skills: teach your OS a repeatable job once",
-      "blurb": "A Skill is a small folder of instructions (and optional scripts) the model loads only when a task needs it. Instead of re-explaining 'how I do a literature pass' every time, you write it down once and your OS reaches for it on demand — the cleanest way to turn a workflow you repeat into something the agent just does.",
-      "source": "https://www.anthropic.com/news/agent-skills",
-      "sourceName": "Anthropic — Agent Skills"
-    },
-    {
-      "date": "2026-06-21",
-      "tag": "connectors",
-      "title": "MCP is the universal port for your tools and data",
-      "blurb": "The Model Context Protocol is an open standard that lets an agent talk to outside tools, files, and services through one consistent interface. It's why 'connect my calendar / my papers / my drive' is becoming plug-in rather than custom plumbing — and why the Connectors tab matters for an OS that actually reaches your real work.",
-      "source": "https://modelcontextprotocol.io",
-      "sourceName": "Model Context Protocol"
-    },
-    {
-      "date": "2026-06-19",
-      "tag": "technique",
-      "title": "Context engineering beats prompt-wrangling",
-      "blurb": "As agents run longer, the high-leverage skill shifts from clever one-off prompts to curating what sits in the model's limited context window — the right files, memory, and tools at the right moment. Think of your OS's job as handing the model a tight, relevant working set, not a firehose.",
-      "source": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
-      "sourceName": "Anthropic Engineering"
-    }
-  ]
-}
-</script>
-<!-- DAILY_SIGNAL_END -->
-
 <!-- ===================== TAB 1 · WHY ===================== -->
 <section class="tabpanel active" id="panel-why" role="tabpanel" aria-labelledby="tabbtn-why">
   <section class="pad">
@@ -546,14 +487,38 @@
         </svg>
       </div>
 
-      <!-- WHERE ARE YOU? router -->
-      <p class="sub-h" style="margin-top:30px">Where are you? Pick a door — it opens the right tab.</p>
-      <div class="chooser">
-        <button class="choose" data-goto="square"><span class="who">Never opened Claude</span><span class="go">Start at <span>Square One</span> →</span><span class="d">Download, account, free vs paid, your first Project.</span></button>
-        <button class="choose" data-goto="core"><span class="who">Have an account</span><span class="go">Build the <span>OS Core</span> →</span><span class="d">Seed it with your CV + goals so it finally knows you.</span></button>
-        <button class="choose" data-goto="connectors"><span class="who">Want live data</span><span class="go">Turn on <span>Connectors</span> →</span><span class="d">PubMed, Drive, Calendar — answers with real citations.</span></button>
-        <button class="choose" data-goto="zotero"><span class="who">Drowning in PDFs</span><span class="go">★ <span>Zotero + Papers</span> →</span><span class="d">Turn a pile of papers into a queryable, integrity-checked library.</span></button>
+      <!-- CHOOSE YOUR TRACK -->
+      <p class="sub-h" style="margin-top:30px">Pick your track — it lays out your path and orders the tabs.</p>
+      <p class="body-text" style="margin:0 0 14px;color:var(--dim);font-size:.95rem">Three ways in, by where you're starting from. Choosing one numbers the tabs in order, opens the first stage, and shows your path in the bar above. Switch or clear it anytime.</p>
+      <div class="tracks" role="group" aria-label="Choose your skill-level track">
+        <button class="track t-beg" data-track="beginner" type="button">
+          <span class="who">New to AI</span>
+          <span class="go">Complete <span>beginner</span></span>
+          <span class="d">You've barely touched AI. Understand what it is, make a free account, and seed your first Project — no terminal, no cost.</span>
+          <span class="pathmini">Why → Square One → OS Core → Reference</span>
+          <span class="tgo">Start the beginner path →</span>
+        </button>
+        <button class="track t-first" data-track="first" type="button">
+          <span class="who">Used an AI chat before</span>
+          <span class="go">Build your <span>first OS</span></span>
+          <span class="d">You've used a chatbot and want the real thing: seed it, give it live data and your papers, and run your first agent on a folder.</span>
+          <span class="pathmini">OS Core → Connectors → ★ Zotero → Cowork → Graph → Skills</span>
+          <span class="tgo">Start the first-build path →</span>
+        </button>
+        <button class="track t-adv" data-track="advanced" type="button">
+          <span class="who">Already built one</span>
+          <span class="go">Go <span>further</span></span>
+          <span class="d">You have a working OS. Deepen it: custom skills, more connectors, scheduled and multi-agent runs, dashboards, and scale across machines.</span>
+          <span class="pathmini">Skills → Graph → At Scale → Claude Code</span>
+          <span class="tgo">Start the advanced path →</span>
+        </button>
       </div>
+      <p class="next" style="margin-top:14px"><span class="lab">Or jump straight to →</span>
+        <button class="goto" data-goto="square">Square One</button>
+        <button class="goto" data-goto="core">OS Core</button>
+        <button class="goto" data-goto="connectors">Connectors</button>
+        <button class="goto" data-goto="zotero">★ Zotero + Papers</button>
+      </p>
     </div>
   </section>
 
@@ -712,7 +677,7 @@
       <p class="body-text">Open any chat and ask it to <em>"plan my year to reach my career goals."</em> You'll get fluent, confident, generic mush — because it has no idea who you are. It's brilliant, and it forgets you the moment you close the tab.</p>
       <p class="body-text">That's not a flaw in the model. It's a missing <strong>system</strong>. The fix is four moves: give it a <strong>memory</strong>, give it a <strong>filesystem</strong>, give it <strong>skills</strong> — and seed all of it with <em>you</em>: your CV, your papers, your goals. Do that and the same model that just flopped becomes a teammate that knows your whole world.</p>
       <p class="body-text">If you've tried these tools and walked away thinking <em>"impressive, but a glorified autocomplete I can't trust"</em> — you're not wrong. That's an honest verdict on raw chat. It's not a verdict on the system you can build around it.</p>
-      <p class="pull">Every tab to the right is those four moves, built up one stage at a time — and almost all of it is <span class="gold">free to start tonight</span>.</p>
+      <p class="pull">Every tab to the right is those four moves, built up one stage at a time — and almost all of it is <span class="gold">free to start today</span>.</p>
 
       <h3 style="color:var(--white);margin-top:30px">Five things change the moment you build an OS.</h3>
       <p class="sectsub">Same model, two completely different machines. The left is what you get from a chat window. The right is what you get when you give the model a home.</p>
@@ -733,7 +698,7 @@
     <div class="wrap reveal">
       <span class="badge">The arc</span>
       <h2>It's a climb, not a leap. Six rungs.</h2>
-      <p class="sectsub">You don't need all of it tonight. Each rung adds one capability, and you can stop wherever it's already paying off. Here's the whole ladder — and exactly where free ends and a paid plan begins. <b>Each rung has its own tab.</b></p>
+      <p class="sectsub">You don't need all of it at once. Each rung adds one capability, and you can stop wherever it's already paying off. Here's the whole ladder — and exactly where free ends and a paid plan begins. <b>Each rung has its own tab.</b></p>
       <div class="rungs">
         <div class="rung free"><span class="step">RUNG 1</span><span class="name">chat</span><span class="one">One conversation. Brilliant, ephemeral, single context.</span><span class="marker"><span class="pill free">Free</span></span></div>
         <div class="rung free"><span class="step">RUNG 2</span><span class="name">Project</span><span class="one">Chat + persistent files & instructions. It finally remembers who you are.</span><span class="marker"><span class="pill free">Free</span></span></div>
@@ -856,11 +821,11 @@
       <div class="tierpill"><span class="lab">Tier</span> <span class="pill free">Free to start</span> <span class="pill paid">Paid only for Cowork/Code</span> <span class="pill yours">Yours forever</span></div>
 
       <p class="sub-h">Free vs paid — the honest version</p>
-      <p class="body-text">The whole <strong>personal-OS core is free</strong>: chat, Memory, file creation, and up to five Projects. You only pay when you want the agentic <em>workspace</em> — Cowork (no terminal) or Claude Code (terminal) — which need a paid plan. So: build and feel the entire idea for <strong>$0</strong>; upgrade later only if you want the hands-on agent. <span class="pill free">Free</span> covers tonight.</p>
+      <p class="body-text">The whole <strong>personal-OS core is free</strong>: chat, Memory, file creation, and up to five Projects. You only pay when you want the agentic <em>workspace</em> — Cowork (no terminal) or Claude Code (terminal) — which need a paid plan. So: build and feel the entire idea for <strong>$0</strong>; upgrade later only if you want the hands-on agent. <span class="pill free">Free</span> covers the whole core.</p>
       <div class="rule"><div class="ic">⛔</div><div><b>One hard rule, from the very first minute: no patient information, ever.</b> A personal account has no institutional data agreement (no BAA), so this is for <b>your own scholarly materials</b> — CV, your published papers, public data — never patient data or anything pulled from your institution's systems. Clinical/PHI work belongs in an institution-approved, BAA-covered tool.</div></div>
 
       <p class="sub-h">Set it up — the free apps <span class="pill free">~15 min · no terminal</span></p>
-      <p class="body-text" style="margin-bottom:4px">This stage lives on the web + desktop app — no terminal anywhere. Install these four; the first one is all you strictly need tonight.</p>
+      <p class="body-text" style="margin-bottom:4px">This stage lives on the web + desktop app — no terminal anywhere. Install these four; the first one is all you strictly need to start.</p>
       <div class="grid2">
         <div class="card"><h3>1 · Claude account <span class="pill free">Free</span></h3>
           <p style="color:var(--dim);font-size:.93rem;margin:0 0 10px"><b style="color:var(--white)">What it is:</b> the AI itself. <b style="color:var(--white)">What it does:</b> Projects + Memory are free — your whole personal-OS core lives here.</p>
@@ -936,7 +901,7 @@
         <pre id="about"># About Me
 
 ## Identity
-- Name / role: [your role — e.g. Surgeon, Researcher, Resident, PhD student, Clinician-educator]
+- Name / role: [your role — e.g. resident, fellow, attending, or PI]
 - One-line: [who you are professionally]
 
 ## Career goals
@@ -1565,6 +1530,17 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
       <p class="pull" style="font-size:1.15rem"><span class="gold">Mine took months of iteration.</span> Yours starts with one Project — and every rung after it pays for the next.</p>
       <div class="rule"><div class="ic">🔒</div><div><b>The boundaries scale too:</b> still no patient data through a personal account, still a human review before anything ships, still "ask before irreversible." Capability raises the stakes on good hygiene, it doesn't relax them.</div></div>
 
+      <p class="sub-h" id="gofurther">Already built one? Go further.</p>
+      <p class="body-text" style="margin-bottom:12px">If the climb above is familiar, these are the next moves — each one is just more of the same pieces, wired tighter. All curated and public; swap in your own keys, skills, and folders.</p>
+      <div class="grid3 morefeat">
+        <div class="card"><h3>⏱ Scheduled &amp; agentic runs</h3><p>Put a skill on a timer — a daily Chief-of-Staff briefing, a weekly literature sweep — so the routine work is done before you sit down.</p></div>
+        <div class="card"><h3>🧩 Write your own skills</h3><p>Go past the three starters: encode a journal-club teardown, a grant-aim critique, a discharge structure. <button class="goto" data-goto="skills" style="padding:3px 9px;font-size:11px">Skills →</button></p></div>
+        <div class="card"><h3>🔌 More connectors</h3><p>Add Gmail, Slack, Calendar, and Drive — plus project-scoped servers via a <code class="inl">.mcp.json</code>. <button class="goto" data-goto="connectors" style="padding:3px 9px;font-size:11px">Connectors →</button></p></div>
+        <div class="card"><h3>🤝 Many agents, each a job</h3><p>Split the work — one agent ingests, one drafts, one verifies — coordinated, instead of one chat doing everything at once.</p></div>
+        <div class="card"><h3>📊 Live dashboards</h3><p>Generate a browsable view of your vault — projects, papers, deadlines — regenerable from the same markdown that feeds your graph.</p></div>
+        <div class="card"><h3>🖧 Across machines</h3><p>One linked vault + skill library that travels with you, so the same OS state is there on every device. <button class="goto" data-goto="scale" style="padding:3px 9px;font-size:11px">At Scale ↑</button></p></div>
+      </div>
+
       <div class="next"><span class="lab">Where this connects →</span>
         <button class="goto" data-goto="why">← Back to Why</button>
         <button class="goto" data-goto="core">Start the climb: OS Core →</button>
@@ -1583,7 +1559,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
       <p class="sub-h">Your first step — small enough that you'll actually do it</p>
       <div class="cta-grid">
-        <div class="cta"><span class="when">Tonight · 5 min · free</span><h3>Seed a Project</h3><p>Make a <b>My OS</b> Project with your CV + goals, paste in the custom instructions, and ask it what to focus on this year. Feel it answer as someone who knows you.</p></div>
+        <div class="cta"><span class="when">First sitting · 5 min · free</span><h3>Seed a Project</h3><p>Make a <b>My OS</b> Project with your CV + goals, paste in the custom instructions, and ask it what to focus on this year. Feel it answer as someone who knows you.</p></div>
         <div class="cta"><span class="when">This weekend · free</span><h3>See your first graph</h3><p>Install Obsidian, point it at your <code class="inl">My-OS/</code> folder, ingest one paper, and open Graph View. Watch the first link appear.</p></div>
         <div class="cta"><span class="when">The keen ones · paid</span><h3>Run a real skill</h3><p>Set up Cowork, drop in the three starter skills, and run your first Chief-of-Staff briefing on your own folder.</p></div>
       </div>
@@ -1669,7 +1645,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
       <details>
         <summary>Will this take over my life?</summary>
-        <div class="body"><p class="desc" style="font-size:.98rem">It shouldn't, and it shouldn't try to. The point is the opposite — encode your best workflow once so you <em>don't</em> rebuild it every time. Tonight's step is five minutes. Add a rung only when the last one is already paying you back. Mine took months of iteration; yours starts with one Project.</p></div>
+        <div class="body"><p class="desc" style="font-size:.98rem">It shouldn't, and it shouldn't try to. The point is the opposite — encode your best workflow once so you <em>don't</em> rebuild it every time. Your first step is five minutes. Add a rung only when the last one is already paying you back. Mine took months of iteration; yours starts with one Project.</p></div>
       </details>
     </div>
   </section>
@@ -1740,7 +1716,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
 <footer>
   <div class="wrap">
-    <p class="sig">Start tonight. Come curious.</p>
+    <p class="sig">Start with one Project. Come curious.</p>
     <p>Dr. Jon Schoenecker · part of the TŌGE family · 2026</p>
     <p class="line">Chat is something you use. An OS is something you build — and it pays you back forever.</p>
   </div>
@@ -1748,8 +1724,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
 <script>
   // ---- the tabs ----
-  var TABS=['today','why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
-  var BUILD_STAGES=['why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
+  var TABS=['why','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
   var tabBtns=Array.prototype.slice.call(document.querySelectorAll('.tab'));
   var panels=function(id){return document.getElementById('panel-'+id);};
   var sel=document.querySelector('.tabselect');
@@ -1781,10 +1756,13 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
     });
     TABS.forEach(function(t){var p=panels(t); if(p){var on=t===id; p.classList.toggle('active',on); p.hidden=!on;}});
     if(sel) sel.value=id;
+    var idx=TABS.indexOf(id);
+    if(progFill) progFill.style.width=((idx+1)/TABS.length*100).toFixed(1)+'%';
     if(opts.hash!==false){ if(('#tab='+id)!==location.hash){ history.pushState(null,'','#tab='+id); } }
     if(opts.scroll!==false){ window.scrollTo({top:0,behavior:'auto'}); }
     // reveal + svg animations for the now-visible panel
     requestAnimationFrame(function(){animatePanel(id);});
+    highlightTrackStep(id);
     if(opts.focus){ var btn=document.getElementById('tabbtn-'+id); if(btn) btn.focus(); }
   }
 
@@ -1816,6 +1794,72 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
   }
   window.addEventListener('hashchange',function(){setTab(fromHash(),{hash:false});});
 
+  // ---- tracks (skill-level guided paths) ----
+  var TRACKS={
+    beginner:{name:'Complete beginner',steps:['why','square','core','reference']},
+    first:{name:'First agentic OS',steps:['core','connectors','zotero','cowork','graph','skills']},
+    advanced:{name:'Already built one',steps:['skills','graph','scale','code']}
+  };
+  var TABLABEL={why:'Why',square:'Square One',core:'OS Core',connectors:'Connectors',zotero:'★ Zotero',
+    cowork:'Cowork',code:'Claude Code',graph:'The Graph',skills:'Skills',scale:'At Scale',reference:'Reference'};
+  var currentTrack=null;
+  var trackbar=document.getElementById('trackbar');
+  var tstepsEl=document.getElementById('tsteps');
+  var tknameEl=document.getElementById('tkname');
+
+  function saveTrack(t){try{if(t)localStorage.setItem('toge_track',t);else localStorage.removeItem('toge_track');}catch(e){}}
+  function loadTrack(){try{return localStorage.getItem('toge_track');}catch(e){return null;}}
+
+  function applyTrackBadges(){
+    var steps=currentTrack?TRACKS[currentTrack].steps:[];
+    tabBtns.forEach(function(b){
+      var old=b.querySelector('.tb'); if(old) old.remove();
+      var i=steps.indexOf(b.dataset.tab);
+      if(currentTrack&&i>=0){
+        b.classList.remove('offtrack'); b.classList.add('hasbadge');
+        var s=document.createElement('span'); s.className='tb'; s.textContent=(i+1);
+        b.insertBefore(s,b.firstChild);
+      } else if(currentTrack){
+        b.classList.add('offtrack'); b.classList.remove('hasbadge');
+      } else {
+        b.classList.remove('offtrack'); b.classList.remove('hasbadge');
+      }
+    });
+  }
+  function highlightTrackStep(id){
+    if(!currentTrack||!tstepsEl) return;
+    tstepsEl.querySelectorAll('.tstep').forEach(function(s){s.classList.toggle('on',s.dataset.goto===id);});
+  }
+  function renderTrackbar(){
+    if(!trackbar) return;
+    if(!currentTrack){trackbar.hidden=true; return;}
+    var tk=TRACKS[currentTrack];
+    if(tknameEl) tknameEl.textContent=tk.name;
+    tstepsEl.innerHTML='';
+    tk.steps.forEach(function(t,i){
+      var b=document.createElement('button'); b.type='button'; b.className='tstep'; b.setAttribute('data-goto',t);
+      b.innerHTML='<span class="sn">'+(i+1)+'</span>'+TABLABEL[t];
+      tstepsEl.appendChild(b);
+      if(i<tk.steps.length-1){var a=document.createElement('span'); a.className='tsa'; a.textContent='→'; tstepsEl.appendChild(a);}
+    });
+    trackbar.hidden=false;
+    var act=document.querySelector('.tab.active');
+    highlightTrackStep(act?act.dataset.tab:'why');
+  }
+  function setTrack(t,opts){
+    opts=opts||{};
+    currentTrack=(t&&TRACKS[t])?t:null;
+    document.querySelectorAll('.track').forEach(function(c){c.classList.toggle('on',c.dataset.track===currentTrack);});
+    applyTrackBadges();
+    renderTrackbar();
+    saveTrack(currentTrack);
+    if(currentTrack&&opts.jump!==false){setTab(TRACKS[currentTrack].steps[0]);}
+  }
+  document.querySelectorAll('.track').forEach(function(c){
+    c.addEventListener('click',function(){setTrack(c.dataset.track);});
+  });
+  if(document.getElementById('tclear')) document.getElementById('tclear').addEventListener('click',function(){setTrack(null);});
+
   // ---- copy buttons ----
   document.querySelectorAll('.copy').forEach(function(btn){
     btn.addEventListener('click',function(){
@@ -1834,100 +1878,9 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
     document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);
   }
 
-  // ---- small helpers ----
-  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function fmtDate(s){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||'');if(!m)return s||'';
-    var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1];
-    return mo+' '+(+m[3])+', '+m[1];}
-  function stageName(id){var b=document.getElementById('tabbtn-'+id);if(!b)return id;
-    return b.textContent.replace(/^\d+/,'').replace(/★/,'').trim();}
-
-  // ---- daily signal (banner + archive, from the inline JSON block) ----
-  function renderDailySignal(){
-    var raw=document.getElementById('daily-signal-data');if(!raw)return;
-    var data;try{data=JSON.parse(raw.textContent);}catch(e){return;}
-    var items=(data.items||[]).slice();
-    var when=document.getElementById('signalWhen');
-    if(when&&data.updated) when.textContent='Updated '+fmtDate(data.updated);
-    var banner=document.getElementById('dailyBanner'),txt=document.getElementById('dailyTxt');
-    if(items.length&&banner&&txt){txt.innerHTML='<b>'+esc(items[0].title)+'</b> — '+esc(items[0].blurb);banner.hidden=false;}
-    var list=document.getElementById('archiveList');
-    if(list){
-      list.innerHTML=items.map(function(t,idx){
-        return '<article class="idea'+(idx===0?' fresh':'')+'">'
-          +'<div class="top">'+(idx===0?'<span class="newchip">New</span>':'')
-          +'<span class="date">'+esc(fmtDate(t.date))+'</span>'
-          +(t.tag?'<span class="tag">'+esc(t.tag)+'</span>':'')+'</div>'
-          +'<h3>'+esc(t.title)+'</h3><p>'+esc(t.blurb)+'</p>'
-          +(t.source?'<div class="src">Source: <a href="'+esc(t.source)+'" target="_blank" rel="noopener">'+esc(t.sourceName||t.source)+'</a></div>':'')
-          +'</article>';
-      }).join('');
-    }
-  }
-
-  // ---- progress tracker (localStorage) ----
-  var DONE_KEY='agos.progress.v1';
-  function getDone(){try{return JSON.parse(localStorage.getItem(DONE_KEY)||'[]');}catch(e){return [];}}
-  function setDone(a){try{localStorage.setItem(DONE_KEY,JSON.stringify(a));}catch(e){}}
-  function toggleStage(id){var d=getDone(),i=d.indexOf(id);if(i>=0)d.splice(i,1);else d.push(id);setDone(d);updateProgress();}
-  function updateProgress(){
-    var d=getDone().filter(function(s){return BUILD_STAGES.indexOf(s)>=0;});
-    if(progFill) progFill.style.width=(d.length/BUILD_STAGES.length*100).toFixed(1)+'%';
-    var rail=document.querySelector('.progressrail');
-    if(rail) rail.title=d.length+' of '+BUILD_STAGES.length+' build stages complete';
-    BUILD_STAGES.forEach(function(s){
-      var btn=document.getElementById('tabbtn-'+s);if(!btn)return;
-      var on=d.indexOf(s)>=0,mini=btn.querySelector('.ck-mini');
-      btn.classList.toggle('is-done',on);
-      if(on&&!mini){mini=document.createElement('span');mini.className='ck-mini';mini.textContent='✓';btn.appendChild(mini);}
-      else if(!on&&mini){mini.parentNode.removeChild(mini);}
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('.stagebar'),function(sb){
-      var on=getDone().indexOf(sb.dataset.stage)>=0,nm=sb.dataset.label;
-      sb.classList.toggle('is-done',on);
-      var ck=sb.querySelector('.ck');if(ck)ck.setAttribute('aria-pressed',on?'true':'false');
-      var lab=sb.querySelector('.lab');
-      if(lab)lab.innerHTML=on?('<b>'+esc(nm)+' complete</b> — nicely done'):('Mark <b>'+esc(nm)+'</b> complete');
-    });
-  }
-
-  // ---- share (per-tab deep link) ----
-  function buildUrl(id){return location.origin+location.pathname+'#tab='+id;}
-  function doShare(btn){
-    var active=document.querySelector('.tab.active');var id=active?active.dataset.tab:'why';var url=buildUrl(id);
-    if(navigator.share){navigator.share({title:document.title,url:url}).catch(function(){});return;}
-    var done=function(){var old=btn.textContent;btn.textContent='Link copied ✓';btn.classList.add('done');
-      setTimeout(function(){btn.textContent=old;btn.classList.remove('done');},1600);};
-    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done).catch(function(){fallback(url);done();});}
-    else{fallback(url);done();}
-  }
-
-  // ---- inject per-stage controls + delegated handlers ----
-  function initControls(){
-    BUILD_STAGES.forEach(function(id){
-      var panel=panels(id);if(!panel)return;var nm=stageName(id);
-      var foot=document.createElement('section');foot.className='pad';
-      foot.innerHTML='<div class="wrap">'
-        +'<div class="stagebar" data-stage="'+id+'" data-label="'+esc(nm)+'">'
-          +'<button class="ck" aria-pressed="false" aria-label="Mark '+esc(nm)+' complete">✓</button>'
-          +'<span class="lab">Mark <b>'+esc(nm)+'</b> complete</span></div>'
-        +'<div class="sharerow"><span class="lab">Share</span>'
-          +'<button class="sharebtn" data-share="tab">🔗 Copy link to this tab</button></div></div>';
-      panel.appendChild(foot);
-    });
-    document.addEventListener('click',function(e){
-      var ck=e.target.closest('.stagebar .ck');if(ck){var sb=ck.closest('.stagebar');toggleStage(sb.dataset.stage);return;}
-      var sh=e.target.closest('.sharebtn');if(sh){doShare(sh);return;}
-    });
-    var dm=document.getElementById('dailyMore');if(dm)dm.addEventListener('click',function(){setTab('today');});
-    var dt=document.getElementById('dailyTxt');if(dt){dt.style.cursor='pointer';dt.addEventListener('click',function(){setTab('today');});}
-  }
-
   // ---- boot ----
-  renderDailySignal();
-  initControls();
-  updateProgress();
   setTab(fromHash(),{hash:false,scroll:false});
+  (function(){var s=loadTrack(); if(s) setTrack(s,{jump:false});})();
 </script>
 </body>
 </html>
