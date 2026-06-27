@@ -440,7 +440,8 @@
       <button class="tab" role="tab" id="tabbtn-graph"       data-tab="graph"      aria-selected="false" aria-controls="panel-graph"><span class="n">10</span>The Graph</button>
       <button class="tab" role="tab" id="tabbtn-skills"      data-tab="skills"     aria-selected="false" aria-controls="panel-skills"><span class="n">11</span>Skills</button>
       <button class="tab" role="tab" id="tabbtn-scale"       data-tab="scale"      aria-selected="false" aria-controls="panel-scale"><span class="n">12</span>At Scale</button>
-      <button class="tab" role="tab" id="tabbtn-reference"   data-tab="reference"  aria-selected="false" aria-controls="panel-reference"><span class="n">13</span>Reference</button>
+      <button class="tab" role="tab" id="tabbtn-pro"         data-tab="pro"        aria-selected="false" aria-controls="panel-pro"><span class="n">13</span>Advanced</button>
+      <button class="tab" role="tab" id="tabbtn-reference"   data-tab="reference"  aria-selected="false" aria-controls="panel-reference"><span class="n">14</span>Reference</button>
     </div>
   </div>
   <select class="tabselect" aria-label="Jump to build stage">
@@ -456,7 +457,8 @@
     <option value="graph">10 · The Graph</option>
     <option value="skills">11 · Skills</option>
     <option value="scale">12 · At Scale</option>
-    <option value="reference">13 · Reference</option>
+    <option value="pro">13 · Advanced</option>
+    <option value="reference">14 · Reference</option>
   </select>
   <div class="progressrail"><div class="fill" id="progFill"></div></div>
 </nav>
@@ -542,8 +544,8 @@
         <button class="track t-adv" data-track="advanced" type="button">
           <span class="who">Already built one</span>
           <span class="go">Go <span>further</span></span>
-          <span class="d">You have a working OS. Deepen it: custom skills, more connectors, scheduled and multi-agent runs, dashboards, and scale across machines.</span>
-          <span class="pathmini">Skills → Graph → At Scale → Claude Code</span>
+          <span class="d">You have a working OS. Run the heavy machinery: citation integrity, data &amp; stats, a deck builder, a grant writer, mentoring, goals, meetings, and scheduled multi-agent runs.</span>
+          <span class="pathmini">Advanced → Skills → Graph → At Scale → Claude Code</span>
           <span class="tgo">Start the advanced path →</span>
         </button>
       </div>
@@ -2386,11 +2388,370 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
     </div>
   </section>
 </section>
+<!-- ===================== TAB · ADVANCED (Track 3 — the heavy machinery) ===================== -->
+<section class="tabpanel" id="panel-pro" role="tabpanel" aria-labelledby="tabbtn-pro" hidden>
+  <!-- INTRO -->
+  <section class="pad">
+    <div class="wrap reveal">
+      <span class="badge">Track 3 · Advanced — the heavy machinery</span>
+      <h2>Run real scholarly infrastructure — with a human on every lever.</h2>
+      <p class="sectsub">You've built an OS. Now turn on the heavy machinery: citation integrity at scale, data and statistics, a deck builder, a grant writer, mentoring and goal tracking, meeting capture, and scheduled, multi-agent runs. Each is taught here with an ortho example, a copy-paste skill block, and a hard verify gate.</p>
+
+      <div class="outbanner"><span class="ic">⚙️</span><p><b>The doctrine, up front:</b> <b>every agent needs a human.</b> AI amplifies; you stay in command. Pair the power below with the verify-everything ethos, the no-PHI rule, and the "ask before anything irreversible" reflex — that's what makes "minutes, not days" safe.</p></div>
+
+      <div class="rule"><span class="ic">🔌</span><div><b>This tier assumes a built OS and the agentic workspace.</b> The skills below run in <button class="goto" data-goto="cowork" style="padding:3px 9px;font-size:11px">Cowork</button> or <button class="goto" data-goto="code" style="padding:3px 9px;font-size:11px">Claude Code</button> (a paid plan, <span class="asof" style="display:inline">as of June 2026</span>). The page uses generic examples and placeholders only — your real data, grants, and people stay in your own OS.</div></div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section class="pad alt">
+    <div class="wrap reveal">
+      <span class="badge">Eight power tools · taught, not just listed</span>
+      <h2>The machinery — what each does, and the gate on each.</h2>
+      <div class="chatmods">
+
+        <!-- A1 · LitGuard -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">1</span><h3>LitGuard — citation integrity at scale</h3><span class="subsp">Trust anchor</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>A skill that verifies <em>every</em> reference in a manuscript or grant against PubMed — resolve, verify, enrich (retraction + evidence grade + overclaim), report — and grades each <b>PASS / CONDITIONAL / FAIL</b>.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>It's the clinical trust anchor: never submit a paper or grant with a hallucinated, retracted, or overstated citation again.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> run it over a manuscript's reference list before submission — it flags an unresolvable citation and a retracted one as FAIL, and an overclaim as CONDITIONAL.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/litguard-check.md</span><button class="copy" data-copy="a1">Copy</button></div>
+            <pre id="a1">SKILL · litguard-check
+Purpose: verify every reference in a manuscript or grant before it ships.
+When to run: before any submission; when ingesting a new reference list.
+Steps:
+  1. RESOLVE every citation to a PMID/DOI.
+  2. VERIFY title, authors, year, and journal against PubMed.
+  3. ENRICH: retraction check + evidence-level grade + overclaim scan.
+  4. REPORT each reference as PASS / CONDITIONAL / FAIL.
+Rules:
+  - Hard-fail on any retraction or unresolvable citation.
+  - Never invent a PMID; if it won't resolve, mark FAIL.
+  - A human signs off before anything is submitted.</pre>
+          </div>
+          <!-- GRAPHIC · verify loop -->
+          <div class="modsvg" style="max-width:100%">
+            <svg viewBox="0 0 920 200" width="100%" style="max-width:720px" role="img" aria-label="The LitGuard verify loop: resolve, then verify, then enrich, then report, producing PASS, CONDITIONAL, or FAIL for each reference.">
+              <defs><marker id="aloop" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <g font-family="Inter,sans-serif" font-size="13" font-weight="700">
+                <circle cx="110" cy="70" r="44" fill="#1B4F72" fill-opacity="0.4" stroke="#3498DB" stroke-opacity="0.6"/><text x="110" y="70" text-anchor="middle" dominant-baseline="central" fill="#8fd0f5">RESOLVE</text>
+                <circle cx="320" cy="70" r="44" fill="#1B4F72" fill-opacity="0.4" stroke="#1ABC9C" stroke-opacity="0.7"/><text x="320" y="70" text-anchor="middle" dominant-baseline="central" fill="#5fe6c8">VERIFY</text>
+                <circle cx="530" cy="70" r="44" fill="#1B4F72" fill-opacity="0.4" stroke="#9B59B6" stroke-opacity="0.6"/><text x="530" y="70" text-anchor="middle" dominant-baseline="central" fill="#cd9bdf">ENRICH</text>
+                <circle cx="740" cy="70" r="44" fill="#F4D03F" fill-opacity="0.16" stroke="#F4D03F"/><text x="740" y="70" text-anchor="middle" dominant-baseline="central" fill="#F9E547">REPORT</text>
+                <line x1="154" y1="70" x2="272" y2="70" stroke="#F4D03F" marker-end="url(#aloop)"/>
+                <line x1="364" y1="70" x2="482" y2="70" stroke="#F4D03F" marker-end="url(#aloop)"/>
+                <line x1="574" y1="70" x2="692" y2="70" stroke="#F4D03F" marker-end="url(#aloop)"/>
+              </g>
+              <g font-family="JetBrains Mono,monospace" font-size="11" font-weight="700">
+                <rect x="636" y="150" width="70" height="26" rx="13" fill="#1ABC9C" fill-opacity="0.85"/><text x="671" y="163" text-anchor="middle" dominant-baseline="central" fill="#04241c">PASS</text>
+                <rect x="712" y="150" width="118" height="26" rx="13" fill="#E67E22" fill-opacity="0.85"/><text x="771" y="163" text-anchor="middle" dominant-baseline="central" fill="#2a1406">CONDITIONAL</text>
+                <rect x="836" y="150" width="60" height="26" rx="13" fill="#E74C3C" fill-opacity="0.9"/><text x="866" y="163" text-anchor="middle" dominant-baseline="central" fill="#fff">FAIL</text>
+                <line x1="740" y1="114" x2="740" y2="146" stroke="#F4D03F" marker-end="url(#aloop)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">⚠️</span><p><b>Verify (hard gate):</b> hard-fail on any retraction or citation that won't resolve — never paper over it. A human reads the report and signs off before submission; LitGuard supports the decision, it doesn't make it.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> every reference shows a status and no FAIL is left unaddressed. (The flagship loop lives in <button class="goto" data-goto="zotero" style="padding:2px 8px;font-size:11px">Zotero + Papers</button>.)</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Citation integrity at scale — add URL</span></div>
+        </div>
+
+        <!-- A2 · Data & statistics -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">2</span><h3>Data &amp; statistics — a reproducible first analysis</h3><span class="subsp">Arthroplasty</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Hand a <b>de-identified</b> CSV to the OS and get a described dataset, checked assumptions, the right test recommended, a draft figure — and the exact code it ran.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>It turns a raw export into a clear analytic starting point in minutes — then your statistician confirms it, faster.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a de-identified CSV of total knee arthroplasty outcomes — describe it, check assumptions, recommend the test, draft the figure, and show the code.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/stats-draft.md</span><button class="copy" data-copy="a2">Copy</button></div>
+            <pre id="a2">SKILL · stats-draft
+Purpose: a first, reproducible analysis of a de-identified dataset.
+When to run: you have a clean, de-identified CSV and need direction.
+Steps:
+  1. Describe the data (n, variables, distributions, missingness).
+  2. Check the assumptions for the question I'm asking.
+  3. Recommend the appropriate test and say why.
+  4. Produce a figure AND show the exact code you ran.
+Rules:
+  - The CSV must contain NO PHI — de-identified only.
+  - You are a draft analyst, not the statistician of record.
+  - End every run with: "confirm with a statistician before reporting."</pre>
+          </div>
+          <!-- GRAPHIC · stats draft -> verify pipeline -->
+          <div class="modsvg" style="max-width:100%">
+            <svg viewBox="0 0 920 150" width="100%" style="max-width:760px" role="img" aria-label="Stats pipeline: a de-identified CSV is described, assumptions checked, a test recommended, a figure and code produced, then confirmed with a statistician.">
+              <defs><marker id="apipe" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <g font-family="Inter,sans-serif" font-size="12.5" font-weight="600">
+                <rect x="8"   y="50" width="120" height="52" rx="10" fill="#1B4F72" fill-opacity="0.4" stroke="#A8B5C2" stroke-opacity="0.4"/><text x="68"  y="70" text-anchor="middle" fill="#E8EDF1">CSV</text><text x="68" y="86" text-anchor="middle" fill="#5fe6c8" font-size="10">de-identified</text>
+                <rect x="166" y="50" width="120" height="52" rx="10" fill="#1B4F72" fill-opacity="0.4" stroke="#3498DB" stroke-opacity="0.5"/><text x="226" y="76" text-anchor="middle" fill="#8fd0f5">Describe</text>
+                <rect x="324" y="50" width="130" height="52" rx="10" fill="#1B4F72" fill-opacity="0.4" stroke="#9B59B6" stroke-opacity="0.5"/><text x="389" y="76" text-anchor="middle" fill="#cd9bdf">Assumptions</text>
+                <rect x="492" y="50" width="130" height="52" rx="10" fill="#1B4F72" fill-opacity="0.4" stroke="#1ABC9C" stroke-opacity="0.6"/><text x="557" y="70" text-anchor="middle" fill="#5fe6c8">Test + figure</text><text x="557" y="86" text-anchor="middle" fill="#A8B5C2" font-size="10">+ the code</text>
+                <rect x="660" y="50" width="252" height="52" rx="10" fill="#244F2E" fill-opacity="0.4" stroke="#1ABC9C" stroke-opacity="0.7"/><text x="786" y="76" text-anchor="middle" fill="#5fe6c8" font-weight="700">Confirm with a statistician</text>
+                <line x1="128" y1="76" x2="164" y2="76" stroke="#F4D03F" marker-end="url(#apipe)"/>
+                <line x1="286" y1="76" x2="322" y2="76" stroke="#F4D03F" marker-end="url(#apipe)"/>
+                <line x1="454" y1="76" x2="490" y2="76" stroke="#F4D03F" marker-end="url(#apipe)"/>
+                <line x1="622" y1="76" x2="658" y2="76" stroke="#F4D03F" marker-end="url(#apipe)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">⚠️</span><p><b>Verify (hard gate):</b> the CSV must be <b>de-identified — no PHI</b> through a personal account (no BAA). The OS is a <em>draft analyst</em>: it shows its code so the work is reproducible, and every analysis ends with <b>"confirm with a statistician."</b></p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you have a described dataset, checked assumptions, a recommended test, a figure, the code — and a statistician has reviewed it.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · AI as a draft analyst — add URL</span></div>
+        </div>
+
+        <!-- A3 · Presentation builder -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">3</span><h3>Presentation builder — paper to deck, reproducibly</h3><span class="subsp">Sports</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>A skill that turns a paper or dataset into a structured talk node, then renders a talk-ready deck — the same way every time.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>Grand rounds and meeting talks become a repeatable pipeline, not a from-scratch scramble.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a return-to-sport-after-ACLR dataset → a structured talk node → a meeting deck, regenerable on demand.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/deck-builder.md</span><button class="copy" data-copy="a3">Copy</button></div>
+            <pre id="a3">SKILL · deck-builder
+Purpose: turn a paper or dataset into a talk-ready deck, reproducibly.
+When to run: journal club, grand rounds, a meeting talk.
+Steps:
+  1. Read the source; extract the one-idea-per-slide spine.
+  2. Build a structured talk node (title, bullets, speaker notes).
+  3. Render slides from the node.
+Rules:
+  - Every number on a slide traces back to the source.
+  - You own the clinical framing; the deck is a draft.
+  - No patient data in the deck.</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="A source document becoming a structured node, then a slide deck.">
+              <rect x="6" y="30" width="26" height="32" rx="3" fill="#1B4F72" fill-opacity="0.5" stroke="#A8B5C2" stroke-opacity="0.4"/>
+              <defs><marker id="adeck" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <line x1="34" y1="46" x2="46" y2="46" stroke="#F4D03F" stroke-width="2" marker-end="url(#adeck)"/>
+              <circle cx="62" cy="46" r="12" fill="none" stroke="#1ABC9C" stroke-width="2"/><circle cx="62" cy="46" r="3.5" fill="#1ABC9C"/>
+              <line x1="76" y1="46" x2="88" y2="46" stroke="#F4D03F" stroke-width="2" marker-end="url(#adeck)"/>
+              <rect x="92" y="34" width="30" height="22" rx="3" fill="#1B4F72" fill-opacity="0.5" stroke="#F4D03F" stroke-opacity="0.6"/><line x1="97" y1="40" x2="117" y2="40" stroke="#F4D03F" stroke-width="2"/><line x1="97" y1="48" x2="113" y2="48" stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> check every number against the source; you own the clinical framing. No patient data in the deck. (Full skill format in <button class="goto" data-goto="skills" style="padding:2px 8px;font-size:11px">Skills</button>.)</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> a talk-ready outline exists and regenerates from the source on demand.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · A reproducible deck pipeline — add URL</span></div>
+        </div>
+
+        <!-- A4 · Grant writer -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">4</span><h3>Grant writer — aims scaffold, harvest-first</h3><span class="subsp">Research</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>A skill that <em>harvests what you've already written first</em>, scaffolds a Specific Aims page, critiques it like a study section, and runs citation integrity on every reference.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>The blank-page aims problem becomes a grounded draft built from your own prior work — and a reviewer's critique before a reviewer ever sees it.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> scaffold a generic Specific Aims page on <b>[your research topic]</b> — harvest your prior writing first, draft significance + gap + hypothesis + 2–3 aims, then critique it.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/grant-aims.md</span><button class="copy" data-copy="a4">Copy</button></div>
+            <pre id="a4">SKILL · grant-aims
+Purpose: scaffold and critique a Specific Aims page.
+When to run: starting or revising an aims page for a project.
+Steps:
+  1. HARVEST first — gather what I've already written on this topic
+     (search-before-write); never start from a blank page.
+  2. Scaffold: significance, gap, central hypothesis, 2-3 aims.
+  3. Critique it like a study section; list the weaknesses.
+  4. Run citation integrity (litguard-check) on every reference.
+Rules:
+  - Use only my real prior text and verified citations.
+  - No fabricated preliminary data, results, or numbers.
+  - Generic structure only on the public page; real aims stay in my OS.</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="Harvested notes feeding an aims page that gets a review critique.">
+              <g fill="#1B4F72" fill-opacity="0.5" stroke="#A8B5C2" stroke-opacity="0.4"><rect x="6" y="20" width="20" height="14" rx="2"/><rect x="6" y="38" width="20" height="14" rx="2"/><rect x="6" y="56" width="20" height="14" rx="2"/></g>
+              <defs><marker id="agrant" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <line x1="28" y1="45" x2="44" y2="45" stroke="#F4D03F" stroke-width="2" marker-end="url(#agrant)"/>
+              <rect x="48" y="16" width="44" height="60" rx="4" fill="#1B4F72" fill-opacity="0.5" stroke="#F4D03F" stroke-opacity="0.6"/><text x="70" y="26" text-anchor="middle" fill="#F9E547" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700">AIMS</text>
+              <g stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"><line x1="54" y1="36" x2="86" y2="36"/><line x1="54" y1="46" x2="86" y2="46"/><line x1="54" y1="56" x2="82" y2="56"/><line x1="54" y1="66" x2="86" y2="66"/></g>
+              <circle cx="104" cy="30" r="13" fill="#E67E22" fill-opacity="0.85"/><text x="104" y="30" text-anchor="middle" dominant-baseline="central" fill="#2a1406" font-family="Inter,sans-serif" font-size="13" font-weight="800">!</text>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">⚠️</span><p><b>Verify (governance):</b> harvest before you draft (search-before-write); every citation goes through LitGuard; <b>no fabricated preliminary data</b>. Public examples are generic — no real grant numbers, theory names, or institutions; the critique is a draft, not a score.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> an aims scaffold + a study-section-style critique exist, built from your prior writing, with citations verified.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Harvest-first grant writing — add URL</span></div>
+        </div>
+
+        <!-- A5 · Mentoring -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">5</span><h3>Mentor / mentee building — both directions</h3><span class="subsp">Peds · career-builder</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Track your mentees (IDP, check-ins, next steps) <em>and</em> track your own mentors and the asks you owe or are owed.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>Mentoring stops slipping through the cracks — in both directions — and your development plan becomes something you actually run.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> maintain an IDP and a check-in cadence for each mentee, and a running list of the specific asks you owe your own mentors.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/mentee-tracker.md · mentor-tracker.md</span><button class="copy" data-copy="a5">Copy</button></div>
+            <pre id="a5">SKILL · mentee-tracker / mentor-tracker
+Purpose: keep mentoring organized in both directions.
+When to run: onboarding a mentee, before a check-in, or planning an ask.
+Steps:
+  1. Per mentee: maintain an IDP (goals, milestones, next steps).
+  2. Draft check-in agendas; log what was decided.
+  3. Track MY mentors and the specific asks I owe or am owed.
+Rules:
+  - Record only what's appropriate; no sensitive personal data.
+  - The relationship is yours; the tracker supports it, it doesn't run it.</pre>
+          </div>
+          <div class="modsvg">
+            <svg viewBox="0 0 130 92" role="img" aria-label="You in the middle, with mentees below and your own mentors above, arrows both ways.">
+              <circle cx="65" cy="46" r="15" fill="#F4D03F" fill-opacity="0.2" stroke="#F4D03F"/><text x="65" y="46" text-anchor="middle" dominant-baseline="central" fill="#F9E547" font-family="Inter,sans-serif" font-size="9" font-weight="800">You</text>
+              <defs><marker id="ament" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#A8B5C2"/></marker></defs>
+              <g><circle cx="30" cy="14" r="9" fill="#9B59B6" fill-opacity="0.7"/><circle cx="100" cy="14" r="9" fill="#9B59B6" fill-opacity="0.7"/><text x="65" y="12" text-anchor="middle" fill="#cd9bdf" font-family="Inter,sans-serif" font-size="7.5">my mentors</text></g>
+              <g><circle cx="30" cy="80" r="9" fill="#1ABC9C" fill-opacity="0.7"/><circle cx="65" cy="84" r="9" fill="#1ABC9C" fill-opacity="0.7"/><circle cx="100" cy="80" r="9" fill="#1ABC9C" fill-opacity="0.7"/></g>
+              <g stroke="#A8B5C2" stroke-opacity="0.6" stroke-width="1.6"><line x1="54" y1="36" x2="36" y2="22" marker-end="url(#ament)"/><line x1="76" y1="36" x2="94" y2="22" marker-end="url(#ament)"/><line x1="54" y1="58" x2="38" y2="72" marker-end="url(#ament)"/><line x1="65" y1="61" x2="65" y2="74" marker-end="url(#ament)"/><line x1="76" y1="58" x2="92" y2="72" marker-end="url(#ament)"/></g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> keep only appropriate notes — no sensitive personal data about trainees. The mentoring relationship is yours; the tracker is a support, not a substitute.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> each mentee has an IDP and a cadence, and your own asks of mentors are written down.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Mentoring in both directions — add URL</span></div>
+        </div>
+
+        <!-- A6 · Goals + achievements -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">6</span><h3>Goal-setting + achievement tracking</h3><span class="subsp">Career</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Cascade goals annual → quarterly → weekly, and log real wins to <code class="inl">achievements.md</code> as you go.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>When the promotion packet or CV refresh comes due, your accomplishments are already captured with dates — not reconstructed from memory.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> set this year's goals, break them into quarters and weeks, and append each win (talk given, paper accepted, grant submitted) to <code class="inl">achievements.md</code>.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/goal-achievement.md</span><button class="copy" data-copy="a6">Copy</button></div>
+            <pre id="a6">SKILL · goal-achievement
+Purpose: cascade goals and capture wins for your CV / promotion packet.
+When to run: annual planning, quarterly review, and the weekly check-in.
+Steps:
+  1. Cascade: annual -> quarterly -> weekly goals.
+  2. Each week, capture what got done.
+  3. Append real wins to achievements.md (date, what, evidence).
+Rules:
+  - Achievements feed your CV — every entry must be accurate.
+  - No inflation; verifiable wins only.</pre>
+          </div>
+          <!-- GRAPHIC · goal -> achievement timeline -->
+          <div class="modsvg" style="max-width:100%">
+            <svg viewBox="0 0 920 160" width="100%" style="max-width:720px" role="img" aria-label="A timeline cascading from annual goals to quarterly to weekly, feeding logged achievements.">
+              <defs><marker id="atime" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <line x1="40" y1="60" x2="700" y2="60" stroke="#F4D03F" stroke-opacity="0.4" stroke-width="2"/>
+              <g font-family="Inter,sans-serif" font-size="12.5" font-weight="700">
+                <circle cx="120" cy="60" r="10" fill="#9B59B6"/><text x="120" y="34" text-anchor="middle" fill="#cd9bdf">Annual</text>
+                <circle cx="340" cy="60" r="10" fill="#3498DB"/><text x="340" y="34" text-anchor="middle" fill="#8fd0f5">Quarterly</text>
+                <circle cx="560" cy="60" r="10" fill="#1ABC9C"/><text x="560" y="34" text-anchor="middle" fill="#5fe6c8">Weekly</text>
+                <rect x="700" y="40" width="200" height="40" rx="10" fill="#F4D03F" fill-opacity="0.16" stroke="#F4D03F"/><text x="800" y="60" text-anchor="middle" dominant-baseline="central" fill="#F9E547" font-family="JetBrains Mono,monospace" font-size="12">achievements.md</text>
+              </g>
+              <g font-family="Inter,sans-serif" font-size="11" fill="#A8B5C2">
+                <line x1="560" y1="84" x2="560" y2="116" stroke="#F4D03F" stroke-opacity="0.5" marker-end="url(#atime)"/>
+                <text x="560" y="134" text-anchor="middle">each win logged with a date →</text>
+                <line x1="660" y1="128" x2="712" y2="74" stroke="#F4D03F" stroke-opacity="0.4" marker-end="url(#atime)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> these entries feed your CV and promotion packet — log only real, verifiable wins. No inflation; spot-check dates and evidence.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> a goal cascade exists and <code class="inl">achievements.md</code> is accumulating accurate, dated wins.</div></div>
+          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Capturing wins as you go — add URL</span></div>
+        </div>
+
+        <!-- A7 · Meeting tracking -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">7</span><h3>Meeting tracking — transcript to accountability</h3><span class="subsp">Administrative</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>Turn a meeting transcript into decisions, action items (each with an owner and a due date), and follow-ups.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>Committee and division meetings stop evaporating — the follow-through is captured and assigned before everyone leaves the room.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Worked example:</b> a division-meeting transcript → the decisions made, the action items with owners and dates, and the open questions to revisit.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">skills/meeting-actions.md</span><button class="copy" data-copy="a7">Copy</button></div>
+            <pre id="a7">SKILL · meeting-actions
+Purpose: turn a meeting transcript into accountable follow-through.
+When to run: right after any meeting you have a transcript for.
+Steps:
+  1. Summarize the decisions made.
+  2. Extract action items, each with an owner and a due date.
+  3. List open questions and follow-ups.
+Rules:
+  - Confirm owners and dates with attendees before relying on them.
+  - No PHI in transcripts; the action list is a draft until confirmed.</pre>
+          </div>
+          <!-- GRAPHIC · transcript -> actions flow -->
+          <div class="modsvg" style="max-width:100%">
+            <svg viewBox="0 0 920 170" width="100%" style="max-width:720px" role="img" aria-label="A meeting transcript fans out into decisions, action items with owners and dates, and follow-ups.">
+              <defs><marker id="aflow" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <rect x="8" y="58" width="150" height="56" rx="11" fill="#1B4F72" fill-opacity="0.45" stroke="#A8B5C2" stroke-opacity="0.45"/><text x="83" y="80" text-anchor="middle" fill="#E8EDF1" font-family="Inter,sans-serif" font-size="13" font-weight="700">Transcript</text><text x="83" y="98" text-anchor="middle" fill="#5fe6c8" font-family="Inter,sans-serif" font-size="10">no PHI</text>
+              <g font-family="Inter,sans-serif" font-size="12.5" font-weight="600">
+                <line x1="158" y1="86" x2="356" y2="34"  stroke="#F4D03F" stroke-opacity="0.5" marker-end="url(#aflow)"/><rect x="360" y="14"  width="300" height="40" rx="10" fill="#1B4F72" fill-opacity="0.4" stroke="#3498DB" stroke-opacity="0.6"/><text x="378" y="34"  dominant-baseline="central" fill="#8fd0f5">Decisions made</text>
+                <line x1="158" y1="86" x2="356" y2="86"  stroke="#F4D03F" stroke-opacity="0.5" marker-end="url(#aflow)"/><rect x="360" y="66"  width="360" height="40" rx="10" fill="#1B4F72" fill-opacity="0.4" stroke="#1ABC9C" stroke-opacity="0.7"/><text x="378" y="86"  dominant-baseline="central" fill="#5fe6c8">Action items — owner + due date</text>
+                <line x1="158" y1="86" x2="356" y2="138" stroke="#F4D03F" stroke-opacity="0.5" marker-end="url(#aflow)"/><rect x="360" y="118" width="300" height="40" rx="10" fill="#1B4F72" fill-opacity="0.4" stroke="#E67E22" stroke-opacity="0.6"/><text x="378" y="138" dominant-baseline="central" fill="#eab37a">Open questions / follow-ups</text>
+              </g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> confirm owners and dates with attendees before relying on them; keep PHI out of transcripts. The action list is a draft until the room agrees.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> a meeting yields a clean decisions + action-items list with owners and dates.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Meetings that produce follow-through — add URL</span></div>
+        </div>
+
+        <!-- A8 · Automations / multi-agent / dashboards / across machines -->
+        <div class="chatmod">
+          <div class="modhead"><span class="mnum">8</span><h3>It runs — scheduled, multi-agent, dashboards, everywhere</h3><span class="subsp">Trauma · onc · spine</span></div>
+          <div class="whatwhy">
+            <div class="box"><span class="k">What it is</span><p>The "it runs by itself" tier: scheduled jobs, multiple agents with different jobs, live dashboards, and an OS that follows you across machines.</p></div>
+            <div class="box"><span class="k">Why a surgeon wants it</span><p>The OS keeps working while you operate — briefings land, papers get ingested and checked, and your dashboard is current when you sit down.</p></div>
+          </div>
+          <p class="worked"><span class="ar">▸</span><span><b>Four worked examples:</b> a <b>daily 6 a.m. briefing</b> (what's due across your domains); a <b>multi-agent</b> handoff (one agent ingests a trauma paper, one drafts, one verifies with LitGuard); a <b>live vault dashboard</b> (projects, grants, deadlines); and a <b>portable OS</b> that follows you from the OR to clinic to home.</span></p>
+          <div class="code">
+            <div class="bar"><span class="fname">prompt · scheduled daily briefing</span><button class="copy" data-copy="a8">Copy</button></div>
+            <pre id="a8">Each morning at 6am, read my goals, deadlines, and calendar and send me a
+short briefing: what's due today, what's slipping, and the one thing to
+protect time for. Keep it to a screen. Flag anything that needs a decision
+from me — never act on the irreversible ones yourself.</pre>
+          </div>
+          <!-- GRAPHIC · multi-agent org chart -->
+          <div class="modsvg" style="max-width:100%">
+            <svg viewBox="0 0 920 220" width="100%" style="max-width:700px" role="img" aria-label="A multi-agent org chart: an orchestrator directs an ingest agent, a draft agent, and a verify agent, all reporting to a human check.">
+              <defs><marker id="atree" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="#F4D03F"/></marker></defs>
+              <g font-family="Inter,sans-serif" font-size="12.5" font-weight="700">
+                <rect x="360" y="10" width="200" height="44" rx="11" fill="#F4D03F" fill-opacity="0.16" stroke="#F4D03F"/><text x="460" y="32" text-anchor="middle" dominant-baseline="central" fill="#F9E547">Orchestrator</text>
+                <rect x="40"  y="100" width="220" height="44" rx="11" fill="#1B4F72" fill-opacity="0.4" stroke="#3498DB" stroke-opacity="0.6"/><text x="150" y="122" text-anchor="middle" dominant-baseline="central" fill="#8fd0f5">Ingest — read the paper</text>
+                <rect x="350" y="100" width="220" height="44" rx="11" fill="#1B4F72" fill-opacity="0.4" stroke="#9B59B6" stroke-opacity="0.6"/><text x="460" y="122" text-anchor="middle" dominant-baseline="central" fill="#cd9bdf">Draft — write it up</text>
+                <rect x="660" y="100" width="220" height="44" rx="11" fill="#1B4F72" fill-opacity="0.4" stroke="#1ABC9C" stroke-opacity="0.7"/><text x="770" y="122" text-anchor="middle" dominant-baseline="central" fill="#5fe6c8">Verify — LitGuard</text>
+                <rect x="350" y="172" width="220" height="40" rx="11" fill="#244F2E" fill-opacity="0.45" stroke="#1ABC9C" stroke-opacity="0.7"/><text x="460" y="192" text-anchor="middle" dominant-baseline="central" fill="#5fe6c8">Human check — you sign off</text>
+                <line x1="460" y1="54" x2="150" y2="98" stroke="#F4D03F" stroke-opacity="0.5" marker-end="url(#atree)"/>
+                <line x1="460" y1="54" x2="460" y2="98" stroke="#F4D03F" stroke-opacity="0.5" marker-end="url(#atree)"/>
+                <line x1="460" y1="54" x2="770" y2="98" stroke="#F4D03F" stroke-opacity="0.5" marker-end="url(#atree)"/>
+                <line x1="150" y1="144" x2="430" y2="172" stroke="#A8B5C2" stroke-opacity="0.4" marker-end="url(#atree)"/>
+                <line x1="460" y1="144" x2="460" y2="170" stroke="#A8B5C2" stroke-opacity="0.4" marker-end="url(#atree)"/>
+                <line x1="770" y1="144" x2="490" y2="172" stroke="#A8B5C2" stroke-opacity="0.4" marker-end="url(#atree)"/>
+              </g>
+            </svg>
+          </div>
+          <div class="verify"><span class="ic">⚠️</span><p><b>Verify (the core rule):</b> <b>every agent needs a human.</b> Review scheduled outputs; keep agents from anything irreversible without sign-off; no PHI in any job; secrets and keys stay out of configs (use placeholders like <code class="inl">&lt;your-key&gt;</code>). Deepen each of these in <button class="goto" data-goto="scale" style="padding:2px 8px;font-size:11px">At Scale</button>.</p></div>
+          <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> at least one job runs on a schedule and a multi-agent handoff completes <em>with</em> a human check at the end.</div></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · One agent ingests, one drafts, one verifies — add URL</span><span class="medichip"><b>🎧 Listen</b> · An OS that runs while you operate — add URL</span></div>
+        </div>
+
+      </div>
+
+      <div class="donewhen" style="margin-top:26px"><span class="ic">⚙️</span><div><b>The machinery is running.</b> Citation integrity, data, decks, grants, mentoring, goals, meetings, and automations — each with a human on the lever. That's a research program with an operating system underneath it.</div></div>
+      <div class="next"><span class="lab">Where next →</span>
+        <button class="goto" data-goto="zotero">★ The LitGuard flagship →</button>
+        <button class="goto" data-goto="scale">Scheduled &amp; multi-agent: At Scale →</button>
+        <button class="goto" data-goto="reference">Pricing &amp; FAQ: Reference →</button>
+      </div>
+    </div>
+  </section>
+</section>
 <!-- ===================== TAB 11 · REFERENCE ===================== -->
 <section class="tabpanel" id="panel-reference" role="tabpanel" aria-labelledby="tabbtn-reference" hidden>
   <section class="pad">
     <div class="wrap reveal">
-      <span class="badge">Stage 13 · Reference</span>
+      <span class="badge">Stage 14 · Reference</span>
       <h2>FAQ, glossary, pricing, privacy — always here.</h2>
       <p class="sectsub">The reference desk for the whole console: what it costs, how your data is handled, the alternatives, the words, and what the agent means when it says "terminal."</p>
 
@@ -2561,7 +2922,7 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
 
 <script>
   // ---- the tabs ----
-  var TABS=['why','chat','build','square','core','connectors','zotero','cowork','code','graph','skills','scale','reference'];
+  var TABS=['why','chat','build','square','core','connectors','zotero','cowork','code','graph','skills','scale','pro','reference'];
   var tabBtns=Array.prototype.slice.call(document.querySelectorAll('.tab'));
   var panels=function(id){return document.getElementById('panel-'+id);};
   var sel=document.querySelector('.tabselect');
@@ -2635,10 +2996,10 @@ concepts. Save each as its own file in my vault's Literature/ folder.</pre>
   var TRACKS={
     beginner:{name:'Complete beginner',steps:['why','chat','square','core','reference']},
     first:{name:'First agentic OS',steps:['build','core','connectors','zotero','cowork','graph','skills']},
-    advanced:{name:'Already built one',steps:['skills','graph','scale','code']}
+    advanced:{name:'Already built one',steps:['pro','skills','graph','scale','code']}
   };
   var TABLABEL={why:'Why',chat:'Chat Wins',build:'First OS',square:'Square One',core:'OS Core',connectors:'Connectors',zotero:'★ Zotero',
-    cowork:'Cowork',code:'Claude Code',graph:'The Graph',skills:'Skills',scale:'At Scale',reference:'Reference'};
+    cowork:'Cowork',code:'Claude Code',graph:'The Graph',skills:'Skills',scale:'At Scale',pro:'Advanced',reference:'Reference'};
   var currentTrack=null;
   var trackbar=document.getElementById('trackbar');
   var tstepsEl=document.getElementById('tsteps');
