@@ -401,6 +401,30 @@
   .medichip{display:inline-flex;align-items:center;gap:8px;font:600 12px/1.3 'Inter',sans-serif;
     color:var(--dim);background:rgba(10,30,46,.5);border:1px dashed rgba(244,208,63,.3);border-radius:999px;padding:8px 13px}
   .medichip b{color:var(--gold)}
+  .medichip.live{color:var(--ink);border-style:solid;border-color:rgba(244,208,63,.5);
+    background:rgba(10,30,46,.7);text-decoration:none;transition:border-color var(--t),background var(--t)}
+  .medichip.live:hover,.medichip.live:focus-visible{border-color:var(--gold);background:rgba(27,79,114,.5);outline:none}
+  .medichip .src{color:var(--dim);font-weight:500;font-size:11px}
+  /* illustrative AI-output mock (result card) */
+  .outmock{margin:16px 0 4px;border:1px solid rgba(26,188,156,.4);border-radius:12px;
+    background:linear-gradient(180deg,rgba(10,30,46,.85),rgba(15,45,68,.5));overflow:hidden}
+  .outmock .omhead{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 14px;
+    background:rgba(26,188,156,.12);border-bottom:1px solid rgba(26,188,156,.3);
+    font:600 12px/1.4 'Inter',sans-serif;color:var(--dim)}
+  .outmock .ombadge{background:var(--gold);color:#0A1E2E;font-weight:800;font-size:11px;
+    letter-spacing:.3px;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+  .outmock .omhead em{color:var(--dim);font-style:italic;font-weight:500}
+  .outmock .ombody{padding:13px 15px}
+  .outmock .omq{margin:0 0 10px;font:700 13px/1.4 'JetBrains Mono',monospace;color:var(--gold-light)}
+  .outmock .omrow{display:flex;gap:10px;align-items:flex-start;margin:0 0 9px}
+  .outmock .omtag{flex:none;font:700 10px/1.5 'Inter',sans-serif;text-transform:uppercase;
+    letter-spacing:.3px;padding:2px 8px;border-radius:6px;margin-top:1px;
+    background:rgba(26,188,156,.18);color:#5fe6c8;border:1px solid rgba(26,188,156,.45)}
+  .outmock .omtag.warn{background:rgba(244,208,63,.14);color:var(--gold-light);border-color:rgba(244,208,63,.45)}
+  .outmock .omrow p{margin:0;color:var(--ink);font-size:.92rem;line-height:1.5}
+  .outmock .omcite{font:600 11px/1 'JetBrains Mono',monospace;color:var(--gold);white-space:nowrap}
+  .outmock .omfoot{margin:11px 0 0;padding-top:10px;border-top:1px dashed rgba(168,181,194,.25);
+    color:var(--dim);font-size:.84rem;line-height:1.5}
   .modsvg{display:flex;justify-content:center;margin:14px 0 6px}
   .modsvg svg{max-width:300px;width:100%;height:auto}
   .heromenu svg{width:100%;height:auto}
@@ -951,6 +975,17 @@ Rules:
               </g>
             </svg>
           </div>
+          <!-- Illustrative AI-output mock — representative only; NO real PMIDs/metrics -->
+          <div class="outmock" role="figure" aria-label="Illustrative example of what the assistant returns: a structured evidence brief that sorts claims into well-supported versus uncertain, each carrying a placeholder citation marked for you to verify in PubMed.">
+            <div class="omhead"><span class="ombadge">Illustrative example</span> What the assistant returns — <em>representative, not real output; verify everything</em></div>
+            <div class="ombody">
+              <p class="omq">› TXA in primary TKA — evidence brief</p>
+              <div class="omrow"><span class="omtag">Well-supported</span><p>Tranexamic acid lowers perioperative blood loss and transfusion risk versus placebo in primary TKA. <span class="omcite">[PMID ####] · verify</span></p></div>
+              <div class="omrow"><span class="omtag">Well-supported</span><p>IV, topical, and combined routes are all described; combined dosing may add benefit. <span class="omcite">[PMID ####] · verify</span></p></div>
+              <div class="omrow"><span class="omtag warn">Uncertain / mixed</span><p>Optimal dose and timing, and use in higher-VTE-risk patients — evidence is mixed and effect sizes vary across trials. <span class="omcite">[PMID ####] · verify</span></p></div>
+              <p class="omfoot">↳ Every <span class="omcite" style="font-size:10px">[PMID ####]</span> is a placeholder until <em>you</em> open it in PubMed. The model can invent references — that's why the next step is <b>verify</b>, not trust. (The real brief names specific trials; this card shows the shape, not borrowed numbers.)</p>
+            </div>
+          </div>
           <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> models can invent citations. Open every PMID in PubMed yourself; if a reference won't resolve, treat the claim as unverified. (Doing this at manuscript scale is exactly the <button class="goto" data-goto="skills" style="padding:2px 8px;font-size:11px">LitGuard</button> pattern.)</p></div>
           <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> you have a brief whose claims you've each traced to a PMID that actually resolves.</div></div>
           <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Deep-research walkthrough · coming soon</span><span class="medichip"><b>🎧 Listen</b> · "How I use AI in research" · coming soon</span></div>
@@ -1490,7 +1525,7 @@ protected information.</pre>
           </div>
           <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> ask it something only your files would answer and confirm it <em>cites the file</em>. Free tier covers this; no PHI in any uploaded file.</p></div>
           <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> your <b>My-OS</b> Project answers a question by citing one of your own files.</div></div>
-          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · Projects as your OS core · coming soon</span></div>
+          <div class="medichips"><a class="medichip live" href="https://support.claude.com/en/articles/9517075-what-are-projects" target="_blank" rel="noopener noreferrer"><b>📖 Read</b> · Projects as your OS core · <span class="src">support.claude.com ↗</span></a></div>
         </div>
 
         <!-- B3 · Connections -->
@@ -1525,7 +1560,7 @@ stop — don't guess.</pre>
           </div>
           <div class="verify"><span class="ic">⚠️</span><p><b>Verify &amp; safety:</b> grant the <b>narrowest</b> access that works; <b>review before any send</b> (keep Gmail/Calendar human-in-the-loop). No PHI flows through a personal connector — there's no BAA. (Full connector setup in <button class="goto" data-goto="connectors" style="padding:2px 8px;font-size:11px">Connectors</button>.)</p></div>
           <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> PubMed returns real PMIDs inside your chat and the OS can see your folder.</div></div>
-          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Connecting MCPs safely · coming soon</span></div>
+          <div class="medichips"><a class="medichip live" href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer"><b>📖 Read</b> · What MCP is &amp; how it connects · <span class="src">modelcontextprotocol.io ↗</span></a></div>
         </div>
 
         <!-- B4 · Folder scaffold -->
@@ -1596,7 +1631,7 @@ you'd need to advise me better.</pre>
           </div>
           <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> a skill is just instructions — open each file and read what it does before you trust it. Check the briefing's claims against the files it cites. (Full skill files in <button class="goto" data-goto="skills" style="padding:2px 8px;font-size:11px">Skills</button>.)</p></div>
           <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> the Chief-of-Staff briefing returns a grounded, file-cited plan for your week.</div></div>
-          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · Writing your first skill · coming soon</span></div>
+          <div class="medichips"><a class="medichip live" href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer"><b>📖 Read</b> · Writing your first skill · <span class="src">platform.claude.com ↗</span></a></div>
         </div>
 
         <!-- B6 · Memory -->
@@ -1617,7 +1652,7 @@ you'd need to advise me better.</pre>
           </div>
           <div class="verify"><span class="ic">🔎</span><p><b>Verify:</b> memory persists facts — so keep PHI and anything sensitive out of it entirely. Review what it has stored and prune anything you didn't intend.</p></div>
           <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> a new chat already knows your role and preferences without being told.</div></div>
-          <div class="medichips"><span class="medichip"><b>🎧 Listen</b> · What memory should (and shouldn't) hold · coming soon</span></div>
+          <div class="medichips"><a class="medichip live" href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" target="_blank" rel="noopener noreferrer"><b>📖 Read</b> · How Claude's memory works · <span class="src">support.claude.com ↗</span></a></div>
         </div>
 
         <!-- B7 · Milestone -->
@@ -2742,7 +2777,7 @@ from me — never act on the irreversible ones yourself.</pre>
           </div>
           <div class="verify"><span class="ic">⚠️</span><p><b>Verify (the core rule):</b> <b>every agent needs a human.</b> Review scheduled outputs; keep agents from anything irreversible without sign-off; no PHI in any job; secrets and keys stay out of configs (use placeholders like <code class="inl">&lt;your-key&gt;</code>). Deepen each of these in <button class="goto" data-goto="scale" style="padding:2px 8px;font-size:11px">At Scale</button>.</p></div>
           <div class="donewhen"><span class="ic">✅</span><div><b>Done when…</b> at least one job runs on a schedule and a multi-agent handoff completes <em>with</em> a human check at the end.</div></div>
-          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · One agent ingests, one drafts, one verifies · coming soon</span><span class="medichip"><b>🎧 Listen</b> · An OS that runs while you operate · coming soon</span></div>
+          <div class="medichips"><span class="medichip"><b>▶ Watch</b> · One agent ingests, one drafts, one verifies · coming soon</span><a class="medichip live" href="https://aidbagentos.ai/" target="_blank" rel="noopener noreferrer"><b>🧭 Explore</b> · AgentOS — the 12-project model · <span class="src">aidbagentos.ai ↗</span></a></div>
         </div>
 
       </div>
